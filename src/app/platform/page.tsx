@@ -23,9 +23,7 @@ const formSchema = z.object({
   age: z.number().min(18, "Age must be at least 18").max(100, "Age must be less than 100"),
   income: z.number().min(0, "Income cannot be negative"),
   creditScore: z.number().min(300, "Credit score must be at least 300").max(850, "Credit score cannot exceed 850"),
-  employmentStatus: z.enum(['employed', 'self-employed', 'unemployed', 'student', 'retired'], {
-    required_error: "Please select your employment status"
-  }),
+  employmentStatus: z.enum(['employed', 'self-employed', 'unemployed', 'student', 'retired']),
   
   // Financial Goals
   primaryGoal: z.enum([
@@ -36,9 +34,7 @@ const formSchema = z.object({
     'debt-consolidation',
     'emergency-fund',
     'retirement'
-  ], {
-    required_error: "Please select your primary financial goal"
-  }),
+  ]),
   
   // Products Interested In
   interestedProducts: z.array(z.string()).min(1, "Please select at least one product you're interested in"),
@@ -47,26 +43,28 @@ const formSchema = z.object({
   currentDebt: z.number().min(0, "Debt cannot be negative"),
   monthlyExpenses: z.number().min(0, "Expenses cannot be negative"),
   existingAccounts: z.array(z.string()),
-  riskTolerance: z.enum(['conservative', 'moderate', 'aggressive'], {
-    required_error: "Please select your risk tolerance"
-  }),
+  riskTolerance: z.enum(['conservative', 'moderate', 'aggressive']),
   
   // Insurance Needs
   insuranceNeeds: z.array(z.string()),
   
   // Investment Preferences
-  investmentTimeframe: z.enum(['short', 'medium', 'long'], {
-    required_error: "Please select your investment timeframe"
-  }),
+  investmentTimeframe: z.enum(['short', 'medium', 'long']),
   investmentAmount: z.number().min(0, "Investment amount cannot be negative"),
 });
 
 type FormData = z.infer<typeof formSchema>;
 
+interface RecommendationsResponse {
+  success: boolean;
+  recommendations?: string;
+  error?: string;
+}
+
 export default function PlatformPage() {
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState<any>(null);
+  const [recommendations, setRecommendations] = useState<RecommendationsResponse | null>(null);
 
   const {
     register,
@@ -454,7 +452,7 @@ export default function PlatformPage() {
             <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-6" />
             <h2 className="text-3xl font-bold text-gray-900 mb-4">Your Personalized Recommendations</h2>
             
-            {recommendations ? (
+            {recommendations && recommendations.recommendations ? (
               <div className="bg-white rounded-xl card-shadow p-8 text-left">
                 <div className="recommendations">
                   <div dangerouslySetInnerHTML={{ __html: recommendations.recommendations }} />

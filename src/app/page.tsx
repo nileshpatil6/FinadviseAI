@@ -5,15 +5,12 @@ import {
   CreditCard, 
   Shield, 
   TrendingUp, 
-  Users, 
   CheckCircle, 
   ArrowRight, 
   Star,
   PiggyBank,
   Home as HomeIcon,
   Landmark,
-  Car,
-  GraduationCap,
   Building2,
   Wallet,
   Calculator,
@@ -105,10 +102,7 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.6 }}
             >
               <Link href="/platform" className="bg-blue-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center gap-2">
-                Start Comparison <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link href="/platform?flow=eligibility" className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-blue-50 transition-all">
-                Check Eligibility
+                Find Best Products <ArrowRight className="w-5 h-5" />
               </Link>
             </motion.div>
 
@@ -120,24 +114,25 @@ export default function Home() {
               transition={{ duration: 0.8, delay: 0.8 }}
             >
               {[
-                { icon: CreditCard, label: "Credit Cards", color: "text-blue-600" },
-                { icon: Wallet, label: "Debit Cards", color: "text-green-600" },
-                { icon: PiggyBank, label: "Loans", color: "text-purple-600" },
-                { icon: Shield, label: "Insurance", color: "text-red-600" },
-                { icon: HomeIcon, label: "Mortgages", color: "text-orange-600" },
-                { icon: TrendingUp, label: "Mutual Funds", color: "text-emerald-600" },
-                { icon: Landmark, label: "Assets", color: "text-indigo-600" },
-                { icon: Building2, label: "Accounts", color: "text-cyan-600" },
+                { icon: CreditCard, label: "Credit Cards", color: "text-blue-600", product: "credit-cards" },
+                { icon: Wallet, label: "Debit Cards", color: "text-green-600", product: "debit-cards" },
+                { icon: PiggyBank, label: "Loans", color: "text-purple-600", product: "personal-loans" },
+                { icon: Shield, label: "Insurance", color: "text-red-600", product: "health-insurance" },
+                { icon: HomeIcon, label: "Mortgages", color: "text-orange-600", product: "home-loans" },
+                { icon: TrendingUp, label: "Mutual Funds", color: "text-emerald-600", product: "mutual-funds" },
+                { icon: Landmark, label: "Assets", color: "text-indigo-600", product: "fixed-deposits" },
+                { icon: Building2, label: "Accounts", color: "text-cyan-600", product: "bank-accounts" },
               ].map((category, index) => (
-                <motion.div
-                  key={index}
-                  className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all cursor-pointer group"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <category.icon className={`w-8 h-8 ${category.color} mb-2 group-hover:scale-110 transition-transform`} />
-                  <span className="text-xs font-medium text-gray-700 text-center">{category.label}</span>
-                </motion.div>
+                <Link href={`/platform?product=${category.product}`} key={index}>
+                  <motion.div
+                    className="flex flex-col items-center p-4 bg-white rounded-xl shadow-sm hover:shadow-lg transition-all cursor-pointer group"
+                    whileHover={{ scale: 1.05, y: -5 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <category.icon className={`w-8 h-8 ${category.color} mb-2 group-hover:scale-110 transition-transform`} />
+                    <span className="text-xs font-medium text-gray-700 text-center">{category.label}</span>
+                  </motion.div>
+                </Link>
               ))}
             </motion.div>
           </div>
@@ -225,14 +220,14 @@ export default function Home() {
                 color: "from-teal-500 to-teal-600"
               }
             ].map((product, index) => (
-              <motion.div
-                key={index}
-                className="bg-white border border-gray-200 p-6 rounded-2xl hover:shadow-lg transition-all group cursor-pointer"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ y: -5 }}
-              >
+              <Link href="/platform" key={index}>
+                <motion.div
+                  className="bg-white border border-gray-200 p-6 rounded-2xl hover:shadow-lg transition-all group cursor-pointer"
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: index * 0.1 }}
+                  whileHover={{ y: -5 }}
+                >
                 <div className={`w-12 h-12 bg-gradient-to-r ${product.color} rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
                   <product.icon className="w-6 h-6 text-white" />
                 </div>
@@ -246,7 +241,8 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-              </motion.div>
+                </motion.div>
+              </Link>
             ))}
           </div>
         </div>
@@ -630,10 +626,7 @@ export default function Home() {
             transition={{ duration: 0.6, delay: 0.2 }}
           >
             <Link href="/platform" className="bg-blue-600 text-white px-10 py-4 rounded-xl text-xl font-semibold hover:bg-blue-700 transition-all transform hover:scale-105 inline-flex items-center gap-3">
-              Start Comparison <ArrowRight className="w-6 h-6" />
-            </Link>
-            <Link href="/platform?flow=eligibility" className="border-2 border-white text-white px-10 py-4 rounded-xl text-xl font-semibold hover:bg-white hover:text-gray-900 transition-all inline-flex items-center gap-3">
-              Check Eligibility <CheckCircle className="w-6 h-6" />
+              Get Started Now <ArrowRight className="w-6 h-6" />
             </Link>
           </motion.div>
         </div>

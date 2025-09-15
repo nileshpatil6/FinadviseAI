@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   CreditCard, 
@@ -9,15 +10,12 @@ import {
   Home,
   ArrowRight,
   CheckCircle,
-  Loader2,
   PiggyBank,
   Building2,
-  Wallet,
   Landmark,
   Calculator,
   Target,
   Award,
-  User,
   DollarSign,
   Star
 } from 'lucide-react';
@@ -39,13 +37,48 @@ type ProductCategory =
   | 'fixed-deposits'
   | 'bonds';
 
-type FlowType = 'comparison' | 'eligibility';
+interface FormData {
+  [key: string]: string | string[] | number | undefined;
+}
+
+interface Recommendation {
+  rank: number;
+  product: string;
+  benefits: string[];
+  approval: string;
+  applyLink: string;
+}
+
+interface Comparison {
+  bank: string;
+  product: string;
+  rate?: string;
+  fee?: string;
+  benefits?: string;
+  approval: string;
+  emi?: string;
+  processing?: string;
+}
+
+interface ApiRecommendation {
+  rank?: number;
+  bankName?: string;
+  productName?: string;
+  keyBenefits?: string | string[];
+  approvalProbability?: string;
+  applyUrl?: string;
+}
 
 export default function PlatformPage() {
   const [selectedProduct, setSelectedProduct] = useState<ProductCategory | null>(null);
-  const [flowType, setFlowType] = useState<FlowType>('comparison');
-  const [loading, setLoading] = useState(false);
-  const [recommendations, setRecommendations] = useState<any>(null);
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const productParam = searchParams.get('product');
+    if (productParam) {
+      setSelectedProduct(productParam as ProductCategory);
+    }
+  }, [searchParams]);
 
   const productCategories = [
     {
@@ -124,26 +157,9 @@ export default function PlatformPage() {
             </Link>
             
             <div className="flex items-center gap-4">
-              <button
-                onClick={() => setFlowType('comparison')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  flowType === 'comparison' 
-                    ? 'bg-blue-600 text-white' 
-                    : 'text-gray-600 hover:text-blue-600'
-                }`}
-              >
-                Compare Products
-              </button>
-              <button
-                onClick={() => setFlowType('eligibility')}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                  flowType === 'eligibility' 
-                    ? 'bg-green-600 text-white' 
-                    : 'text-gray-600 hover:text-green-600'
-                }`}
-              >
-                Check Eligibility
-              </button>
+              <div className="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium">
+                Find Best Products
+              </div>
             </div>
           </div>
         </div>
@@ -157,15 +173,8 @@ export default function PlatformPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className={`inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 ${
-              flowType === 'comparison' 
-                ? 'bg-blue-100 text-blue-800' 
-                : 'bg-green-100 text-green-800'
-            }`}>
-              {flowType === 'comparison' 
-                ? 'Flow 1: User Input → Comparison → Top 3 Results' 
-                : 'Flow 2: Login → Eligibility Check → Pre-Approved Products'
-              }
+            <div className="inline-block px-4 py-2 rounded-full text-sm font-medium mb-4 bg-blue-100 text-blue-800">
+              Compare Products → Get Top Recommendations → Apply
             </div>
           </motion.div>
           
@@ -175,10 +184,7 @@ export default function PlatformPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            {flowType === 'comparison' 
-              ? 'Select Product to Compare' 
-              : 'Check Your Eligibility'
-            }
+            Find Your Perfect Financial Product
           </motion.h1>
           
           <motion.p 
@@ -187,70 +193,13 @@ export default function PlatformPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {flowType === 'comparison' 
-              ? 'Choose a financial product category to compare options across banks and get personalized recommendations'
-              : 'Login with PAN/Aadhaar to check your eligibility and get pre-approved products with high approval probability'
-            }
+            Choose a financial product category to compare options across banks and get AI-powered personalized recommendations
           </motion.p>
         </div>
 
-        {flowType === 'eligibility' ? (
-          // Eligibility Login Section
-          <motion.div
-            className="max-w-md mx-auto bg-white p-8 rounded-2xl shadow-xl"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-          >
-            <div className="text-center mb-6">
-              <Target className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">Secure Login</h2>
-              <p className="text-gray-600">Login with your PAN/Aadhaar for eligibility check</p>
-            </div>
-            
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">PAN Number</label>
-                <input
-                  type="text"
-                  placeholder="ABCDE1234F"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Mobile Number</label>
-                <input
-                  type="tel"
-                  placeholder="9876543210"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                />
-              </div>
-              
-              <button className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold hover:bg-green-700 transition-colors">
-                Send OTP
-              </button>
-            </div>
-            
-            <div className="mt-6 pt-6 border-t border-gray-200">
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                CIBIL/Experian credit score check
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600 mb-2">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                Income verification
-              </div>
-              <div className="flex items-center gap-2 text-sm text-gray-600">
-                <CheckCircle className="w-4 h-4 text-green-500" />
-                Pre-approved product recommendations
-              </div>
-            </div>
-          </motion.div>
-        ) : (
-          // Product Selection Grid
-          <div className="space-y-8">
-            {productCategories.map((category, categoryIndex) => (
+        {/* Product Selection Grid */}
+        <div className="space-y-8">
+          {productCategories.map((category, categoryIndex) => (
               <motion.div
                 key={categoryIndex}
                 className="bg-white p-6 rounded-2xl shadow-lg"
@@ -258,11 +207,15 @@ export default function PlatformPage() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
               >
-                <div className="flex items-center mb-6">
+                <div 
+                  className="flex items-center mb-6 cursor-pointer hover:opacity-80 transition-opacity"
+                  onClick={() => setSelectedProduct(category.products[0]?.id as ProductCategory)}
+                >
                   <div className={`w-12 h-12 bg-gradient-to-r ${category.color} rounded-lg flex items-center justify-center mr-4`}>
                     <category.icon className="w-6 h-6 text-white" />
                   </div>
                   <h2 className="text-2xl font-bold text-gray-900">{category.category}</h2>
+                  <ArrowRight className="w-5 h-5 text-gray-400 ml-2" />
                 </div>
                 
                 <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -285,8 +238,7 @@ export default function PlatformPage() {
                 </div>
               </motion.div>
             ))}
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
@@ -294,14 +246,14 @@ export default function PlatformPage() {
 
 // Product-specific form component
 function ProductForm({ product, onBack }: { product: ProductCategory; onBack: () => void }) {
-  const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState<any>({});
-  const [comparisons, setComparisons] = useState<any[]>([]);
-  const [recommendations, setRecommendations] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<FormData>({});
+  const [comparisons, setComparisons] = useState<Comparison[]>([]);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   
-  const handleInputChange = (field: string, value: any) => {
-    setFormData((prev: any) => ({ ...prev, [field]: value }));
+  const handleInputChange = (field: string, value: string | string[] | number) => {
+    setFormData((prev: FormData) => ({ ...prev, [field]: value }));
   };
 
   const handleCompare = async () => {
@@ -330,7 +282,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
         
         // Set recommendations from AI response
         if (data.data.recommendations && data.data.recommendations.length > 0) {
-          const formattedRecs = data.data.recommendations.map((rec: any) => ({
+          const formattedRecs = data.data.recommendations.map((rec: ApiRecommendation) => ({
             rank: rec.rank || 1,
             product: `${rec.bankName || 'Bank'} ${rec.productName || 'Product'}`,
             benefits: Array.isArray(rec.keyBenefits) ? rec.keyBenefits : [rec.keyBenefits || 'Benefits available'],
@@ -405,7 +357,17 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
 }
 
 // Input Form Component
-function InputForm({ product, formData, onInputChange, onCompare }: any) {
+function InputForm({ 
+  product, 
+  formData, 
+  onInputChange, 
+  onCompare 
+}: { 
+  product: ProductCategory; 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+  onCompare: () => void; 
+}) {
   const getProductForm = () => {
     switch (product) {
       case 'credit-cards':
@@ -452,7 +414,13 @@ function InputForm({ product, formData, onInputChange, onCompare }: any) {
 }
 
 // Credit Card Form
-function CreditCardForm({ formData, onInputChange }: any) {
+function CreditCardForm({ 
+  formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -526,7 +494,7 @@ function CreditCardForm({ formData, onInputChange }: any) {
                 type="checkbox"
                 className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 onChange={(e) => {
-                  const current = formData.spendingPattern || [];
+                  const current = Array.isArray(formData.spendingPattern) ? formData.spendingPattern : [];
                   const updated = e.target.checked 
                     ? [...current, pattern]
                     : current.filter((p: string) => p !== pattern);
@@ -560,7 +528,13 @@ function CreditCardForm({ formData, onInputChange }: any) {
 }
 
 // Personal Loan Form  
-function PersonalLoanForm({ formData, onInputChange }: any) {
+function PersonalLoanForm({ 
+  formData: _formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -677,7 +651,13 @@ function PersonalLoanForm({ formData, onInputChange }: any) {
 }
 
 // Other form components would follow similar patterns
-function HealthInsuranceForm({ formData, onInputChange }: any) {
+function HealthInsuranceForm({ 
+  formData: _formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -749,7 +729,7 @@ function HealthInsuranceForm({ formData, onInputChange }: any) {
                 type="checkbox"
                 className="w-4 h-4 text-red-600 border-gray-300 rounded focus:ring-red-500"
                 onChange={(e) => {
-                  const current = formData.addons || [];
+                  const current = Array.isArray(_formData.addons) ? _formData.addons : [];
                   const updated = e.target.checked 
                     ? [...current, addon]
                     : current.filter((a: string) => a !== addon);
@@ -765,7 +745,13 @@ function HealthInsuranceForm({ formData, onInputChange }: any) {
   );
 }
 
-function MutualFundForm({ formData, onInputChange }: any) {
+function MutualFundForm({ 
+  formData: _formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -863,7 +849,13 @@ function MutualFundForm({ formData, onInputChange }: any) {
   );
 }
 
-function HomeLoanForm({ formData, onInputChange }: any) {
+function HomeLoanForm({ 
+  formData: _formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <div className="flex items-center gap-3 mb-6">
@@ -941,7 +933,13 @@ function HomeLoanForm({ formData, onInputChange }: any) {
   );
 }
 
-function GenericForm({ formData, onInputChange }: any) {
+function GenericForm({ 
+  formData, 
+  onInputChange 
+}: { 
+  formData: FormData; 
+  onInputChange: (field: string, value: string | string[] | number) => void; 
+}) {
   return (
     <div className="space-y-6">
       <h2 className="text-2xl font-bold text-gray-900">Product Requirements</h2>
@@ -995,7 +993,15 @@ function LoadingComparison() {
 // No mock data - only real API responses
 
 // Comprehensive Comparison Results Component
-function ComparisonResults({ product, comparisons, recommendations }: any) {
+function ComparisonResults({ 
+  product, 
+  comparisons, 
+  recommendations 
+}: { 
+  product: ProductCategory; 
+  comparisons: Comparison[]; 
+  recommendations: Recommendation[]; 
+}) {
   const [filterType, setFilterType] = useState<'best-value' | 'best-overall' | 'best-match'>('best-match');
 
   const getProductDisplayName = (product: string) => {
@@ -1044,7 +1050,7 @@ function ComparisonResults({ product, comparisons, recommendations }: any) {
           ].map((filter) => (
             <button
               key={filter.id}
-              onClick={() => setFilterType(filter.id as any)}
+              onClick={() => setFilterType(filter.id as 'best-value' | 'best-overall' | 'best-match')}
               className={`px-4 py-2 rounded-lg font-medium transition-colors flex items-center gap-2 ${
                 filterType === filter.id 
                   ? 'bg-blue-600 text-white' 
@@ -1072,7 +1078,7 @@ function ComparisonResults({ product, comparisons, recommendations }: any) {
         </div>
 
         <div className="grid lg:grid-cols-3 gap-6">
-          {recommendations.slice(0, 3).map((rec: any, index: number) => (
+          {recommendations.slice(0, 3).map((rec: Recommendation, index: number) => (
             <motion.div
               key={index}
               className="bg-white p-6 rounded-xl shadow-lg border-2 border-blue-200 relative"
@@ -1166,7 +1172,7 @@ function ComparisonResults({ product, comparisons, recommendations }: any) {
               </tr>
             </thead>
             <tbody>
-              {comparisons.map((comp: any, index: number) => (
+              {comparisons.map((comp: Comparison, index: number) => (
                 <tr key={index} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 transition-colors`}>
                   <td className="p-4 border border-gray-200 font-medium text-gray-900">
                     {comp.bank}
@@ -1217,7 +1223,7 @@ function ComparisonResults({ product, comparisons, recommendations }: any) {
               <h4 className="font-semibold text-blue-900 mb-1">How We Rank Products</h4>
               <p className="text-sm text-blue-800">
                 Our AI considers your profile, current market rates, approval probability, and overall value 
-                to rank products. The "Best Match" considers your specific requirements and eligibility.
+                to rank products. The &quot;Best Match&quot; considers your specific requirements and eligibility.
               </p>
             </div>
           </div>

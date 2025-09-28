@@ -165,7 +165,7 @@ function PlatformContent() {
                 </div>
               </div>
               <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">FinadAI</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
                 <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
               </div>
             </Link>
@@ -376,7 +376,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
                 </div>
               </div>
               <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">FinadAI</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
                 <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
               </div>
             </Link>

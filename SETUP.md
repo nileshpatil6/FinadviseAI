@@ -1,4 +1,4 @@
-# FinadAI - Personal Financial Advisory Platform
+# Unifiny - Personal Financial Advisory Platform
 
 A comprehensive financial advisory platform powered by Google's Gemini AI that helps users make smarter financial decisions across credit cards, loans, insurance, investments, and more.
 

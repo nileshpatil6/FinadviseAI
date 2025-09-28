@@ -46,7 +46,7 @@ export default function Home() {
                 </div>
               </div>
               <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">FinadAI</span>
+                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
                 <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
               </div>
             </motion.div>
@@ -806,7 +806,7 @@ export default function Home() {
                   </div>
                 </div>
                 <div>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-white to-blue-300 bg-clip-text text-transparent">FinadAI</span>
+                  <span className="text-2xl font-bold bg-gradient-to-r from-white to-blue-300 bg-clip-text text-transparent">Unifiny</span>
                   <div className="text-sm text-indigo-400 font-medium">Premium Finance Platform</div>
                 </div>
               </div>
@@ -892,7 +892,7 @@ export default function Home() {
           </div>
           
           <div className="border-t border-gray-800 mt-16 pt-10 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm">&copy; 2024 FinadAI. All rights reserved.</p>
+            <p className="text-gray-500 text-sm">&copy; 2024 Unifiny. All rights reserved.</p>
             <div className="flex gap-8 mt-4 md:mt-0">
               <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Privacy Policy</a>
               <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Terms of Service</a>

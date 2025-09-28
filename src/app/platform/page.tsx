@@ -1306,7 +1306,7 @@ function ComparisonResults({
               <h4 className="font-bold text-xl text-blue-900 mb-2">How We Rank Products</h4>
               <p className="text-blue-800">
                 Our AI considers your profile, current market rates, approval probability, and overall value 
-                to rank products. The "Best Match" considers your specific requirements and eligibility.
+                to rank products. The &quot;Best Match&quot; considers your specific requirements and eligibility.
               </p>
             </div>
           </div>

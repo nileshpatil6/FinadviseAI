@@ -19,7 +19,7 @@ export async function POST(request: Request) {
       });
     }
     
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
     console.log('Model initialized');
     
     const prompt = `

@@ -1131,7 +1131,7 @@ function ComparisonResults({
         <p className="text-xl text-gray-600">Based on your requirements, here are the best matches across banks</p>
       </div>
 
-      {/* Filter Tabs */}
+      {/* Filter Tabs
       <div className="flex justify-center">
         <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-2 rounded-xl shadow-lg border border-gray-200">
           {[
@@ -1153,7 +1153,7 @@ function ComparisonResults({
             </button>
           ))}
         </div>
-      </div>
+      </div> */}
 
       {/* Top 3 Recommendations - Highlighted Section */}
       <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-12 rounded-3xl border-2 border-blue-200">
@@ -1325,7 +1325,7 @@ function ComparisonResults({
       </div>
 
       {/* Action Section */}
-      <div className="bg-gradient-to-r from-gray-900 to-indigo-900 text-white p-12 rounded-3xl text-center">
+      {/* <div className="bg-gradient-to-r from-gray-900 to-indigo-900 text-white p-12 rounded-3xl text-center">
         <h2 className="text-3xl font-bold mb-6">Ready to Apply?</h2>
         <p className="text-xl text-gray-300 mb-8">
           These recommendations are personalized for your profile. Apply now to get the best rates and offers.
@@ -1338,7 +1338,7 @@ function ComparisonResults({
             Compare More Products
           </button>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }

@@ -22,6 +22,8 @@ import {
   ArrowLeft
 } from 'lucide-react';
 import Link from 'next/link';
+import { FinancialAdvisorChat } from '../../components/FinancialAdvisorChat';
+import { FinancePlayground } from '../../components/FinancePlayground';
 
 type ProductCategory = 
   | 'credit-cards' 
@@ -220,6 +222,10 @@ function PlatformContent() {
           </motion.p>
         </div>
 
+        <div className="mb-20">
+          <FinancePlayground />
+        </div>
+
         {/* Product Selection Grid */}
         <div className="space-y-12">
           {productCategories.map((category, categoryIndex) => (
@@ -268,6 +274,8 @@ function PlatformContent() {
             ))}
         </div>
       </div>
+
+      <FinancialAdvisorChat />
     </div>
   );
 }
@@ -498,7 +506,7 @@ function CreditCardForm({
         </div>
         
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Annual Income (₹)</label>
+          <label className="block text-sm font-medium text-gray-700 mb-3">Income</label>
           <select 
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('income', e.target.value)}
@@ -561,15 +569,21 @@ function CreditCardForm({
       </div>
       
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">Card Preferences</label>
+        <label className="block text-sm font-medium text-gray-700 mb-4">Card Preferences (Select all that apply)</label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {['Cashback', 'Rewards Points', 'Travel Miles', 'Lounge Access', 'Premium Benefits', 'Low/No Annual Fee'].map((pref) => (
             <label key={pref} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-blue-50 transition-colors border border-gray-100">
               <input
-                type="radio"
-                name="cardPreference"
+                type="checkbox"
                 className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
-                onChange={() => onInputChange('cardPreference', pref)}
+                checked={Array.isArray(formData.cardPreference) ? formData.cardPreference.includes(pref) : false}
+                onChange={(e) => {
+                  const current = Array.isArray(formData.cardPreference) ? formData.cardPreference : [];
+                  const updated = e.target.checked
+                    ? [...current, pref]
+                    : current.filter((p: string) => p !== pref);
+                  onInputChange('cardPreference', updated);
+                }}
               />
               <span className="text-sm text-gray-700">{pref}</span>
             </label>

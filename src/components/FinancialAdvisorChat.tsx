@@ -1,0 +1,182 @@
+'use client';
+
+import { FormEvent, useEffect, useRef, useState } from 'react';
+import { MessageCircle, Send, ShieldAlert, Sparkles, X } from 'lucide-react';
+
+type ChatRole = 'user' | 'assistant';
+
+interface ChatMessage {
+  role: ChatRole;
+  content: string;
+}
+
+const initialMessages: ChatMessage[] = [
+  {
+    role: 'assistant',
+    content:
+      'Hi! I am FinadAI Assistant. Ask me anything about credit cards, loans, insurance, or investments and I will walk you through the considerations.',
+  },
+];
+
+export function FinancialAdvisorChat() {
+  const [isOpen, setIsOpen] = useState(false);
+  const [messages, setMessages] = useState<ChatMessage[]>(initialMessages);
+  const [input, setInput] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const conversationEndRef = useRef<HTMLDivElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      textareaRef.current?.focus();
+    }
+  }, [isOpen]);
+
+  useEffect(() => {
+    conversationEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages, isOpen]);
+
+  const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const trimmed = input.trim();
+
+    if (!trimmed || isLoading) {
+      return;
+    }
+
+    const nextMessages: ChatMessage[] = [...messages, { role: 'user', content: trimmed }];
+    setMessages(nextMessages);
+    setInput('');
+    setIsLoading(true);
+
+    try {
+      const response = await fetch('/api/financial-advice', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: nextMessages }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data?.success) {
+        const errorMessage = data?.error || 'Sorry, I could not process that. Please try asking in a different way.';
+        setMessages((prev) => [...prev, { role: 'assistant', content: errorMessage }]);
+        return;
+      }
+
+      setMessages((prev) => [...prev, { role: 'assistant', content: data.message as string }]);
+    } catch (error) {
+      console.error('Chat request failed', error);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'I had trouble reaching the financial advice service. Please check your connection and try again.',
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <button
+        type="button"
+        onClick={() => setIsOpen((prev) => !prev)}
+        className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-5 py-3 text-white shadow-xl transition hover:from-blue-700 hover:to-indigo-700 focus:outline-none focus:ring-4 focus:ring-blue-300/50"
+        aria-haspopup="dialog"
+        aria-expanded={isOpen}
+      >
+        <MessageCircle className="h-5 w-5" />
+        <span className="text-sm font-semibold">Ask FinadAI</span>
+      </button>
+
+      {isOpen && (
+        <div className="fixed bottom-24 right-6 z-50 w-full max-w-sm transform rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 transition-all lg:max-w-md">
+          <div className="flex items-start justify-between border-b border-gray-100 p-4">
+            <div className="flex items-center gap-3">
+              <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 p-2 text-white shadow-lg">
+                <Sparkles className="h-5 w-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-semibold text-gray-900">FinadAI Assistant</h3>
+                <p className="text-xs text-gray-500">Financial insights tailored for you</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setIsOpen(false)}
+              className="rounded-full p-1 text-gray-400 transition hover:bg-gray-100 hover:text-gray-700"
+              aria-label="Close chatbot"
+            >
+              <X className="h-5 w-5" />
+            </button>
+          </div>
+
+          <div className="flex max-h-[420px] flex-col gap-3 overflow-y-auto px-4 py-4 text-sm text-gray-800">
+            {messages.map((message, index) => (
+              <div
+                key={`${message.role}-${index}`}
+                className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                <div
+                  className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${
+                    message.role === 'user'
+                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-900'
+                  }`}
+                >
+                  {message.content.split('\n').map((line, lineIndex) => (
+                    <p key={lineIndex} className="whitespace-pre-wrap leading-relaxed">
+                      {line}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            ))}
+            <div ref={conversationEndRef} />
+          </div>
+
+          <div className="border-t border-gray-100 bg-gray-50 px-4 py-3">
+            <form onSubmit={handleSubmit} className="flex flex-col gap-3">
+              <textarea
+                ref={textareaRef}
+                rows={2}
+                value={input}
+                onChange={(event) => setInput(event.target.value)}
+                placeholder="Ask about credit cards, loans, insurance..."
+                className="w-full resize-none rounded-2xl border border-gray-200 bg-white px-3 py-2 text-sm text-gray-900 shadow-inner focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200/60"
+                aria-label="Type your financial question"
+              />
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="inline-flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:from-blue-700 hover:to-indigo-700 disabled:cursor-not-allowed disabled:opacity-70"
+              >
+                {isLoading ? (
+                  <>
+                    <span className="h-2 w-2 animate-ping rounded-full bg-white/80" />
+                    Thinking...
+                  </>
+                ) : (
+                  <>
+                    Send
+                    <Send className="h-4 w-4" />
+                  </>
+                )}
+              </button>
+            </form>
+            <div className="mt-3 flex items-start gap-2 text-xs text-gray-500">
+              <ShieldAlert className="mt-0.5 h-4 w-4 flex-shrink-0 text-blue-500" />
+              <p>
+                Guidance is for informational purposes. Review specifics with your bank or a licensed financial
+                advisor before making decisions.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

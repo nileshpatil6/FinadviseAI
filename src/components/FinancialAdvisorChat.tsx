@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
 import { MessageCircle, Send, ShieldAlert, Sparkles, X } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 type ChatRole = 'user' | 'assistant';
 
@@ -93,7 +94,7 @@ export function FinancialAdvisorChat() {
       </button>
 
       {isOpen && (
-        <div className="fixed bottom-24 right-6 z-50 w-full max-w-sm transform rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 transition-all lg:max-w-md">
+        <div className="fixed bottom-6 right-6 left-6 md:left-auto z-50 w-auto md:w-full md:max-w-md lg:max-w-lg transform rounded-3xl bg-white shadow-2xl ring-1 ring-black/5 transition-all">
           <div className="flex items-start justify-between border-b border-gray-100 p-4">
             <div className="flex items-center gap-3">
               <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-purple-500 to-indigo-600 p-2 text-white shadow-lg">
@@ -114,24 +115,46 @@ export function FinancialAdvisorChat() {
             </button>
           </div>
 
-          <div className="flex max-h-[420px] flex-col gap-3 overflow-y-auto px-4 py-4 text-sm text-gray-800">
+          <div className="flex max-h-[50vh] md:max-h-[420px] flex-col gap-3 overflow-y-auto px-4 py-4 text-sm text-gray-800">
             {messages.map((message, index) => (
               <div
                 key={`${message.role}-${index}`}
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${
+                  className={`max-w-[85%] md:max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${
                     message.role === 'user'
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-900'
                   }`}
                 >
-                  {message.content.split('\n').map((line, lineIndex) => (
-                    <p key={lineIndex} className="whitespace-pre-wrap leading-relaxed">
-                      {line}
-                    </p>
-                  ))}
+                  {message.role === 'assistant' ? (
+                    <div className="prose prose-sm max-w-none">
+                      <ReactMarkdown
+                        components={{
+                          p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+                          strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
+                          em: ({ children }) => <em className="italic">{children}</em>,
+                          ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-2">{children}</ul>,
+                          ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-2">{children}</ol>,
+                          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                          h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-gray-900">{children}</h1>,
+                          h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-gray-900">{children}</h2>,
+                          h3: ({ children }) => <h3 className="text-sm font-bold mb-1 text-gray-900">{children}</h3>,
+                          code: ({ children }) => <code className="bg-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>,
+                          a: ({ children, href }) => (
+                            <a href={href} className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+                              {children}
+                            </a>
+                          ),
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    </div>
+                  ) : (
+                    <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                  )}
                 </div>
               </div>
             ))}

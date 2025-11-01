@@ -22,7 +22,10 @@ import {
   Users,
   BarChart3,
   Globe2,
-  Sparkles
+  Sparkles,
+  Facebook,
+  Linkedin,
+  Instagram
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -768,7 +771,7 @@ export default function Home() {
             Ready to Find Your Best Match?
           </motion.h2>
           <motion.p 
-            className="text-xl text-gray-300 mb-12 text-lg"
+            className="text-xl text-gray-300 mb-12"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -814,15 +817,15 @@ export default function Home() {
                 Making financial decisions smarter with AI-powered insights. Compare, analyze, and choose the best financial products for your needs.
               </p>
               <div className="flex gap-4">
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer">
-                  <span className="font-bold text-sm">f</span>
-                </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer">
-                  <span className="font-bold text-sm">in</span>
-                </div>
-                <div className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer">
-                  <span className="font-bold text-sm">in</span>
-                </div>
+                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer" aria-label="Facebook">
+                  <Facebook className="w-5 h-5" />
+                </a>
+                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer" aria-label="LinkedIn">
+                  <Linkedin className="w-5 h-5" />
+                </a>
+                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-pink-600 hover:to-purple-600 transition-all cursor-pointer" aria-label="Instagram">
+                  <Instagram className="w-5 h-5" />
+                </a>
               </div>
             </div>
             

@@ -23,7 +23,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { FinancialAdvisorChat } from '../../components/FinancialAdvisorChat';
-import { FinancePlayground } from '../../components/FinancePlayground';
 
 type ProductCategory = 
   | 'credit-cards' 
@@ -222,9 +221,7 @@ function PlatformContent() {
           </motion.p>
         </div>
 
-        <div className="mb-20">
-          <FinancePlayground />
-        </div>
+   
 
         {/* Product Selection Grid */}
         <div className="space-y-12">

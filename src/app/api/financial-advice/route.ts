@@ -43,7 +43,7 @@ export async function POST(request: Request) {
       .slice(-10); // keep the most recent exchanges to stay within token limits
 
     const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-pro',
       systemInstruction:
         'You are FinadAI Assistant, a helpful financial guidance chatbot for Indian users. Provide clear, conversational financial guidance about banking, loans, insurance, credit, and investments. Cite real-world considerations and explain reasoning. \
 Always include a concise disclaimer reminding users to verify details with qualified professionals and that your guidance is informational, not personalized financial advice.',

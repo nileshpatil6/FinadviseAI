@@ -3,10 +3,10 @@
 import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { motion } from 'framer-motion';
-import { 
-  CreditCard, 
-  Shield, 
-  TrendingUp, 
+import {
+  CreditCard,
+  Shield,
+  TrendingUp,
   Home,
   ArrowRight,
   CheckCircle,
@@ -14,12 +14,10 @@ import {
   Building2,
   Landmark,
   Calculator,
-  Target,
-  Award,
-  DollarSign,
   Star,
   Sparkles,
-  ArrowLeft
+  ArrowLeft,
+  ExternalLink
 } from 'lucide-react';
 import Link from 'next/link';
 import { FinancialAdvisorChat } from '../../components/FinancialAdvisorChat';
@@ -48,17 +46,20 @@ interface Recommendation {
   rank: number;
   product: string;
   benefits: string[];
-  approval: string;
+  rewardRate?: string;
+  interestRate?: string;
+  fees?: string;
   applyLink: string;
 }
 
 interface Comparison {
   bank: string;
   product: string;
+  rewardRate?: string;
   rate?: string;
   fee?: string;
   benefits?: string;
-  approval: string;
+  interestRate?: string;
   emi?: string;
   processing?: string;
 }
@@ -68,8 +69,15 @@ interface ApiRecommendation {
   bankName?: string;
   productName?: string;
   keyBenefits?: string | string[];
-  approvalProbability?: string;
+  rewardRate?: string;
+  interestRate?: string;
+  fees?: string;
   applyUrl?: string;
+}
+
+interface GroundingSource {
+  uri: string;
+  title: string;
 }
 
 function PlatformContent() {
@@ -295,6 +303,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
   const [formData, setFormData] = useState<FormData>({});
   const [comparisons, setComparisons] = useState<Comparison[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [sources, setSources] = useState<GroundingSource[]>([]);
   
   const handleInputChange = (field: string, value: string | string[] | number) => {
     setFormData((prev: FormData) => ({ ...prev, [field]: value }));
@@ -319,17 +328,19 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
       });
 
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         // Handle structured JSON response
-        
+
         // Set recommendations from AI response
         if (data.data.recommendations && data.data.recommendations.length > 0) {
           const formattedRecs = data.data.recommendations.map((rec: ApiRecommendation) => ({
             rank: rec.rank || 1,
             product: `${rec.bankName || 'Bank'} ${rec.productName || 'Product'}`,
             benefits: Array.isArray(rec.keyBenefits) ? rec.keyBenefits : [rec.keyBenefits || 'Benefits available'],
-            approval: rec.approvalProbability || 'Contact bank',
+            rewardRate: rec.rewardRate,
+            interestRate: rec.interestRate,
+            fees: rec.fees,
             applyLink: rec.applyUrl || '#'
           }));
           setRecommendations(formattedRecs);
@@ -339,16 +350,22 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             rank: 1,
             product: 'No suitable products found',
             benefits: ['Please check your inputs and try again', 'Consider adjusting your requirements'],
-            approval: 'N/A',
             applyLink: '#'
           }]);
         }
-        
+
         // Set comparisons from AI response
         if (data.data.comparisons && data.data.comparisons.length > 0) {
           setComparisons(data.data.comparisons);
         } else {
           setComparisons([]);
+        }
+
+        // Set sources from grounding
+        if (data.sources && data.sources.length > 0) {
+          setSources(data.sources);
+        } else {
+          setSources([]);
         }
       } else {
         console.error('API error:', data.error);
@@ -399,7 +416,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {step === 1 && <InputForm product={product} formData={formData} onInputChange={handleInputChange} onCompare={handleCompare} />}
         {step === 2 && <LoadingComparison />}
-        {step === 3 && <ComparisonResults product={product} comparisons={comparisons} recommendations={recommendations} />}
+        {step === 3 && <ComparisonResults product={product} comparisons={comparisons} recommendations={recommendations} sources={sources} />}
       </div>
     </div>
   );
@@ -1083,37 +1100,37 @@ function LoadingComparison() {
 // No mock data - only real API responses
 
 // Comprehensive Comparison Results Component
-function ComparisonResults({ 
-  product, 
-  comparisons, 
-  recommendations 
-}: { 
-  product: ProductCategory; 
-  comparisons: Comparison[]; 
-  recommendations: Recommendation[]; 
+function ComparisonResults({
+  product,
+  comparisons,
+  recommendations,
+  sources
+}: {
+  product: ProductCategory;
+  comparisons: Comparison[];
+  recommendations: Recommendation[];
+  sources: GroundingSource[];
 }) {
-  const [filterType, setFilterType] = useState<'best-value' | 'best-overall' | 'best-match'>('best-match');
-
   const getProductDisplayName = (product: string) => {
     return product.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
   const getComparisonHeaders = (product: string) => {
-    const commonHeaders = ['Bank', 'Product', 'Approval %'];
-    
+    const commonHeaders = ['Bank', 'Product'];
+
     switch (product) {
       case 'credit-cards':
-        return [...commonHeaders, 'Annual Fee', 'Reward Rate', 'Benefits'];
+        return [...commonHeaders, 'Reward Rate', 'Annual Fee', 'Interest (APR)', 'Key Benefits'];
       case 'personal-loans':
-        return [...commonHeaders, 'Interest Rate', 'EMI', 'Processing Fee'];
+        return [...commonHeaders, 'Interest Rate', 'Processing Fee', 'EMI', 'Features'];
       case 'health-insurance':
-        return [...commonHeaders, 'Premium', 'Sum Insured', 'Network Hospitals'];
+        return [...commonHeaders, 'Premium', 'Sum Insured', 'Network Hospitals', 'Features'];
       case 'mutual-funds':
-        return [...commonHeaders, 'Expense Ratio', 'Return (3Y)', 'Fund Type'];
+        return [...commonHeaders, 'Expense Ratio', 'Return (3Y)', 'Fund Type', 'Risk'];
       case 'home-loans':
-        return [...commonHeaders, 'Interest Rate', 'EMI', 'Processing Fee'];
+        return [...commonHeaders, 'Interest Rate', 'Processing Fee', 'EMI', 'Features'];
       default:
-        return [...commonHeaders, 'Rate', 'Features', 'Charges'];
+        return [...commonHeaders, 'Rate', 'Fee', 'Features', 'Terms'];
     }
   };
 
@@ -1193,12 +1210,30 @@ function ComparisonResults({
 
               {/* Product Header */}
               <div className="mt-8 mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{rec.product}</h3>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-500" />
-                    <span className="text-xl font-bold text-green-600">{rec.approval} Approval Chance</span>
+                <h3 className="text-2xl font-bold text-gray-900 mb-6">{rec.product}</h3>
+
+                {/* Reward Rate - Prominent Display */}
+                {rec.rewardRate && (
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl mb-3 border border-blue-200">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Rewards</div>
+                    <div className="text-base font-bold text-blue-600 leading-relaxed">{rec.rewardRate}</div>
                   </div>
+                )}
+
+                {/* Fees & Interest - Compact Grid */}
+                <div className="grid grid-cols-2 gap-3">
+                  {rec.fees && (
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Fees</div>
+                      <div className="text-sm font-semibold text-gray-700 leading-snug">{rec.fees}</div>
+                    </div>
+                  )}
+                  {rec.interestRate && (
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Interest APR</div>
+                      <div className="text-sm text-gray-600">{rec.interestRate}</div>
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -1247,6 +1282,42 @@ function ComparisonResults({
         </div>
       </div>
 
+      {/* Sources Section */}
+      {sources.length > 0 && (
+        <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-3xl border-2 border-green-200">
+          <div className="flex items-center gap-3 mb-6">
+            <ExternalLink className="w-6 h-6 text-green-600" />
+            <h3 className="text-2xl font-bold text-gray-900">Verified Sources</h3>
+          </div>
+          <p className="text-gray-700 mb-6">
+            ✓ Information verified from these official bank websites in real-time:
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sources.map((source, idx) => (
+              <a
+                key={idx}
+                href={source.uri}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-white p-4 rounded-2xl border-2 border-green-200 hover:border-green-400 hover:shadow-xl transition-all group"
+              >
+                <div className="flex items-start gap-3">
+                  <ExternalLink className="w-5 h-5 text-green-600 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-2">
+                      {source.title}
+                    </p>
+                    <p className="text-xs text-gray-500 mt-1 truncate">
+                      {new URL(source.uri).hostname}
+                    </p>
+                  </div>
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Side-by-Side Comparison Table */}
       <div className="bg-white p-10 rounded-3xl shadow-2xl border border-gray-100/50">
         <div className="flex items-center gap-4 mb-8">
@@ -1274,20 +1345,12 @@ function ComparisonResults({
                   <td className="p-5 border border-gray-200 text-gray-700">
                     {comp.product}
                   </td>
-                  <td className="p-5 border border-gray-200">
-                    <span className={`px-4 py-2 rounded-full text-base font-bold ${
-                      parseInt(comp.approval) >= 80 ? 'bg-green-100 text-green-800' :
-                      parseInt(comp.approval) >= 70 ? 'bg-yellow-100 text-yellow-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {comp.approval}
-                    </span>
-                  </td>
                   {product === 'credit-cards' && (
                     <>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.rate}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits}</td>
+                      <td className="p-5 border border-gray-200 font-semibold text-blue-600">{comp.rewardRate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-600 text-sm">{comp.interestRate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
                     </>
                   )}
                   {product === 'personal-loans' && (

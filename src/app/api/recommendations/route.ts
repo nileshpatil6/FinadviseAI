@@ -3,6 +3,11 @@ import { NextResponse } from 'next/server';
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
 
+interface GroundingSource {
+  uri: string;
+  title: string;
+}
+
 export async function POST(request: Request) {
   console.log('API route called');
   
@@ -19,116 +24,82 @@ export async function POST(request: Request) {
       });
     }
     
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-pro' });
-    console.log('Model initialized');
+    // Enable grounding with a simplified approach
+    const model = genAI.getGenerativeModel(
+      {
+        model: 'gemini-2.5-flash',
+        tools: [
+          {
+            googleSearch: {},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        ],
+      },
+      { apiVersion: 'v1beta' }
+    );
+    console.log('Model initialized with grounding enabled');
     
-    const prompt = `
-    You are a professional financial advisor AI. Based on the user profile provided, return ONLY a valid JSON object with structured financial product recommendations. Do NOT include any HTML, explanatory text, or formatting outside the JSON.
+    const prompt = `SEARCH OFFICIAL BANK WEBSITES for current ${data.product} offers from HDFC Bank, ICICI Bank, SBI, Axis Bank, Kotak Mahindra Bank.
 
-    User Profile:
-    - Product Type: ${data.product}
-    - Age: ${data.age || 'Not provided'}
-    - Annual Income: ${data.income || 'Not provided'}
-    - Credit Score: ${data.creditScore || 'Not provided'}
-    - Employment Status: ${data.employmentStatus || 'Not provided'}
-    - Primary Financial Goal: ${data.primaryGoal || 'Not provided'}
-    - Monthly Income: ₹${data.monthlyIncome || 'Not provided'}
-    - Employment Type: ${data.employmentType || 'Not provided'}
-    - Spending Pattern: ${data.spendingPattern?.join(', ') || 'Not provided'}
+User: ${data.income || 'middle income'}, CIBIL ${data.cibilScore || '700+'}, ${data.employment || 'salaried'}, interests: ${data.spendingPattern?.join(', ') || 'general'}
 
-    CRITICAL REQUIREMENTS:
-    1. You MUST provide EXACTLY 3 recommendations, no more, no less
-    2. Provide ONLY real, accurate products from actual Indian banks (HDFC, ICICI, SBI, Axis, Kotak, etc.)
-    3. Use current market rates and fees as of 2025
-    4. Ensure all interest rates, fees, and approval probabilities are realistic and verifiable
-    5. Do NOT make up fake product names or non-existent benefits
-    6. All URLs should be real bank websites (use https://www.bankname.com format)
+CRITICAL REQUIREMENTS:
+1. ONLY use data from official bank websites (.com domains): hdfc.com, icicibank.com, sbi.in, axisbank.com, kotak.com
+2. Verify ALL numbers are current (December 2024/January 2025)
+3. DO NOT include approval probability/percentage - this is not public information
+4. Distinguish: "rewardRate" = cashback/points %, "interestRate" = APR on unpaid balance
+5. Verify reward partners are accurate (e.g., SBI SimplyCLICK: BookMyShow/Cleartrip are 10x, Amazon is 5x)
+6. Check latest reward point rates (e.g., Kotak 811: 4 RP per ₹100 online, not 2)
 
-    Return ONLY this JSON structure with NO additional text:
+Return ONLY this JSON (no text before/after):
 
-    {
-      "recommendations": [
-        {
-          "rank": 1,
-          "productName": "Actual product name from real bank",
-          "bankName": "Real Indian bank name",
-          "keyBenefits": ["Real benefit 1", "Real benefit 2", "Real benefit 3"],
-          "interestRate": "X.X%" (use actual current rates),
-          "fees": "₹X,XXX" (use actual fees),
-          "approvalProbability": "XX%" (realistic based on user profile),
-          "applyUrl": "https://www.realbank.com"
-        },
-        {
-          "rank": 2,
-          "productName": "Actual product name from real bank",
-          "bankName": "Real Indian bank name",
-          "keyBenefits": ["Real benefit 1", "Real benefit 2", "Real benefit 3"],
-          "interestRate": "X.X%" (use actual current rates),
-          "fees": "₹X,XXX" (use actual fees),
-          "approvalProbability": "XX%" (realistic based on user profile),
-          "applyUrl": "https://www.realbank.com"
-        },
-        {
-          "rank": 3,
-          "productName": "Actual product name from real bank",
-          "bankName": "Real Indian bank name",
-          "keyBenefits": ["Real benefit 1", "Real benefit 2", "Real benefit 3"],
-          "interestRate": "X.X%" (use actual current rates),
-          "fees": "₹X,XXX" (use actual fees),
-          "approvalProbability": "XX%" (realistic based on user profile),
-          "applyUrl": "https://www.realbank.com"
-        }
-      ],
-      "comparisons": [
-        {
-          "bank": "Real Bank Name 1",
-          "product": "Real Product Name 1", 
-          "rate": "X.X%" (actual rate),
-          "fee": "₹X,XXX" (actual fee),
-          "benefits": "Key real benefit",
-          "approval": "XX%" (realistic)
-        },
-        {
-          "bank": "Real Bank Name 2",
-          "product": "Real Product Name 2", 
-          "rate": "X.X%" (actual rate),
-          "fee": "₹X,XXX" (actual fee),
-          "benefits": "Key real benefit",
-          "approval": "XX%" (realistic)
-        },
-        {
-          "bank": "Real Bank Name 3",
-          "product": "Real Product Name 3", 
-          "rate": "X.X%" (actual rate),
-          "fee": "₹X,XXX" (actual fee),
-          "benefits": "Key real benefit",
-          "approval": "XX%" (realistic)
-        }
-      ],
-      "insights": [
-        "Key insight 1 based on user profile with specific details",
-        "Key insight 2 about realistic approval chances with reasoning", 
-        "Key insight 3 about best options with actionable advice"
-      ]
-    }
-
-    Focus on ${data.product} products specifically. Use only real Indian banks and their actual products. Verify all rates and fees are current market rates for 2025. Ensure data is 100% accurate and actionable.`;
+{
+  "recommendations": [
+    {"rank": 1, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"},
+    {"rank": 2, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"},
+    {"rank": 3, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"}
+  ],
+  "comparisons": [
+    {"bank": "bank1", "product": "product1", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"},
+    {"bank": "bank2", "product": "product2", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"},
+    {"bank": "bank3", "product": "product3", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"}
+  ],
+  "insights": ["verified insight based on official data", "insight about suitability for user profile", "actionable recommendation"]
+}`;
 
     console.log('Generating content with Gemini...');
     const result = await model.generateContent(prompt);
     const response = await result.response;
     const aiResponse = response.text();
-    console.log('AI Response received:', aiResponse);
+    console.log('AI Response received:', aiResponse.substring(0, 100) + '...');
+
+    // Extract grounding metadata
+    const groundingMetadata = response.candidates?.[0]?.groundingMetadata;
+    if (groundingMetadata?.webSearchQueries) {
+      console.log('Grounding - Search queries:', groundingMetadata.webSearchQueries);
+    }
+    if (groundingMetadata?.groundingChunks?.length) {
+      console.log('Grounding - Sources found:', groundingMetadata.groundingChunks.length);
+    }
 
     try {
       // Clean the response to extract only JSON
       let jsonString = aiResponse.trim();
-      
+
       // Remove any markdown code blocks if present
-      if (jsonString.startsWith('```json')) {
-        jsonString = jsonString.replace(/```json\s*/, '').replace(/```\s*$/, '');
-      } else if (jsonString.startsWith('```')) {
-        jsonString = jsonString.replace(/```\s*/, '').replace(/```\s*$/, '');
+      if (jsonString.includes('```json')) {
+        jsonString = jsonString.replace(/[\s\S]*```json\s*/, '').replace(/```\s*$/, '');
+      } else if (jsonString.includes('```')) {
+        jsonString = jsonString.replace(/[\s\S]*```\s*/, '').replace(/```\s*$/, '');
+      }
+
+      // Extract JSON if there's extra text before/after
+      // Find the first { and last } to extract just the JSON object
+      const firstBrace = jsonString.indexOf('{');
+      const lastBrace = jsonString.lastIndexOf('}');
+
+      if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
+        jsonString = jsonString.substring(firstBrace, lastBrace + 1);
       }
       
       // Parse the JSON response
@@ -162,9 +133,24 @@ export async function POST(request: Request) {
         }
       }
 
+      // Extract sources from grounding metadata
+      const sources: GroundingSource[] = [];
+      if (groundingMetadata?.groundingChunks) {
+        groundingMetadata.groundingChunks.forEach((chunk: { web?: { uri?: string; title?: string } }) => {
+          if (chunk.web?.uri && chunk.web?.title) {
+            sources.push({
+              uri: chunk.web.uri,
+              title: chunk.web.title,
+            });
+          }
+        });
+      }
+
       return NextResponse.json({
         success: true,
-        data: structuredData
+        data: structuredData,
+        sources: sources.length > 0 ? sources : undefined,
+        searchQueries: groundingMetadata?.webSearchQueries || undefined,
       });
     } catch (parseError) {
       console.error('Failed to parse AI response as JSON:', parseError);

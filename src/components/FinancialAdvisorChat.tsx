@@ -1,14 +1,20 @@
 'use client';
 
 import { FormEvent, useEffect, useRef, useState } from 'react';
-import { MessageCircle, Send, ShieldAlert, Sparkles, X } from 'lucide-react';
+import { MessageCircle, Send, ShieldAlert, Sparkles, X, ExternalLink } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 type ChatRole = 'user' | 'assistant';
 
+interface GroundingSource {
+  uri: string;
+  title: string;
+}
+
 interface ChatMessage {
   role: ChatRole;
   content: string;
+  sources?: GroundingSource[];
 }
 
 const initialMessages: ChatMessage[] = [
@@ -65,7 +71,14 @@ export function FinancialAdvisorChat() {
         return;
       }
 
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.message as string }]);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: data.message as string,
+          sources: data.sources as GroundingSource[] | undefined
+        }
+      ]);
     } catch (error) {
       console.error('Chat request failed', error);
       setMessages((prev) => [
@@ -129,29 +142,50 @@ export function FinancialAdvisorChat() {
                   }`}
                 >
                   {message.role === 'assistant' ? (
-                    <div className="prose prose-sm max-w-none">
-                      <ReactMarkdown
-                        components={{
-                          p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
-                          strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
-                          em: ({ children }) => <em className="italic">{children}</em>,
-                          ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-2">{children}</ul>,
-                          ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-2">{children}</ol>,
-                          li: ({ children }) => <li className="leading-relaxed">{children}</li>,
-                          h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-gray-900">{children}</h1>,
-                          h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-gray-900">{children}</h2>,
-                          h3: ({ children }) => <h3 className="text-sm font-bold mb-1 text-gray-900">{children}</h3>,
-                          code: ({ children }) => <code className="bg-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>,
-                          a: ({ children, href }) => (
-                            <a href={href} className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
-                              {children}
-                            </a>
-                          ),
-                        }}
-                      >
-                        {message.content}
-                      </ReactMarkdown>
-                    </div>
+                    <>
+                      <div className="prose prose-sm max-w-none">
+                        <ReactMarkdown
+                          components={{
+                            p: ({ children }) => <p className="mb-2 last:mb-0 leading-relaxed">{children}</p>,
+                            strong: ({ children }) => <strong className="font-bold text-gray-900">{children}</strong>,
+                            em: ({ children }) => <em className="italic">{children}</em>,
+                            ul: ({ children }) => <ul className="list-disc list-inside space-y-1 my-2">{children}</ul>,
+                            ol: ({ children }) => <ol className="list-decimal list-inside space-y-1 my-2">{children}</ol>,
+                            li: ({ children }) => <li className="leading-relaxed">{children}</li>,
+                            h1: ({ children }) => <h1 className="text-lg font-bold mb-2 text-gray-900">{children}</h1>,
+                            h2: ({ children }) => <h2 className="text-base font-bold mb-2 text-gray-900">{children}</h2>,
+                            h3: ({ children }) => <h3 className="text-sm font-bold mb-1 text-gray-900">{children}</h3>,
+                            code: ({ children }) => <code className="bg-gray-200 px-1 py-0.5 rounded text-xs">{children}</code>,
+                            a: ({ children, href }) => (
+                              <a href={href} className="text-blue-600 underline hover:text-blue-800" target="_blank" rel="noopener noreferrer">
+                                {children}
+                              </a>
+                            ),
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                      {message.sources && message.sources.length > 0 && (
+                        <div className="mt-3 border-t border-gray-200 pt-2">
+                          <p className="text-xs font-semibold text-gray-600 mb-1">Sources:</p>
+                          <div className="space-y-1">
+                            {message.sources.map((source, idx) => (
+                              <a
+                                key={idx}
+                                href={source.uri}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="flex items-start gap-1.5 text-xs text-blue-600 hover:text-blue-800 hover:underline"
+                              >
+                                <ExternalLink className="h-3 w-3 mt-0.5 flex-shrink-0" />
+                                <span className="line-clamp-1">{source.title}</span>
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </>
                   ) : (
                     <p className="whitespace-pre-wrap leading-relaxed">{message.content}</p>
                   )}

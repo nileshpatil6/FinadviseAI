@@ -9,6 +9,11 @@ interface ChatMessage {
   content: string;
 }
 
+interface GroundingSource {
+  uri: string;
+  title: string;
+}
+
 export async function POST(request: Request) {
   if (!genAI) {
     return NextResponse.json(
@@ -42,12 +47,21 @@ export async function POST(request: Request) {
       }))
       .slice(-10); // keep the most recent exchanges to stay within token limits
 
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.5-pro',
-      systemInstruction:
-        'You are FinadAI Assistant, a helpful financial guidance chatbot for Indian users. Provide clear, conversational financial guidance about banking, loans, insurance, credit, and investments. Cite real-world considerations and explain reasoning. \
+    const model = genAI.getGenerativeModel(
+      {
+        model: 'gemini-2.5-flash',
+        systemInstruction:
+          'You are FinadAI Assistant, a helpful financial guidance chatbot for Indian users with real-time web search access. When users ask about current rates, latest offers, or specific financial products, search for up-to-date information from official bank websites (HDFC, ICICI, SBI, Axis, Kotak, etc.). Provide clear, conversational financial guidance about banking, loans, insurance, credit, and investments. Include specific product names, current rates, and features when available. Cite real-world considerations and explain reasoning. \
 Always include a concise disclaimer reminding users to verify details with qualified professionals and that your guidance is informational, not personalized financial advice.',
-    });
+        tools: [
+          {
+            googleSearch: {},
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any,
+        ],
+      },
+      { apiVersion: 'v1beta' }
+    );
 
     const result = await model.generateContent({
       contents: sanitizedMessages,
@@ -65,9 +79,26 @@ Always include a concise disclaimer reminding users to verify details with quali
       );
     }
 
+    // Extract grounding metadata if available
+    const groundingMetadata = result.response.candidates?.[0]?.groundingMetadata;
+    const sources: GroundingSource[] = [];
+
+    if (groundingMetadata?.groundingChunks) {
+      groundingMetadata.groundingChunks.forEach((chunk: { web?: { uri?: string; title?: string } }) => {
+        if (chunk.web?.uri && chunk.web?.title) {
+          sources.push({
+            uri: chunk.web.uri,
+            title: chunk.web.title,
+          });
+        }
+      });
+    }
+
     return NextResponse.json({
       success: true,
       message: responseText,
+      sources: sources.length > 0 ? sources : undefined,
+      searchQueries: groundingMetadata?.webSearchQueries || undefined,
     });
   } catch (error) {
     console.error('Error generating financial advice:', error);

@@ -86,6 +86,40 @@ Return ONLY this JSON (no text before/after):
 }`;
 
         case 'health-insurance':
+          return `SEARCH OFFICIAL HEALTH INSURANCE COMPANY WEBSITES for current HEALTH INSURANCE plans ONLY from HDFC ERGO, ICICI Lombard, Star Health, Care Health, Max Bupa, Niva Bupa, Aditya Birla Health.
+
+${userProfile}
+Family Size: ${data.familySize || 'individual'}
+Sum Insured Required: ${data.sumInsured || '₹5 Lakhs'}
+Premium Budget: ${data.premiumBudget || '₹10,000-20,000 annually'}
+Required Add-ons: ${data.addons?.join(', ') || 'Basic coverage'}
+
+CRITICAL REQUIREMENTS:
+1. ONLY return HEALTH INSURANCE plans - NO life, auto, or home insurance
+2. ONLY use data from official health insurance company websites
+3. Verify ALL premiums and coverage amounts are current (December 2024/January 2025)
+4. "premium" = annual premium amount in ₹
+5. "coverage" = sum insured/coverage amount (e.g., "₹5 Lakhs", "₹10 Lakhs", "₹50 Lakhs")
+6. Include network hospital count and key features like cashless treatment, room rent limits
+7. Mention specific add-ons available: Critical Illness, Maternity, OPD, Mental Health, etc.
+8. DO NOT make up data - only use verified information from official sources
+
+Return ONLY this JSON (no text before/after):
+
+{
+  "recommendations": [
+    {"rank": 1, "productName": "exact health insurance plan name", "bankName": "insurance company name", "keyBenefits": ["Network: X,XXX+ hospitals", "Cashless treatment", "specific coverage feature"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/health-insurance/plan"},
+    {"rank": 2, "productName": "exact health insurance plan name", "bankName": "insurance company name", "keyBenefits": ["Network: X,XXX+ hospitals", "Cashless treatment", "specific coverage feature"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/health-insurance/plan"},
+    {"rank": 3, "productName": "exact health insurance plan name", "bankName": "insurance company name", "keyBenefits": ["Network: X,XXX+ hospitals", "Cashless treatment", "specific coverage feature"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/health-insurance/plan"}
+  ],
+  "comparisons": [
+    {"bank": "insurer1", "product": "health plan1", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "Network hospitals, room rent, add-ons"},
+    {"bank": "insurer2", "product": "health plan2", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "Network hospitals, room rent, add-ons"},
+    {"bank": "insurer3", "product": "health plan3", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "Network hospitals, room rent, add-ons"}
+  ],
+  "insights": ["insight about health insurance coverage", "insight about premium vs coverage", "insight about add-ons value"]
+}`;
+
         case 'life-insurance':
         case 'auto-insurance':
         case 'home-insurance':

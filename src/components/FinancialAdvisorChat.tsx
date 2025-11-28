@@ -21,7 +21,7 @@ const initialMessages: ChatMessage[] = [
   {
     role: 'assistant',
     content:
-      'Hi! I am FinadAI Assistant. Ask me anything about credit cards, loans, insurance, or investments and I will walk you through the considerations.',
+      'Hi! I am BankBuz Assistant. Ask me anything about credit cards, loans, insurance, or investments and I will walk you through the considerations.',
   },
 ];
 
@@ -135,11 +135,10 @@ export function FinancialAdvisorChat() {
                 className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
               >
                 <div
-                  className={`max-w-[85%] md:max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${
-                    message.role === 'user'
+                  className={`max-w-[85%] md:max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${message.role === 'user'
                       ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
                       : 'bg-gray-100 text-gray-900'
-                  }`}
+                    }`}
                 >
                   {message.role === 'assistant' ? (
                     <>

@@ -15,10 +15,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Unifiny - Your Personal Financial Advisor",
+  title: "BankBuz - Your Personal Financial Advisor",
   description: "Get AI-powered recommendations for credit cards, loans, insurance, investments, and more. Make smarter financial decisions with personalized insights.",
   keywords: ["financial advisor", "AI recommendations", "credit cards", "loans", "insurance", "investments"],
-  authors: [{ name: "Unifiny Team" }],
+  authors: [{ name: "BankBuz Team" }],
 };
 
 export const viewport: Viewport = {

@@ -17,10 +17,20 @@ import {
   Star,
   Sparkles,
   ArrowLeft,
-  ExternalLink
+  ExternalLink,
+  ChevronDown,
+  Car,
+  GraduationCap,
+  Heart,
+  Plane,
+  Wallet,
+  BarChart3,
+  DollarSign
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { FinancialAdvisorChat } from '../../components/FinancialAdvisorChat';
+import { EMICalculator, SIPCalculator, InsuranceCalculator, RetirementCalculator, SavingsCalculator } from '../../components/Calculators';
 
 type ProductCategory =
   | 'credit-cards'
@@ -29,14 +39,24 @@ type ProductCategory =
   | 'home-loans'
   | 'auto-loans'
   | 'education-loans'
+  | 'business-loans'
   | 'health-insurance'
   | 'life-insurance'
   | 'auto-insurance'
   | 'home-insurance'
+  | 'travel-insurance'
   | 'mutual-funds'
+  | 'stocks'
+  | 'nps'
   | 'bank-accounts'
   | 'fixed-deposits'
-  | 'bonds';
+  | 'bonds'
+  | 'gold'
+  | 'emi-calculator'
+  | 'sip-calculator'
+  | 'insurance-calculator'
+  | 'retirement-calculator'
+  | 'savings-calculator';
 
 interface FormData {
   [key: string]: string | string[] | number | undefined;
@@ -108,19 +128,23 @@ function PlatformContent() {
       color: 'from-blue-500 to-blue-600',
       gradient: 'bg-gradient-to-r from-blue-50 to-indigo-50',
       products: [
-        { id: 'credit-cards', name: 'All Credit Cards', description: 'Cashback, Travel, Rewards, Premium' }
+        { id: 'credit-cards', name: 'All Credit Cards', description: 'Cashback, Travel, Rewards, Premium, Business' }
       ]
     },
     {
-      category: 'Loans',
-      icon: PiggyBank,
+      category: 'Loans & Mortgages',
+      icon: Home,
       color: 'from-purple-500 to-purple-600',
       gradient: 'bg-gradient-to-r from-purple-50 to-pink-50',
+      hasCalculator: true,
+      calculatorType: 'EMI Calculator',
+      calculatorId: 'emi-calculator',
       products: [
-        { id: 'personal-loans', name: 'Personal Loans', description: 'Instant approval, competitive rates' },
-        { id: 'home-loans', name: 'Home Loans', description: 'Mortgages, refinancing, construction' },
-        { id: 'auto-loans', name: 'Auto Loans', description: 'Car loans, bike loans' },
-        { id: 'education-loans', name: 'Education Loans', description: 'Study abroad, domestic education' }
+        { id: 'personal-loans', name: 'Personal Loans', description: 'Instant approval, competitive rates, debt consolidation' },
+        { id: 'home-loans', name: 'Home Loans', description: 'Purchase, refinancing, construction, balance transfer' },
+        { id: 'auto-loans', name: 'Auto Loans', description: 'New car, used car, two-wheeler loans' },
+        { id: 'education-loans', name: 'Education Loans', description: 'Study abroad, domestic, skill development' },
+        { id: 'business-loans', name: 'Business Loans', description: 'MSME, working capital, equipment financing' }
       ]
     },
     {
@@ -128,11 +152,15 @@ function PlatformContent() {
       icon: Shield,
       color: 'from-red-500 to-red-600',
       gradient: 'bg-gradient-to-r from-red-50 to-orange-50',
+      hasCalculator: true,
+      calculatorType: 'Premium Calculator',
+      calculatorId: 'insurance-calculator',
       products: [
-        { id: 'health-insurance', name: 'Health Insurance', description: 'Individual, family, senior citizen' },
-        { id: 'life-insurance', name: 'Life Insurance', description: 'Term, endowment, ULIP' },
-        { id: 'auto-insurance', name: 'Auto Insurance', description: 'Car, bike, commercial vehicle' },
-        { id: 'home-insurance', name: 'Home Insurance', description: 'Property, contents, liability' }
+        { id: 'health-insurance', name: 'Health Insurance', description: 'Individual, family, senior citizen, critical illness' },
+        { id: 'life-insurance', name: 'Life Insurance', description: 'Term, endowment, ULIP, whole life' },
+        { id: 'auto-insurance', name: 'Vehicle Insurance', description: 'Car, bike, commercial vehicle, comprehensive' },
+        { id: 'home-insurance', name: 'Home Insurance', description: 'Property, contents, liability, natural disasters' },
+        { id: 'travel-insurance', name: 'Travel Insurance', description: 'Domestic, international, family, student' }
       ]
     },
     {
@@ -140,8 +168,13 @@ function PlatformContent() {
       icon: TrendingUp,
       color: 'from-green-500 to-green-600',
       gradient: 'bg-gradient-to-r from-green-50 to-emerald-50',
+      hasCalculator: true,
+      calculatorType: 'SIP Calculator',
+      calculatorId: 'sip-calculator',
       products: [
-        { id: 'mutual-funds', name: 'Mutual Funds', description: 'Equity, debt, hybrid, tax-saving' }
+        { id: 'mutual-funds', name: 'Mutual Funds', description: 'Equity, debt, hybrid, tax-saving (ELSS), index funds' },
+        { id: 'stocks', name: 'Stocks & ETFs', description: 'Direct equity, ETFs, sectoral funds' },
+        { id: 'nps', name: 'NPS & Pension', description: 'National Pension System, retirement planning' }
       ]
     },
     {
@@ -150,18 +183,33 @@ function PlatformContent() {
       color: 'from-cyan-500 to-cyan-600',
       gradient: 'bg-gradient-to-r from-cyan-50 to-blue-50',
       products: [
-        { id: 'bank-accounts', name: 'Bank Accounts', description: 'Savings, current, salary, NRI' },
-        { id: 'debit-cards', name: 'Debit Cards', description: 'Platinum, international, cashback' }
+        { id: 'bank-accounts', name: 'Bank Accounts', description: 'Savings, current, salary, zero-balance, NRI' },
+        { id: 'debit-cards', name: 'Debit Cards', description: 'Platinum, international, cashback, contactless' }
       ]
     },
     {
-      category: 'Assets',
+      category: 'Assets & Deposits',
       icon: Landmark,
       color: 'from-indigo-500 to-indigo-600',
       gradient: 'bg-gradient-to-r from-indigo-50 to-purple-50',
       products: [
-        { id: 'fixed-deposits', name: 'Fixed Deposits', description: 'Regular FD, tax-saving FD' },
-        { id: 'bonds', name: 'Bonds', description: 'Government bonds, corporate bonds' }
+        { id: 'fixed-deposits', name: 'Fixed Deposits', description: 'Regular FD, tax-saving FD, senior citizen FD' },
+        { id: 'bonds', name: 'Bonds & Debentures', description: 'Government bonds, corporate bonds, tax-free bonds' },
+        { id: 'gold', name: 'Gold Investment', description: 'Digital gold, sovereign gold bonds, gold ETFs' }
+      ]
+    },
+    {
+      category: 'Calculators & Tools',
+      icon: Calculator,
+      color: 'from-amber-500 to-amber-600',
+      gradient: 'bg-gradient-to-r from-amber-50 to-yellow-50',
+      isCalculatorOnly: true,
+      products: [
+        { id: 'emi-calculator', name: 'EMI Calculator', description: 'Calculate monthly installments for loans' },
+        { id: 'sip-calculator', name: 'SIP Calculator', description: 'Plan your mutual fund investments' },
+        { id: 'insurance-calculator', name: 'Insurance Premium Calculator', description: 'Estimate your insurance costs' },
+        { id: 'retirement-calculator', name: 'Retirement Planner', description: 'Plan your retirement corpus' },
+        { id: 'savings-calculator', name: 'Savings Calculator', description: 'Plan your savings goals' }
       ]
     }
   ];
@@ -171,26 +219,23 @@ function PlatformContent() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-emerald-100 selection:text-emerald-900">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-sm">
+      <nav className="bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur-lg opacity-30"></div>
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center relative z-10">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
-                <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="BankBuz Logo"
+                width={150}
+                height={40}
+                className="h-10 w-auto object-contain"
+              />
             </Link>
 
             <div className="flex items-center gap-4">
-              <div className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-lg shadow-blue-500/20">
+              <div className="px-5 py-2.5 bg-slate-900 text-white rounded-lg text-sm font-medium shadow-md hover:bg-slate-800 transition-colors">
                 Find Best Products
               </div>
             </div>
@@ -202,85 +247,90 @@ function PlatformContent() {
         {/* Header */}
         <div className="text-center mb-16">
           <motion.div
-            className="inline-block mb-6"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
-          >
-            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-1 rounded-full mx-auto"></div>
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-medium mb-6 border border-blue-200">
-              Compare Products → Get Top Recommendations → Apply
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-bold uppercase tracking-wider mb-6">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              AI-Powered Analysis
             </div>
           </motion.div>
 
           <motion.h1
-            className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight"
+            className="text-4xl md:text-6xl font-bold text-slate-900 mb-6 leading-tight tracking-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            Find Your Perfect Financial Product
+            Find Your Perfect <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900">Financial Product</span>
           </motion.h1>
 
           <motion.p
-            className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
+            className="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed font-medium"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            Choose a financial product category to compare options across banks and get AI-powered personalized recommendations
+            Compare. Choose. Save.
           </motion.p>
         </div>
 
 
 
         {/* Product Selection Grid */}
-        <div className="space-y-12">
+        <div className="space-y-8">
           {productCategories.map((category, categoryIndex) => (
             <motion.div
               key={categoryIndex}
-              className={`p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all ${category.gradient} border border-gray-100/50`}
-              initial={{ opacity: 0, y: 30 }}
+              className="bg-white rounded-3xl p-8 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+              transition={{ duration: 0.5, delay: categoryIndex * 0.1 }}
             >
-              <div
-                className="flex items-center mb-8 cursor-pointer group"
-                onClick={() => setSelectedProduct(category.products[0]?.id as ProductCategory)}
-              >
-                <div className="relative mr-6">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                  <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform`}>
-                    <category.icon className="w-8 h-8 text-white" />
+              <div className="flex items-center justify-between mb-8">
+                <div className="flex items-center cursor-pointer group" onClick={() => !category.isCalculatorOnly && setSelectedProduct(category.products[0]?.id as ProductCategory)}>
+                  <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mr-6 group-hover:bg-slate-900 transition-colors duration-300 border border-slate-100">
+                    <category.icon className="w-7 h-7 text-slate-900 group-hover:text-white transition-colors duration-300" />
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">{category.category}</h2>
+                    <p className="text-sm text-slate-500 mt-1">
+                      {category.products.length} {category.isCalculatorOnly ? 'tools' : 'products'} available
+                    </p>
                   </div>
                 </div>
-                <h2 className="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{category.category}</h2>
-                <div className="ml-auto">
-                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                </div>
+                {category.hasCalculator && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (category.calculatorId) {
+                        setSelectedProduct(category.calculatorId as ProductCategory);
+                      }
+                    }}
+                    className="flex items-center gap-2 px-4 py-2 bg-emerald-50 border border-emerald-100 rounded-xl cursor-pointer hover:bg-emerald-100 transition-colors"
+                  >
+                    <Calculator className="w-4 h-4 text-emerald-600" />
+                    <span className="text-sm font-semibold text-emerald-700">{category.calculatorType}</span>
+                  </div>
+                )}
               </div>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {category.products.map((product, productIndex) => (
                   <motion.div
                     key={productIndex}
-                    className="p-6 border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all cursor-pointer group bg-white/50 backdrop-blur-sm"
-                    whileHover={{ y: -8, scale: 1.02 }}
+                    className="p-5 rounded-2xl bg-slate-50 border border-transparent hover:bg-white hover:border-slate-200 hover:shadow-lg transition-all cursor-pointer group/item"
+                    whileHover={{ y: -4 }}
                     onClick={() => setSelectedProduct(product.id as ProductCategory)}
                   >
-                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                    <h3 className="text-base font-bold text-slate-900 mb-2 group-hover/item:text-emerald-600 transition-colors">
                       {product.name}
                     </h3>
-                    <p className="text-sm text-gray-600 mb-4">{product.description}</p>
-                    <div className="flex items-center text-blue-600 font-semibold group-hover:underline">
-                      Compare Now <ArrowRight className="w-4 h-4 ml-2" />
+                    <p className="text-sm text-slate-500 mb-4 line-clamp-2">{product.description}</p>
+                    <div className="flex items-center text-xs font-bold text-slate-400 group-hover/item:text-emerald-600 uppercase tracking-wider transition-colors">
+                      {category.isCalculatorOnly ? 'Open' : 'Compare'} <ArrowRight className="w-3 h-3 ml-1" />
                     </div>
                   </motion.div>
                 ))}
@@ -400,29 +450,26 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-xl border-b border-gray-100/50 shadow-sm">
+      <nav className="bg-white/90 backdrop-blur-xl border-b border-slate-200 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3">
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur-lg opacity-30"></div>
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-606 rounded-xl flex items-center justify-center relative z-10">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
-              </div>
-              <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
-                <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
-              </div>
+              <Image
+                src="/images/logo.png"
+                alt="BankBuz Logo"
+                width={150}
+                height={40}
+                className="h-10 w-auto object-contain"
+              />
             </Link>
 
             <button
               onClick={onBack}
-              className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-medium group"
+              className="flex items-center text-slate-500 hover:text-slate-900 transition-colors font-medium group text-sm"
             >
-              <ArrowLeft className="w-5 h-5 mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Products
+              <ArrowLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" /> Back to Products
             </button>
           </div>
         </div>
@@ -461,39 +508,60 @@ function InputForm({
         return <MutualFundForm formData={formData} onInputChange={onInputChange} />;
       case 'home-loans':
         return <HomeLoanForm formData={formData} onInputChange={onInputChange} />;
+      case 'emi-calculator':
+        return <EMICalculator />;
+      case 'sip-calculator':
+        return <SIPCalculator />;
+      case 'insurance-calculator':
+        return <InsuranceCalculator />;
+      case 'retirement-calculator':
+        return <RetirementCalculator />;
+      case 'savings-calculator':
+        return <SavingsCalculator />;
       default:
         return <GenericForm formData={formData} onInputChange={onInputChange} />;
     }
   };
 
+  // If it's a calculator, don't show the "Compare" button or the header in the same way
+  if (product.includes('calculator')) {
+    return (
+      <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200">
+        {getProductForm()}
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="text-center mb-12">
         <motion.div
-          className="inline-block mb-6"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
         >
-          <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-1 rounded-full mx-auto"></div>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider mb-6">
+            <Calculator className="w-3 h-3" />
+            Comparison Engine
+          </div>
         </motion.div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4 capitalize">
+        <h1 className="text-3xl md:text-4xl font-bold text-slate-900 mb-4 capitalize tracking-tight">
           {product.replace('-', ' ')} Comparison
         </h1>
-        <p className="text-xl text-gray-600">
+        <p className="text-lg text-slate-600 max-w-2xl mx-auto">
           Enter your requirements to compare options across banks and get top 3 recommendations
         </p>
       </div>
 
-      <div className="bg-white p-10 rounded-3xl shadow-2xl border border-gray-100/50 backdrop-blur-sm">
+      <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200">
         {getProductForm()}
 
-        <div className="mt-12 pt-8 border-t border-gray-200">
+        <div className="mt-12 pt-8 border-t border-slate-100">
           <button
             onClick={onCompare}
-            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-5 rounded-2xl text-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 flex items-center justify-center gap-3 shadow-lg shadow-blue-500/20"
+            className="w-full bg-slate-900 text-white py-4 rounded-xl text-lg font-bold hover:bg-slate-800 transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl"
           >
-            <Calculator className="w-6 h-6" />
+            <Calculator className="w-5 h-5" />
             Compare Products Across Banks
           </button>
         </div>
@@ -515,41 +583,41 @@ function CreditCardForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
-          <CreditCard className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <CreditCard className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Credit Card Requirements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Credit Card Requirements</h2>
       </div>
 
       {/* Card Category Selection */}
-      <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
-        <label className="block text-sm font-bold text-gray-900 mb-4">Card Category</label>
-        <div className="flex gap-6">
-          <label className="flex items-center space-x-3 cursor-pointer">
+      <div className="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+        <label className="block text-sm font-bold text-slate-900 mb-4">Card Category</label>
+        <div className="flex flex-col sm:flex-row gap-6">
+          <label className="flex items-center space-x-3 cursor-pointer group">
             <input
               type="radio"
               name="cardCategory"
               value="retail"
               defaultChecked
-              className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+              className="w-5 h-5 text-emerald-600 border-slate-300 focus:ring-emerald-500"
               onChange={() => onInputChange('cardCategory', 'retail')}
             />
             <div>
-              <span className="block text-sm font-bold text-gray-900">Retail (Personal)</span>
-              <span className="text-xs text-gray-500">For personal use, shopping, travel</span>
+              <span className="block text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Retail (Personal)</span>
+              <span className="text-xs text-slate-500">For personal use, shopping, travel</span>
             </div>
           </label>
-          <label className="flex items-center space-x-3 cursor-pointer">
+          <label className="flex items-center space-x-3 cursor-pointer group">
             <input
               type="radio"
               name="cardCategory"
               value="business"
-              className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+              className="w-5 h-5 text-emerald-600 border-slate-300 focus:ring-emerald-500"
               onChange={() => onInputChange('cardCategory', 'business')}
             />
             <div>
-              <span className="block text-sm font-bold text-gray-900">Commercial (Business)</span>
-              <span className="text-xs text-gray-500">For business expenses, shopkeepers, corporates</span>
+              <span className="block text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors">Commercial (Business)</span>
+              <span className="text-xs text-slate-500">For business expenses, shopkeepers, corporates</span>
             </div>
           </label>
         </div>
@@ -557,9 +625,9 @@ function CreditCardForm({
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Age</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('ageRange', e.target.value)}
           >
             <option value="">Select age range</option>
@@ -571,11 +639,11 @@ function CreditCardForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">
+          <label className="block text-sm font-medium text-slate-700 mb-2">
             {isBusiness ? 'Monthly Business Income / Turnover' : 'Monthly Income'}
           </label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('income', e.target.value)}
           >
             <option value="">Select income range</option>
@@ -588,9 +656,9 @@ function CreditCardForm({
 
         {!isBusiness && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">Employment Type</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Employment Type</label>
             <select
-              className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
               onChange={(e) => onInputChange('employment', e.target.value)}
             >
               <option value="">Select employment type</option>
@@ -603,9 +671,9 @@ function CreditCardForm({
 
         {isBusiness && (
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">Business Type</label>
+            <label className="block text-sm font-medium text-slate-700 mb-2">Business Type</label>
             <select
-              className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
               onChange={(e) => onInputChange('businessType', e.target.value)}
             >
               <option value="">Select business type</option>
@@ -619,9 +687,9 @@ function CreditCardForm({
         )}
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score (if known)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">CIBIL Score (if known)</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
             <option value="">Select CIBIL range</option>
@@ -634,7 +702,7 @@ function CreditCardForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">
+        <label className="block text-sm font-medium text-slate-700 mb-4">
           {isBusiness ? 'Business Spending Needs' : 'Spending Pattern (Select all that apply)'}
         </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -642,10 +710,10 @@ function CreditCardForm({
             ? ['Inventory', 'Travel/Hotels', 'Utility Bills', 'Office Supplies', 'Dining/Client Meetings', 'Fuel', 'Online Ads', 'Software/SaaS']
             : ['Travel', 'Online Shopping', 'Dining', 'Fuel', 'Groceries', 'Entertainment', 'Bills', 'Others']
           ).map((pattern) => (
-            <label key={pattern} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-blue-50 transition-colors">
+            <label key={pattern} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
               <input
                 type="checkbox"
-                className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
                 onChange={(e) => {
                   const current = Array.isArray(formData.spendingPattern) ? formData.spendingPattern : [];
                   const updated = e.target.checked
@@ -654,20 +722,20 @@ function CreditCardForm({
                   onInputChange('spendingPattern', updated);
                 }}
               />
-              <span className="text-sm text-gray-700">{pattern}</span>
+              <span className="text-sm text-slate-700">{pattern}</span>
             </label>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">Card Preferences</label>
+        <label className="block text-sm font-medium text-slate-700 mb-4">Card Preferences</label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {['Cashback', 'Rewards Points', 'Travel Miles', 'Lounge Access', 'Premium Benefits', 'Low/No Annual Fee'].map((pref) => (
-            <label key={pref} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-blue-50 transition-colors border border-gray-100">
+            <label key={pref} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100 hover:border-slate-200">
               <input
                 type="checkbox"
-                className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500"
                 checked={Array.isArray(formData.cardPreference) ? formData.cardPreference.includes(pref) : false}
                 onChange={(e) => {
                   const current = Array.isArray(formData.cardPreference) ? formData.cardPreference : [];
@@ -677,7 +745,7 @@ function CreditCardForm({
                   onInputChange('cardPreference', updated);
                 }}
               />
-              <span className="text-sm text-gray-700">{pref}</span>
+              <span className="text-sm text-slate-700">{pref}</span>
             </label>
           ))}
         </div>
@@ -687,9 +755,9 @@ function CreditCardForm({
 }
 
 // Personal Loan Form  
+// Personal Loan Form
 function PersonalLoanForm({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  formData: _formData,
+  formData,
   onInputChange
 }: {
   formData: FormData;
@@ -698,27 +766,27 @@ function PersonalLoanForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">
-          <PiggyBank className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <PiggyBank className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Personal Loan Requirements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Personal Loan Requirements</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Loan Amount (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Loan Amount (₹)</label>
           <input
             type="number"
             placeholder="e.g., 500000"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('loanAmount', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Tenure</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Tenure</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('tenure', e.target.value)}
           >
             <option value="">Select tenure</option>
@@ -731,19 +799,19 @@ function PersonalLoanForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Income (₹)</label>
           <input
             type="number"
             placeholder="e.g., 60000"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('monthlyIncome', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Employment Type</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Employment Type</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('employment', e.target.value)}
           >
             <option value="">Select employment type</option>
@@ -754,9 +822,9 @@ function PersonalLoanForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">CIBIL Score</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
             <option value="">Select CIBIL range</option>
@@ -768,9 +836,9 @@ function PersonalLoanForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Purpose</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Purpose</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('purpose', e.target.value)}
           >
             <option value="">Select purpose</option>
@@ -786,25 +854,25 @@ function PersonalLoanForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Interest Type Preference</label>
+        <label className="block text-sm font-medium text-slate-700 mb-3">Interest Type Preference</label>
         <div className="flex gap-6">
-          <label className="flex items-center space-x-3 cursor-pointer">
+          <label className="flex items-center space-x-3 cursor-pointer group">
             <input
               type="radio"
               name="interestType"
-              className="w-5 h-5 text-purple-600 border-gray-300 focus:ring-purple-500"
+              className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
               onChange={() => onInputChange('interestType', 'fixed')}
             />
-            <span className="text-sm text-gray-700">Fixed Rate</span>
+            <span className="text-sm text-slate-700 group-hover:text-emerald-700 transition-colors">Fixed Rate</span>
           </label>
-          <label className="flex items-center space-x-3 cursor-pointer">
+          <label className="flex items-center space-x-3 cursor-pointer group">
             <input
               type="radio"
               name="interestType"
-              className="w-5 h-5 text-purple-600 border-gray-300 focus:ring-purple-500"
+              className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
               onChange={() => onInputChange('interestType', 'floating')}
             />
-            <span className="text-sm text-gray-700">Floating Rate</span>
+            <span className="text-sm text-slate-700 group-hover:text-emerald-700 transition-colors">Floating Rate</span>
           </label>
         </div>
       </div>
@@ -812,7 +880,6 @@ function PersonalLoanForm({
   );
 }
 
-// Other form components would follow similar patterns
 function HealthInsuranceForm({
   formData: _formData,
   onInputChange
@@ -823,27 +890,27 @@ function HealthInsuranceForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-red-500 to-orange-600 rounded-2xl flex items-center justify-center">
-          <Shield className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <Shield className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Health Insurance Requirements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Health Insurance Requirements</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Age</label>
           <input
             type="number"
             placeholder="e.g., 32"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Family Size</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Family Size</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('familySize', e.target.value)}
           >
             <option value="">Select family size</option>
@@ -855,9 +922,9 @@ function HealthInsuranceForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Sum Insured (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Sum Insured (₹)</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('sumInsured', e.target.value)}
           >
             <option value="">Select sum insured</option>
@@ -870,9 +937,9 @@ function HealthInsuranceForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Premium Budget (Annual)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Premium Budget (Annual)</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('premiumBudget', e.target.value)}
           >
             <option value="">Select budget range</option>
@@ -885,13 +952,29 @@ function HealthInsuranceForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">Required Add-ons (Select all that apply)</label>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {['Critical Illness', 'Maternity Cover', 'Dental Care', 'OPD Cover', 'Ambulance Cover', 'Mental Health'].map((addon) => (
-            <label key={addon} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-red-50 transition-colors">
+        <label className="block text-sm font-medium text-slate-700 mb-4">Required Add-ons (Select all that apply)</label>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {[
+            'Critical Illness',
+            'Maternity Cover',
+            'OPD Cover',
+            'Room Rent Waiver',
+            'No Claim Bonus Protector',
+            'Consumables Cover',
+            'Daily Hospital Cash',
+            'AYUSH Cover',
+            'Mental Health',
+            'Home Care Treatment',
+            'Personal Accident Cover',
+            'International Treatment Cover',
+            'Top-up / Deductible Add-on',
+            'Emergency Services (Ambulance + Air Ambulance)',
+            'Other'
+          ].map((addon) => (
+            <label key={addon} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
               <input
                 type="checkbox"
-                className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
+                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 flex-shrink-0"
                 onChange={(e) => {
                   const current = Array.isArray(_formData.addons) ? _formData.addons : [];
                   const updated = e.target.checked
@@ -900,7 +983,7 @@ function HealthInsuranceForm({
                   onInputChange('addons', updated);
                 }}
               />
-              <span className="text-sm text-gray-700">{addon}</span>
+              <span className="text-sm text-slate-700">{addon}</span>
             </label>
           ))}
         </div>
@@ -920,27 +1003,27 @@ function MutualFundForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center">
-          <TrendingUp className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <TrendingUp className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Mutual Fund Investment</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Mutual Fund Investment</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Age</label>
           <input
             type="number"
             placeholder="e.g., 32"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Investment Experience</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Investment Experience</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('experience', e.target.value)}
           >
             <option value="">Select experience</option>
@@ -951,19 +1034,19 @@ function MutualFundForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Monthly SIP Amount (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Monthly SIP Amount (₹)</label>
           <input
             type="number"
             placeholder="e.g., 10000"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('sipAmount', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Investment Horizon</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Investment Horizon</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('horizon', e.target.value)}
           >
             <option value="">Select time horizon</option>
@@ -975,23 +1058,23 @@ function MutualFundForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Risk Appetite</label>
+        <label className="block text-sm font-medium text-slate-700 mb-3">Risk Appetite</label>
         <div className="grid grid-cols-3 gap-4">
           {[
             { value: 'low', label: 'Low Risk', desc: 'Stable returns, low volatility' },
             { value: 'medium', label: 'Medium Risk', desc: 'Balanced growth and safety' },
             { value: 'high', label: 'High Risk', desc: 'High growth potential' }
           ].map((risk) => (
-            <label key={risk.value} className="cursor-pointer">
+            <label key={risk.value} className="cursor-pointer group">
               <input
                 type="radio"
                 name="riskAppetite"
                 className="sr-only peer"
                 onChange={() => onInputChange('riskAppetite', risk.value)}
               />
-              <div className="p-5 border-2 border-gray-200 rounded-2xl peer-checked:border-green-600 peer-checked:bg-green-50 hover:bg-gray-50 transition-colors">
-                <div className="font-medium text-gray-900 text-lg">{risk.label}</div>
-                <div className="text-sm text-gray-600 mt-2">{risk.desc}</div>
+              <div className="p-5 border border-slate-200 rounded-2xl peer-checked:border-emerald-600 peer-checked:bg-emerald-50 hover:bg-slate-50 transition-all hover:shadow-sm">
+                <div className="font-medium text-slate-900 text-lg group-hover:text-emerald-700 transition-colors">{risk.label}</div>
+                <div className="text-sm text-slate-600 mt-2">{risk.desc}</div>
               </div>
             </label>
           ))}
@@ -999,9 +1082,9 @@ function MutualFundForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Investment Goal</label>
+        <label className="block text-sm font-medium text-slate-700 mb-2">Investment Goal</label>
         <select
-          className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
+          className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
           onChange={(e) => onInputChange('goal', e.target.value)}
         >
           <option value="">Select investment goal</option>
@@ -1027,27 +1110,27 @@ function HomeLoanForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-orange-500 to-red-600 rounded-2xl flex items-center justify-center">
-          <Home className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <Home className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Home Loan Requirements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Home Loan Requirements</h2>
       </div>
 
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Loan Amount (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Loan Amount (₹)</label>
           <input
             type="number"
             placeholder="e.g., 4000000"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('loanAmount', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Tenure (Years)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Tenure (Years)</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('tenure', e.target.value)}
           >
             <option value="">Select tenure</option>
@@ -1060,19 +1143,19 @@ function HomeLoanForm({
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Income (₹)</label>
           <input
             type="number"
             placeholder="e.g., 100000"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('monthlyIncome', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">CIBIL Score</label>
           <select
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
             <option value="">Select CIBIL range</option>
@@ -1084,17 +1167,17 @@ function HomeLoanForm({
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-3">Property Type</label>
+        <label className="block text-sm font-medium text-slate-700 mb-3">Property Type</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {['Apartment', 'Independent House', 'Villa', 'Plot'].map((type) => (
-            <label key={type} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-orange-50 transition-colors border border-gray-100">
+            <label key={type} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-slate-50 transition-colors border border-slate-100 hover:border-slate-200">
               <input
                 type="radio"
                 name="propertyType"
-                className="w-5 h-5 text-orange-600 border-gray-300 focus:ring-orange-500"
+                className="w-4 h-4 text-emerald-600 border-slate-300 focus:ring-emerald-500"
                 onChange={() => onInputChange('propertyType', type)}
               />
-              <span className="text-sm text-gray-700">{type}</span>
+              <span className="text-sm text-slate-700">{type}</span>
             </label>
           ))}
         </div>
@@ -1114,28 +1197,28 @@ function GenericForm({
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
-        <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
-          <CreditCard className="w-7 h-7 text-white" />
+        <div className="w-12 h-12 bg-slate-900 rounded-xl flex items-center justify-center shadow-md">
+          <CreditCard className="w-6 h-6 text-emerald-400" />
         </div>
-        <h2 className="text-3xl font-bold text-gray-900">Product Requirements</h2>
+        <h2 className="text-2xl font-bold text-slate-900">Product Requirements</h2>
       </div>
       <div className="grid md:grid-cols-2 gap-8">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Age</label>
           <input
             type="number"
             placeholder="Enter your age"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
+          <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Income (₹)</label>
           <input
             type="number"
             placeholder="Enter monthly income"
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+            className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white shadow-sm transition-all hover:border-slate-300"
             onChange={(e) => onInputChange('monthlyIncome', e.target.value)}
           />
         </div>
@@ -1150,25 +1233,27 @@ function LoadingComparison() {
     <div className="text-center py-24">
       <motion.div
         animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-        className="inline-block mx-auto mb-8"
+        transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+        className="inline-block mx-auto mb-8 p-4 bg-white rounded-full shadow-lg border border-slate-100"
       >
-        <Calculator className="w-20 h-20 text-blue-600" />
+        <Calculator className="w-12 h-12 text-emerald-500" />
       </motion.div>
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Comparing Products Across Banks</h2>
-      <p className="text-xl text-gray-600 mb-12">Analyzing thousands of products to find your best matches...</p>
-      <div className="max-w-md mx-auto space-y-4">
-        <div className="flex items-center text-left text-sm text-gray-600">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></div>
-          <span>Fetching latest rates and offers</span>
+      <h2 className="text-3xl font-bold text-slate-900 mb-4">Analyzing Financial Products</h2>
+      <p className="text-xl text-slate-600 mb-12 max-w-lg mx-auto">
+        Our AI is comparing thousands of options across banks to find your perfect match...
+      </p>
+      <div className="max-w-md mx-auto space-y-6">
+        <div className="flex items-center text-left text-sm font-medium text-slate-600 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full mr-4 animate-pulse"></div>
+          <span>Fetching real-time interest rates and offers</span>
         </div>
-        <div className="flex items-center text-left text-sm text-gray-600">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></div>
-          <span>Calculating approval probability</span>
+        <div className="flex items-center text-left text-sm font-medium text-slate-600 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full mr-4 animate-pulse delay-75"></div>
+          <span>Calculating approval probability based on your profile</span>
         </div>
-        <div className="flex items-center text-left text-sm text-gray-600">
-          <div className="w-2 h-2 bg-green-500 rounded-full mr-3 animate-pulse"></div>
-          <span>Ranking products by suitability</span>
+        <div className="flex items-center text-left text-sm font-medium text-slate-600 bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+          <div className="w-2 h-2 bg-emerald-500 rounded-full mr-4 animate-pulse delay-150"></div>
+          <span>Ranking products by value and benefits</span>
         </div>
       </div>
     </div>
@@ -1213,185 +1298,153 @@ function ComparisonResults({
   };
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {/* Header */}
       <div className="text-center">
-        <div className="inline-flex items-center bg-gradient-to-r from-green-100 to-emerald-100 text-green-800 px-6 py-3 rounded-full text-lg font-medium mb-6 border border-green-200">
-          <CheckCircle className="w-5 h-5 mr-2" />
-          Analysis Complete - {comparisons.length} Products Found
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-sm font-bold mb-8">
+          <CheckCircle className="w-4 h-4" />
+          Analysis Complete • {comparisons.length} Products Found
         </div>
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+        <h1 className="text-4xl font-bold text-slate-900 mb-4 tracking-tight">
           {getProductDisplayName(product)} Comparison Results
         </h1>
-        <p className="text-xl text-gray-600">Based on your requirements, here are the best matches across banks</p>
+        <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+          Based on your unique profile and requirements, our AI has identified the best matches across top banks.
+        </p>
       </div>
 
-      {/* Filter Tabs
-      <div className="flex justify-center">
-        <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-2 rounded-xl shadow-lg border border-gray-200">
-          {[
-            { id: 'best-match', label: 'Best Match for You', icon: Target },
-            { id: 'best-value', label: 'Best Value', icon: DollarSign },
-            { id: 'best-overall', label: 'Best Overall', icon: Award }
-          ].map((filter) => (
-            <button
-              key={filter.id}
-              onClick={() => setFilterType(filter.id as 'best-value' | 'best-overall' | 'best-match')}
-              className={`px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-3 ${
-                filterType === filter.id 
-                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg' 
-                  : 'text-gray-600 hover:text-blue-600 hover:bg-white/50'
-              }`}
-            >
-              <filter.icon className="w-5 h-5" />
-              {filter.label}
-            </button>
-          ))}
-        </div>
-      </div> */}
-
       {/* Top 3 Recommendations - Highlighted Section */}
-      <div className="bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 p-12 rounded-3xl border-2 border-blue-200">
+      <div className="relative">
         <div className="text-center mb-12">
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <Star className="w-8 h-8 text-blue-600" />
-            <h2 className="text-4xl font-bold text-gray-900">Top 3 Recommendations</h2>
-            <Star className="w-8 h-8 text-blue-600" />
+          <div className="flex items-center justify-center gap-3 mb-4">
+            <Star className="w-6 h-6 text-amber-400 fill-amber-400" />
+            <h2 className="text-3xl font-bold text-slate-900">Top 3 Recommendations</h2>
+            <Star className="w-6 h-6 text-amber-400 fill-amber-400" />
           </div>
-          <p className="text-xl text-gray-600">
-            Our AI has ranked these as your best matches with high approval probability
+          <p className="text-lg text-slate-600">
+            Ranked by approval probability and value for you
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8">
+        <div className="grid lg:grid-cols-3 gap-8 items-start">
           {recommendations.slice(0, 3).map((rec: Recommendation, index: number) => (
             <motion.div
               key={index}
-              className="bg-white p-8 rounded-3xl shadow-2xl border-4 border-blue-200 relative overflow-hidden"
+              className={`bg-white rounded-3xl shadow-xl border overflow-hidden relative flex flex-col h-full ${index === 0 ? 'border-amber-200 ring-4 ring-amber-50 shadow-amber-100' : 'border-slate-200'
+                }`}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              {/* Decorative element */}
-              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-l from-blue-100 to-transparent opacity-50 -z-10"></div>
-
               {/* Rank Badge */}
-              <div className="absolute -top-4 -left-4">
-                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg ${index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
-                  index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-600' :
-                    'bg-gradient-to-r from-orange-400 to-orange-600'
-                  }`}>
-                  #{index + 1}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
+              {index === 0 && <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300"></div>}
+
+              <div className="p-8 pb-0">
+                <div className="flex justify-between items-start mb-6">
+                  <div className={`inline-flex items-center justify-center w-12 h-12 rounded-xl font-bold text-xl shadow-sm ${index === 0 ? 'bg-amber-100 text-amber-700' :
+                    index === 1 ? 'bg-slate-100 text-slate-700' :
+                      'bg-orange-100 text-orange-800'
+                    }`}>
+                    #{index + 1}
+                  </div>
+                  {index === 0 && (
+                    <span className="px-3 py-1 bg-amber-100 text-amber-800 text-xs font-bold uppercase tracking-wider rounded-full">
+                      Best Match
+                    </span>
+                  )}
+                </div>
+
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 leading-tight min-h-[4rem]">{rec.product}</h3>
+
+                {/* Key Metrics Grid */}
+                <div className="grid grid-cols-2 gap-4 mb-6">
+                  {/* Credit Cards: Reward Rate */}
+                  {rec.rewardRate && (
+                    <div className="col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1 font-semibold">Rewards</div>
+                      <div className="text-lg font-bold text-emerald-600">{rec.rewardRate}</div>
+                    </div>
+                  )}
+
+                  {/* Insurance: Premium & Coverage */}
+                  {rec.premium && (
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1 font-semibold">Premium</div>
+                      <div className="text-base font-bold text-slate-900">{rec.premium}</div>
+                    </div>
+                  )}
+                  {rec.coverage && (
+                    <div className="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1 font-semibold">Coverage</div>
+                      <div className="text-base font-bold text-slate-900">{rec.coverage}</div>
+                    </div>
+                  )}
+
+                  {/* Loans: EMI */}
+                  {rec.emi && (
+                    <div className="col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1 font-semibold">Monthly EMI</div>
+                      <div className="text-lg font-bold text-emerald-600">{rec.emi}</div>
+                    </div>
+                  )}
+
+                  {/* Mutual Funds: Returns */}
+                  {rec.returns && (
+                    <div className="col-span-2 bg-slate-50 p-4 rounded-xl border border-slate-100">
+                      <div className="text-xs uppercase tracking-wide text-slate-500 mb-1 font-semibold">3Y Returns</div>
+                      <div className="text-lg font-bold text-emerald-600">{rec.returns}</div>
+                    </div>
+                  )}
+
+                  {/* Secondary Metrics */}
+                  {(rec.fees || rec.interestRate || rec.expenseRatio) && (
+                    <>
+                      <div className="bg-white p-3 rounded-xl border border-slate-100">
+                        <div className="text-xs uppercase tracking-wide text-slate-400 mb-1 font-medium">
+                          {rec.premium ? 'Fees' : rec.emi ? 'Proc. Fee' : rec.expenseRatio ? 'Exp. Ratio' : 'Fees'}
+                        </div>
+                        <div className="text-sm font-semibold text-slate-700">{rec.fees || rec.expenseRatio || '-'}</div>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-slate-100">
+                        <div className="text-xs uppercase tracking-wide text-slate-400 mb-1 font-medium">
+                          {rec.emi ? 'Rate' : 'Interest'}
+                        </div>
+                        <div className="text-sm font-semibold text-slate-700">{rec.interestRate || '-'}</div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Benefits List */}
+                <div className="mb-8">
+                  <h4 className="text-sm font-bold text-slate-900 mb-3 uppercase tracking-wide">Key Benefits</h4>
+                  <ul className="space-y-3">
+                    {rec.benefits.slice(0, 3).map((benefit: string, i: number) => (
+                      <li key={i} className="flex items-start gap-3 text-slate-600 text-sm leading-relaxed">
+                        <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <span>{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
 
-              {/* Product Header */}
-              <div className="mt-8 mb-8">
-                <h3 className="text-2xl font-bold text-gray-900 mb-6">{rec.product}</h3>
-
-                {/* Credit Cards: Reward Rate */}
-                {rec.rewardRate && (
-                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl mb-3 border border-blue-200">
-                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Rewards</div>
-                    <div className="text-base font-bold text-blue-600 leading-relaxed">{rec.rewardRate}</div>
-                  </div>
-                )}
-
-                {/* Insurance: Premium & Coverage */}
-                {rec.premium && (
-                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-3 border border-green-200">
-                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Annual Premium</div>
-                    <div className="text-base font-bold text-green-600 leading-relaxed">{rec.premium}</div>
-                  </div>
-                )}
-                {rec.coverage && (
-                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl mb-3 border border-purple-200">
-                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Coverage Amount</div>
-                    <div className="text-base font-bold text-purple-600 leading-relaxed">{rec.coverage}</div>
-                  </div>
-                )}
-
-                {/* Loans: EMI */}
-                {rec.emi && (
-                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-xl mb-3 border border-orange-200">
-                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Monthly EMI</div>
-                    <div className="text-base font-bold text-orange-600 leading-relaxed">{rec.emi}</div>
-                  </div>
-                )}
-
-                {/* Mutual Funds: Returns */}
-                {rec.returns && (
-                  <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-xl mb-3 border border-green-200">
-                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Returns</div>
-                    <div className="text-base font-bold text-green-600 leading-relaxed">{rec.returns}</div>
-                  </div>
-                )}
-
-                {/* Fees & Interest - Compact Grid */}
-                <div className="grid grid-cols-2 gap-3">
-                  {rec.fees && (
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-                        {rec.premium ? 'Additional Fees' : rec.emi ? 'Processing Fee' : rec.expenseRatio ? 'Exit Load' : 'Fees'}
-                      </div>
-                      <div className="text-sm font-semibold text-gray-700 leading-snug">{rec.fees}</div>
-                    </div>
-                  )}
-                  {rec.interestRate && (
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
-                        {rec.emi ? 'Interest Rate' : 'Interest APR'}
-                      </div>
-                      <div className="text-sm text-gray-600">{rec.interestRate}</div>
-                    </div>
-                  )}
-                  {rec.expenseRatio && (
-                    <div className="bg-gray-50 p-3 rounded-lg">
-                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Expense Ratio</div>
-                      <div className="text-sm text-gray-600">{rec.expenseRatio}</div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Key Benefits */}
-              <div className="mb-8">
-                <h4 className="font-bold text-lg text-gray-900 mb-4">Key Benefits</h4>
-                <ul className="space-y-3">
-                  {rec.benefits.map((benefit: string, i: number) => (
-                    <li key={i} className="flex items-start gap-3 text-gray-700">
-                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
-                      <span className="text-sm">{benefit}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Apply Button */}
-              <div className="space-y-4">
+              {/* Footer Action */}
+              <div className="mt-auto p-6 pt-0">
                 <a
                   href={rec.applyLink}
-                  className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3 shadow-lg"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 shadow-lg ${index === 0
+                    ? 'bg-slate-900 text-white hover:bg-slate-800 shadow-slate-900/20'
+                    : 'bg-white border-2 border-slate-200 text-slate-700 hover:border-slate-300 hover:bg-slate-50'
+                    }`}
                 >
-                  <ArrowRight className="w-5 h-5" />
-                  Apply Now - Official Bank Page
+                  Apply Now <ExternalLink className="w-4 h-4" />
                 </a>
-                <div className="text-center text-sm text-gray-500">
-                  Redirects to {rec.product.split(' ')[0]} official website
-                </div>
-              </div>
-
-              {/* Trust Indicators */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <div className="flex items-center justify-between text-sm text-gray-500">
-                  <span className="flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    Secure Application
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <CheckCircle className="w-4 h-4" />
-                    Instant Decision
-                  </span>
+                <div className="text-center text-xs text-slate-400 mt-3 flex items-center justify-center gap-1">
+                  <Shield className="w-3 h-3" /> Official Bank Link
                 </div>
               </div>
             </motion.div>
@@ -1399,35 +1452,55 @@ function ComparisonResults({
         </div>
       </div>
 
-      {/* Sources Section */}
+      {/* Sources Section - Collapsible */}
       {sources.length > 0 && (
-        <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-8 rounded-3xl border-2 border-green-200">
-          <div className="flex items-center gap-3 mb-6">
-            <ExternalLink className="w-6 h-6 text-green-600" />
-            <h3 className="text-2xl font-bold text-gray-900">Verified Sources</h3>
+        <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center border border-slate-200 shadow-sm">
+                <ExternalLink className="w-5 h-5 text-emerald-600" />
+              </div>
+              <h3 className="text-xl font-bold text-slate-900">Verified Sources</h3>
+            </div>
+            <button
+              onClick={() => {
+                const sourcesGrid = document.getElementById('sources-grid');
+                const btn = document.getElementById('sources-toggle-btn');
+                if (sourcesGrid && btn) {
+                  const isHidden = sourcesGrid.classList.contains('hidden');
+                  sourcesGrid.classList.toggle('hidden');
+                  btn.textContent = isHidden ? 'Hide Sources' : 'View All Sources';
+                }
+              }}
+              id="sources-toggle-btn"
+              className="px-4 py-2 bg-white border border-slate-200 rounded-xl text-sm font-medium text-slate-700 hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center gap-2"
+            >
+              View All Sources
+              <ChevronDown className="w-4 h-4" />
+            </button>
           </div>
-          <p className="text-gray-700 mb-6">
-            ✓ Information verified from these official bank websites in real-time:
+          <p className="text-slate-600 mb-6 text-sm">
+            Information verified from {sources.length} official bank websites in real-time
           </p>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div id="sources-grid" className="hidden grid md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sources.map((source, idx) => (
               <a
                 key={idx}
                 href={source.uri}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="bg-white p-4 rounded-2xl border-2 border-green-200 hover:border-green-400 hover:shadow-xl transition-all group"
+                className="bg-white p-4 rounded-xl border border-slate-200 hover:border-emerald-300 hover:shadow-md transition-all group flex items-start gap-3"
               >
-                <div className="flex items-start gap-3">
-                  <ExternalLink className="w-5 h-5 text-green-600 mt-1 flex-shrink-0 group-hover:scale-110 transition-transform" />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-gray-900 group-hover:text-green-600 transition-colors line-clamp-2">
-                      {source.title}
-                    </p>
-                    <p className="text-xs text-gray-500 mt-1 truncate">
-                      {new URL(source.uri).hostname}
-                    </p>
-                  </div>
+                <div className="mt-1">
+                  <ExternalLink className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors" />
+                </div>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-slate-900 group-hover:text-emerald-700 transition-colors line-clamp-1">
+                    {source.title}
+                  </p>
+                  <p className="text-xs text-slate-500 mt-0.5 truncate">
+                    {new URL(source.uri).hostname}
+                  </p>
                 </div>
               </a>
             ))}
@@ -1436,70 +1509,74 @@ function ComparisonResults({
       )}
 
       {/* Side-by-Side Comparison Table */}
-      <div className="bg-white p-10 rounded-3xl shadow-2xl border border-gray-100/50">
-        <div className="flex items-center gap-4 mb-8">
-          <Calculator className="w-8 h-8 text-blue-600" />
-          <h2 className="text-3xl font-bold text-gray-900">Side-by-Side Comparison</h2>
+      <div className="bg-white rounded-3xl shadow-sm border border-slate-200 overflow-hidden">
+        <div className="p-8 border-b border-slate-100">
+          <div className="flex items-center gap-4">
+            <div className="w-10 h-10 bg-slate-100 rounded-xl flex items-center justify-center">
+              <Calculator className="w-5 h-5 text-slate-600" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900">Side-by-Side Comparison</h2>
+          </div>
         </div>
 
         <div className="overflow-x-auto">
-          <table className="w-full border-collapse">
+          <table className="w-full border-collapse text-left">
             <thead>
-              <tr className="bg-gradient-to-r from-gray-50 to-blue-50">
+              <tr className="bg-slate-50/50">
                 {getComparisonHeaders(product).map((header, index) => (
-                  <th key={index} className="text-left p-5 font-bold text-gray-900 border border-gray-200 text-lg">
+                  <th key={index} className="p-5 font-semibold text-slate-900 border-b border-slate-200 text-sm uppercase tracking-wider whitespace-nowrap">
                     {header}
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-slate-100">
               {comparisons.map((comp: Comparison, index: number) => (
-                <tr key={index} className={`${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50 transition-colors`}>
-                  <td className="p-5 border border-gray-200 font-bold text-gray-900 text-lg">
+                <tr key={index} className="hover:bg-slate-50/50 transition-colors">
+                  <td className="p-5 font-bold text-slate-900">
                     {comp.bank}
                   </td>
-                  <td className="p-5 border border-gray-200 text-gray-700">
+                  <td className="p-5 text-slate-700 font-medium">
                     {comp.product}
                   </td>
                   {product === 'credit-cards' && (
                     <>
-                      <td className="p-5 border border-gray-200 font-semibold text-blue-600">{comp.rewardRate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-600 text-sm">{comp.interestRate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 text-emerald-600 font-semibold">{comp.rewardRate || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.fee || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.interestRate || '-'}</td>
+                      <td className="p-5 text-slate-600 text-sm max-w-xs">{comp.benefits || '-'}</td>
                     </>
                   )}
                   {(product === 'personal-loans' || product === 'home-loans' || product === 'auto-loans' || product === 'education-loans') && (
                     <>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.rate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.processing || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 font-bold text-gray-900 text-lg">{comp.emi || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 text-slate-600">{comp.rate || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.processing || '-'}</td>
+                      <td className="p-5 font-bold text-slate-900">{comp.emi || '-'}</td>
+                      <td className="p-5 text-slate-600 text-sm max-w-xs">{comp.benefits || '-'}</td>
                     </>
                   )}
                   {(product === 'health-insurance' || product === 'life-insurance' || product === 'auto-insurance' || product === 'home-insurance') && (
                     <>
-                      <td className="p-5 border border-gray-200 font-semibold text-blue-600">{comp.rate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 text-emerald-600 font-semibold">{comp.rate || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.fee || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.benefits || '-'}</td>
+                      <td className="p-5 text-slate-600 text-sm max-w-xs">{comp.benefits || '-'}</td>
                     </>
                   )}
                   {product === 'mutual-funds' && (
                     <>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 font-semibold text-green-600">{comp.rate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 text-slate-600">{comp.fee || '-'}</td>
+                      <td className="p-5 text-emerald-600 font-semibold">{comp.rate || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.benefits || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.benefits || '-'}</td>
                     </>
                   )}
                   {!['credit-cards', 'personal-loans', 'home-loans', 'auto-loans', 'education-loans', 'health-insurance', 'life-insurance', 'auto-insurance', 'home-insurance', 'mutual-funds'].includes(product) && (
                     <>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.rate || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'Standard'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'Standard'}</td>
+                      <td className="p-5 text-slate-600">{comp.rate || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.fee || '-'}</td>
+                      <td className="p-5 text-slate-600">{comp.benefits || 'Standard'}</td>
+                      <td className="p-5 text-slate-600">{comp.benefits || 'Standard'}</td>
                     </>
                   )}
                 </tr>
@@ -1508,12 +1585,12 @@ function ComparisonResults({
           </table>
         </div>
 
-        <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl">
-          <div className="flex items-start gap-4">
-            <CheckCircle className="w-6 h-6 text-blue-600 mt-1" />
+        <div className="p-6 bg-slate-50 border-t border-slate-200">
+          <div className="flex items-start gap-3">
+            <CheckCircle className="w-5 h-5 text-emerald-600 mt-0.5" />
             <div>
-              <h4 className="font-bold text-xl text-blue-900 mb-2">How We Rank Products</h4>
-              <p className="text-blue-800">
+              <h4 className="font-bold text-sm text-slate-900 mb-1">How We Rank Products</h4>
+              <p className="text-sm text-slate-600">
                 Our AI considers your profile, current market rates, approval probability, and overall value
                 to rank products. The &quot;Best Match&quot; considers your specific requirements and eligibility.
               </p>
@@ -1521,22 +1598,6 @@ function ComparisonResults({
           </div>
         </div>
       </div>
-
-      {/* Action Section */}
-      {/* <div className="bg-gradient-to-r from-gray-900 to-indigo-900 text-white p-12 rounded-3xl text-center">
-        <h2 className="text-3xl font-bold mb-6">Ready to Apply?</h2>
-        <p className="text-xl text-gray-300 mb-8">
-          These recommendations are personalized for your profile. Apply now to get the best rates and offers.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-6 justify-center">
-          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-4 rounded-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg shadow-blue-500/30">
-            Apply for Top Choice
-          </button>
-          <button className="border-2 border-white text-white px-10 py-4 rounded-2xl font-bold hover:bg-white hover:text-gray-900 transition-all">
-            Compare More Products
-          </button>
-        </div>
-      </div> */}
     </div>
   );
 }

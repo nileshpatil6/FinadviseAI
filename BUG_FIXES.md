@@ -1,4 +1,4 @@
-# FinadviseAI - Bug Fixes Summary
+# Bankbuz- Bug Fixes Summary
 
 ## Issues Identified and Fixed
 

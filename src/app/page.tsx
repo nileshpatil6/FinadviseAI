@@ -1,902 +1,855 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { 
-  CreditCard, 
-  Shield, 
-  TrendingUp, 
-  CheckCircle, 
-  ArrowRight, 
-  Star,
-  PiggyBank,
-  Home as HomeIcon,
+import { motion, useScroll, useTransform, Variants, AnimatePresence } from 'framer-motion';
+import {
+  CreditCard,
+  Shield,
+  TrendingUp,
+  CheckCircle,
+  ArrowRight,
+  PieChart,
   Landmark,
   Building2,
   Wallet,
   Calculator,
   Target,
   Globe,
-  Zap,
   Lock,
+  Zap,
+  ChevronRight,
+  BarChart3,
+  Smartphone,
+  ChevronDown,
+  Search,
   Users,
-  Sparkles,
-  Facebook,
-  Linkedin,
-  Instagram
+  Briefcase,
+  Briefcase,
+  Home as HomeIcon,
+  Heart
 } from 'lucide-react';
 import Link from 'next/link';
+import Image from 'next/image';
+import { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+// --- Components ---
+
+const SectionHeading = ({ children, subtitle }: { children: React.ReactNode, subtitle?: string }) => (
+  <div className="mb-16 md:mb-24 text-center max-w-3xl mx-auto px-4">
+    {subtitle && (
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="text-emerald-600 font-semibold tracking-wider uppercase text-sm mb-4"
+      >
+        {subtitle}
+      </motion.div>
+    )}
+    <motion.h2
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      className="text-3xl md:text-5xl font-bold text-slate-900 leading-tight"
+    >
+      {children}
+    </motion.h2>
+    <motion.div
+      initial={{ scaleX: 0 }}
+      whileInView={{ scaleX: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.8, ease: "circOut" }}
+      className="h-1 w-24 bg-emerald-500 mx-auto mt-6 rounded-full"
+    />
+  </div>
+);
+
+const FeatureCard = ({ icon: Icon, title, desc, delay }: { icon: any, title: string, desc: string, delay: number }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ delay, duration: 0.5 }}
+    className="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+  >
+    <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-slate-900 transition-colors duration-300">
+      <Icon className="w-7 h-7 text-slate-900 group-hover:text-white transition-colors duration-300" />
+    </div>
+    <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
+    <p className="text-slate-500 leading-relaxed">{desc}</p>
+  </motion.div>
+);
+
+const StatCard = ({ value, label }: { value: string, label: string }) => (
+  <div className="text-center p-6 border-r border-slate-100 last:border-0">
+    <div className="text-4xl font-bold text-slate-900 mb-2">{value}</div>
+    <div className="text-sm text-slate-500 font-medium uppercase tracking-wider">{label}</div>
+  </div>
+);
+
+const FaqItem = ({ question, answer }: { question: string, answer: string }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <div className="border-b border-slate-200">
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full py-6 flex items-center justify-between text-left focus:outline-none"
+      >
+        <span className="text-lg font-semibold text-slate-900">{question}</span>
+        <ChevronDown className={`w-5 h-5 text-slate-500 transition-transform duration-300 ${isOpen ? 'rotate-180' : ''}`} />
+      </button>
+      <motion.div
+        initial={false}
+        animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        className="overflow-hidden"
+      >
+        <p className="pb-6 text-slate-600 leading-relaxed">{answer}</p>
+      </motion.div>
+    </div>
+  );
+};
+
+// --- Animation Variants ---
+
+const containerVariants: any = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.3,
+    }
+  }
+};
+
+const itemVariants: any = {
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
+};
+
+// --- Main Page ---
 
 export default function Home() {
+  const { scrollYProgress } = useScroll();
+  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const router = useRouter();
+
+  const handleProductClick = (path: string) => {
+    router.push(path);
+    setIsProductsOpen(false);
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+    <div className="min-h-screen bg-white font-sans text-slate-900 selection:bg-emerald-100 selection:text-emerald-900 overflow-x-hidden">
+
+      {/* Scroll Progress Bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-emerald-500 origin-left z-[100]"
+        style={{ scaleX: scrollYProgress }}
+      />
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl z-50 border-b border-gray-100/50 shadow-sm">
+      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-xl z-50 border-b border-slate-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18">
-            <motion.div 
-              className="flex items-center space-x-3"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur-lg opacity-30"></div>
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center relative z-10">
-                  <Sparkles className="w-5 h-5 text-white" />
-                </div>
+          <div className="flex items-center justify-between h-20">
+            <div className="flex items-center gap-2">
+              <Image
+                src="/images/logo.png"
+                alt="BankBuz Logo"
+                width={150}
+                height={40}
+                className="h-10 w-auto object-contain"
+              />
+            </div>
+
+            <div className="hidden md:flex items-center space-x-8">
+              <a href="#features" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Features</a>
+
+              <div
+                className="relative"
+                onMouseEnter={() => setIsProductsOpen(true)}
+                onMouseLeave={() => setIsProductsOpen(false)}
+              >
+                <button
+                  className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors flex items-center gap-1"
+                  onClick={() => setIsProductsOpen(!isProductsOpen)}
+                >
+                  Products <ChevronDown className={`w-4 h-4 transition-transform ${isProductsOpen ? 'rotate-180' : ''}`} />
+                </button>
+
+                <AnimatePresence>
+                  {isProductsOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-[600px] bg-white rounded-2xl shadow-xl border border-slate-100 p-6 grid grid-cols-2 gap-6 z-50"
+                    >
+                      <div className="space-y-4">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Lending & Cards</h4>
+                        <div onClick={() => handleProductClick("/platform?product=credit-cards")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                            <CreditCard className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Credit Cards</div>
+                            <div className="text-xs text-slate-500">Compare rewards & fees</div>
+                          </div>
+                        </div>
+                        <div onClick={() => handleProductClick("/platform?product=personal-loans")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                            <Wallet className="w-5 h-5 text-purple-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Personal Loans</div>
+                            <div className="text-xs text-slate-500">Instant approval loans</div>
+                          </div>
+                        </div>
+                        <div onClick={() => handleProductClick("/platform?product=home-loans")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-indigo-50 rounded-lg flex items-center justify-center group-hover:bg-indigo-100 transition-colors">
+                            <HomeIcon className="w-5 h-5 text-indigo-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Home Loans</div>
+                            <div className="text-xs text-slate-500">Best mortgage rates</div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-4">
+                        <h4 className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Investments & Insurance</h4>
+                        <div onClick={() => handleProductClick("/platform?product=mutual-funds")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center group-hover:bg-orange-100 transition-colors">
+                            <TrendingUp className="w-5 h-5 text-orange-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Mutual Funds</div>
+                            <div className="text-xs text-slate-500">Direct plans, 0% commission</div>
+                          </div>
+                        </div>
+                        <div onClick={() => handleProductClick("/platform?product=health-insurance")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                            <Shield className="w-5 h-5 text-emerald-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Health Insurance</div>
+                            <div className="text-xs text-slate-500">Comprehensive coverage</div>
+                          </div>
+                        </div>
+                        <div onClick={() => handleProductClick("/platform?product=emi-calculator")} className="flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer">
+                          <div className="w-10 h-10 bg-amber-50 rounded-lg flex items-center justify-center group-hover:bg-amber-100 transition-colors">
+                            <Calculator className="w-5 h-5 text-amber-600" />
+                          </div>
+                          <div>
+                            <div className="font-bold text-slate-900 text-sm">Calculators</div>
+                            <div className="text-xs text-slate-500">EMI, SIP, & more</div>
+                          </div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
-              <div>
-                <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Unifiny</span>
-                <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
-              </div>
-            </motion.div>
-            
-            <motion.div 
-              className="hidden md:flex items-center space-x-8"
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
-            >
-              <a href="#products" className="text-gray-600 hover:text-blue-600 transition-colors font-medium group">
-                Products
-                <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-blue-600"></span>
-              </a>
-              <a href="#how-it-works" className="text-gray-600 hover:text-blue-600 transition-colors font-medium group">
-                How It Works
-                <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-blue-600"></span>
-              </a>
-              <a href="#comparison" className="text-gray-600 hover:text-blue-600 transition-colors font-medium group">
-                Compare
-                <span className="block max-w-0 group-hover:max-w-full transition-all duration-500 h-0.5 bg-blue-600"></span>
-              </a>
-              <Link href="/platform" className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 shadow-lg shadow-blue-500/20 font-semibold">
-                Get Started
+
+              <a href="#how-it-works" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">How it Works</a>
+              <Link href="/platform" className="group bg-slate-900 text-white px-6 py-3 rounded-xl text-sm font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center gap-2">
+                Launch Platform <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
-            </motion.div>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-20 left-10 w-72 h-72 bg-blue-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob"></div>
-        <div className="absolute top-40 right-10 w-72 h-72 bg-indigo-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-2000"></div>
-        <div className="absolute bottom-20 left-1/2 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-blob animation-delay-4000"></div>
-        
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="text-center">
+      <section className="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-50/50 via-white to-white z-0"></div>
+        <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
+          <div className="max-w-2xl">
             <motion.div
-              className="mb-8"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
             >
-              <div className="inline-flex items-center bg-gradient-to-r from-blue-100 to-indigo-100 text-blue-800 px-6 py-3 rounded-full text-sm font-medium mb-6 border border-blue-200 shadow-sm">
-                <Globe className="w-4 h-4 mr-2" />
-                Credit Cards | Loans | Insurance | Mortgages | Mutual Funds | Assets | Accounts
-              </div>
-            </motion.div>
-            
-            <motion.h1 
-              className="text-5xl md:text-7xl font-bold text-gray-900 mb-6 leading-tight"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              <span className="block text-3xl md:text-4xl font-medium text-gray-600 mb-6">
-                <span className="relative">
-                  <span className="relative z-10">Unified Financial Product Platform</span>
-                  <span className="absolute bottom-0 left-0 w-full h-3 bg-blue-100 -z-10"></span>
-                </span>
-              </span>
-              One Platform.
-              <span className="block bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent">
-                All Financial Solutions.
-              </span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-xl md:text-2xl text-gray-600 mb-10 max-w-4xl mx-auto leading-relaxed"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              Compare and get personalized recommendations with eligibility check and approval probability. 
-              Get top 3 best-fit products with direct bank links.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-6 justify-center items-center mb-16"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
-            >
-              <Link href="/platform" className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-10 py-5 rounded-2xl text-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-105 flex items-center gap-3 shadow-2xl shadow-blue-500/30">
-                Find Best Products 
-                <ArrowRight className="w-6 h-6 transition-transform group-hover:translate-x-1" />
-              </Link>
-              
-              <div className="flex items-center gap-4 text-gray-600">
-                <div className="flex -space-x-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-green-400 to-blue-500 p-0.5">
-                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-xs font-bold text-gray-700">AJ</div>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-purple-400 to-pink-500 p-0.5">
-                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-xs font-bold text-gray-700">SR</div>
-                  </div>
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 to-red-500 p-0.5">
-                    <div className="w-full h-full rounded-full bg-white flex items-center justify-center text-xs font-bold text-gray-700">PK</div>
-                  </div>
-                </div>
-                <span className="font-medium">Trusted by 10,000+ users</span>
-              </div>
-            </motion.div>
-
-            {/* Product Categories Grid */}
-            <motion.div 
-              className="grid grid-cols-4 md:grid-cols-8 gap-5 max-w-5xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.8 }}
-            >
-              {[
-                { icon: CreditCard, label: "Credit Cards", color: "text-blue-600", product: "credit-cards" },
-                { icon: Wallet, label: "Debit Cards", color: "text-green-600", product: "debit-cards" },
-                { icon: PiggyBank, label: "Loans", color: "text-purple-600", product: "personal-loans" },
-                { icon: Shield, label: "Insurance", color: "text-red-600", product: "health-insurance" },
-                { icon: HomeIcon, label: "Mortgages", color: "text-orange-600", product: "home-loans" },
-                { icon: TrendingUp, label: "Mutual Funds", color: "text-emerald-600", product: "mutual-funds" },
-                { icon: Landmark, label: "Assets", color: "text-indigo-600", product: "fixed-deposits" },
-                { icon: Building2, label: "Accounts", color: "text-cyan-600", product: "bank-accounts" },
-              ].map((category, index) => (
-                <Link href={`/platform?product=${category.product}`} key={index}>
-                  <motion.div
-                    className="flex flex-col items-center p-5 bg-white/70 backdrop-blur-sm rounded-2xl shadow-lg hover:shadow-2xl transition-all cursor-pointer group border border-gray-100 hover:border-blue-200"
-                    whileHover={{ scale: 1.05, y: -8 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                      <category.icon className={`w-10 h-10 ${category.color} mb-3 relative z-10 group-hover:scale-110 transition-transform`} />
-                    </div>
-                    <span className="text-sm font-semibold text-gray-700 text-center">{category.label}</span>
-                  </motion.div>
-                </Link>
-              ))}
-            </motion.div>
-          </div>
-        </div>
-      </section>
-
-      {/* Trust Indicators */}
-      <section className="py-12 bg-white/50 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center">
-            {[
-              { icon: Users, label: "10,000+ Users", desc: "Trusted by customers" },
-              { icon: Globe, label: "500+ Partners", desc: "Banks & financial institutions" },
-              { icon: Lock, label: "Bank Level Security", desc: "Protected transactions" },
-              { icon: Zap, label: "Instant Results", desc: "Get recommendations in seconds" }
-            ].map((item, index) => (
-              <motion.div 
-                key={index}
-                className="text-center"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <item.icon className="w-6 h-6 text-white" />
-                </div>
-                <div className="font-bold text-gray-900 text-lg">{item.label}</div>
-                <div className="text-sm text-gray-600">{item.desc}</div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Product Categories Section */}
-      <section id="products" className="py-24 bg-gradient-to-br from-white to-blue-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <motion.div
-              className="inline-block mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-1 rounded-full mx-auto"></div>
-            </motion.div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              Complete Financial Product Suite
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Dual Flow: User Input → Comparison & Eligibility Check → Top 3 Personalized Products with Direct Bank Links
-            </motion.p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {[
-              {
-                icon: CreditCard,
-                title: "Credit Cards",
-                subtitle: "All Types",
-                items: ["Cashback Cards", "Travel Rewards", "Premium Benefits", "Student Cards"],
-                color: "from-blue-500 to-blue-600",
-                gradient: "bg-gradient-to-r from-blue-50 to-indigo-50"
-              },
-              {
-                icon: PiggyBank,
-                title: "Loans",
-                subtitle: "Personal & Business",
-                items: ["Personal Loans", "Home Loans", "Auto Loans", "Education Loans"],
-                color: "from-purple-500 to-purple-600",
-                gradient: "bg-gradient-to-r from-purple-50 to-pink-50"
-              },
-              {
-                icon: Shield,
-                title: "Insurance",
-                subtitle: "Complete Coverage",
-                items: ["Health Insurance", "Life Insurance", "Auto Insurance", "Home Insurance"],
-                color: "from-red-500 to-red-600",
-                gradient: "bg-gradient-to-r from-red-50 to-orange-50"
-              },
-              {
-                icon: TrendingUp,
-                title: "Mutual Funds",
-                subtitle: "Investment Growth",
-                items: ["Equity Funds", "Debt Funds", "Hybrid Funds", "Tax Saving"],
-                color: "from-green-500 to-green-600",
-                gradient: "bg-gradient-to-r from-green-50 to-emerald-50"
-              },
-              {
-                icon: HomeIcon,
-                title: "Mortgages",
-                subtitle: "Home Financing",
-                items: ["Home Purchase", "Refinancing", "Construction", "Plot Purchase"],
-                color: "from-orange-500 to-orange-600",
-                gradient: "bg-gradient-to-r from-orange-50 to-yellow-50"
-              },
-              {
-                icon: Landmark,
-                title: "Assets",
-                subtitle: "Fixed Returns",
-                items: ["Fixed Deposits", "Recurring Deposits", "Bonds", "PPF/EPF"],
-                color: "from-indigo-500 to-indigo-600",
-                gradient: "bg-gradient-to-r from-indigo-50 to-purple-50"
-              },
-              {
-                icon: Building2,
-                title: "Bank Accounts",
-                subtitle: "All Account Types",
-                items: ["Savings Account", "Current Account", "Salary Account", "NRI Accounts"],
-                color: "from-cyan-500 to-cyan-600",
-                gradient: "bg-gradient-to-r from-cyan-50 to-blue-50"
-              },
-              {
-                icon: Wallet,
-                title: "Debit Cards",
-                subtitle: "Enhanced Banking",
-                items: ["Platinum Cards", "International", "Cashback", "Zero Balance"],
-                color: "from-teal-500 to-teal-600",
-                gradient: "bg-gradient-to-r from-teal-50 to-green-50"
-              }
-            ].map((product, index) => (
-              <Link href="/platform" key={index}>
-                <motion.div
-                  className={`p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all group cursor-pointer border border-gray-100 hover:border-blue-200 ${product.gradient}`}
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: index * 0.1 }}
-                  whileHover={{ y: -10 }}
-                >
-                <div className={`w-16 h-16 bg-gradient-to-r ${product.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform shadow-lg`}>
-                  <product.icon className="w-8 h-8 text-white" />
-                </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-2">{product.title}</h3>
-                <p className="text-sm text-gray-600 mb-6 font-medium">{product.subtitle}</p>
-                <ul className="space-y-3">
-                  {product.items.map((item, i) => (
-                    <li key={i} className="text-sm text-gray-700 flex items-center">
-                      <div className="w-5 h-5 mr-3 flex items-center justify-center">
-                        <CheckCircle className="w-4 h-4 text-green-500" />
-                      </div>
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-6">
-                  <span className="text-sm font-semibold text-blue-600 group-hover:underline">Explore →</span>
-                </div>
-                </motion.div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Comparison Engine Section */}
-      <section id="comparison" className="py-24 bg-gradient-to-br from-gray-50 to-blue-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <motion.div
-              className="inline-block mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="bg-gradient-to-r from-purple-600 to-blue-600 w-20 h-1 rounded-full mx-auto"></div>
-            </motion.div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              Advanced Comparison Engine
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Side-by-side comparison with filters: Best Value | Best Overall | Best Match for You
-            </motion.p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-10">
-            {[
-              {
-                icon: Calculator,
-                title: "Smart Comparison",
-                color: "text-blue-600",
-                description: "Compare across banks with metrics like Interest Rate, Tenure, Charges, Benefits & Approval Probability",
-                features: [
-                  "Bank/Product comparison table",
-                  "Real-time rates & charges",
-                  "Approval probability scoring"
-                ],
-                gradient: "from-blue-500 to-indigo-600"
-              },
-              {
-                icon: Target,
-                title: "Eligibility Engine",
-                color: "text-purple-600",
-                description: "CIBIL/Experian integration with PAN/Aadhaar verification for accurate eligibility assessment",
-                features: [
-                  "Credit score analysis",
-                  "Income verification",
-                  "High approval products"
-                ],
-                gradient: "from-purple-500 to-pink-600"
-              },
-              {
-                icon: Star,
-                title: "Top 3 Results",
-                color: "text-orange-600",
-                description: "Get best-fit recommendations with approval probability, key benefits and direct apply links",
-                features: [
-                  "Personalized ranking",
-                  "Direct bank/AMC links",
-                  "Key benefits summary"
-                ],
-                gradient: "from-orange-500 to-red-500"
-              }
-            ].map((feature, index) => (
               <motion.div
-                key={index}
-                className="bg-white p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all group border border-gray-100"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.2 }}
-                whileHover={{ y: -10 }}
+                variants={itemVariants}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-50 border border-slate-200 text-slate-600 text-sm font-medium mb-8"
               >
-                <div className="w-20 h-20 bg-gradient-to-r from-gray-100 to-gray-50 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-gradient-to-r group-hover:from-blue-50 group-hover:to-indigo-50 transition-all">
-                  <div className={`w-12 h-12 bg-gradient-to-r ${feature.gradient} rounded-xl flex items-center justify-center`}>
-                    <feature.icon className="w-6 h-6 text-white" />
-                  </div>
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900 mb-4">{feature.title}</h3>
-                <p className="text-gray-600 mb-6 text-lg">
-                  {feature.description}
-                </p>
-                <ul className="space-y-3">
-                  {feature.features.map((item, i) => (
-                    <li key={i} className="flex items-start">
-                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                        <CheckCircle className="w-3 h-3 text-green-600" />
-                      </div>
-                      <span className="text-gray-700">{item}</span>
-                    </li>
-                  ))}
-                </ul>
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                Unified Financial Product Platform
               </motion.div>
-            ))}
+
+              <motion.h1
+                variants={itemVariants}
+                className="text-5xl lg:text-7xl font-bold text-slate-900 mb-8 tracking-tight leading-[1.1]"
+              >
+                One Platform. <br />
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900">
+                  All Financial Solutions.
+                </span>
+              </motion.h1>
+
+              <motion.p
+                variants={itemVariants}
+                className="text-xl text-slate-600 mb-10 leading-relaxed"
+              >
+                Compare and get personalized recommendations with eligibility check and approval probability. Get top 3 best-fit products with direct bank links.
+              </motion.p>
+
+              <motion.div
+                variants={itemVariants}
+                className="flex flex-col sm:flex-row gap-4"
+              >
+                <Link href="/platform" className="bg-slate-900 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-slate-800 transition-all flex items-center justify-center gap-2 shadow-xl hover:shadow-2xl hover:-translate-y-1">
+                  Start Free Analysis
+                </Link>
+                <a href="#how-it-works" className="px-8 py-4 rounded-xl text-lg font-medium text-slate-700 hover:bg-slate-50 transition-all border border-slate-200 flex items-center justify-center gap-2">
+                  See How It Works
+                </a>
+              </motion.div>
+
+              <motion.div
+                variants={itemVariants}
+                className="mt-12 pt-8 border-t border-slate-100"
+              >
+                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Instant Access to Premium Products</p>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {[
+                    { name: 'Credit Cards', icon: CreditCard, path: '/platform?product=credit-cards', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', shadow: 'shadow-blue-100' },
+                    { name: 'Personal Loans', icon: Wallet, path: '/platform?product=personal-loans', color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100', shadow: 'shadow-purple-100' },
+                    { name: 'Home Loans', icon: HomeIcon, path: '/platform?product=home-loans', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', shadow: 'shadow-indigo-100' },
+                    { name: 'Mutual Funds', icon: TrendingUp, path: '/platform?product=mutual-funds', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', shadow: 'shadow-orange-100' },
+                    { name: 'Health Ins.', icon: Shield, path: '/platform?product=health-insurance', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', shadow: 'shadow-emerald-100' },
+                    { name: 'Life Ins.', icon: Heart, path: '/platform?product=life-insurance', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100', shadow: 'shadow-rose-100' },
+                    { name: 'Stocks', icon: BarChart3, path: '/platform?product=stocks', color: 'text-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-100', shadow: 'shadow-cyan-100' },
+                    { name: 'Calculators', icon: Calculator, path: '/platform?product=emi-calculator', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', shadow: 'shadow-amber-100' },
+                  ].map((product, i) => (
+                    <motion.div
+                      key={product.name}
+                      whileHover={{ y: -5, scale: 1.02 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => router.push(product.path)}
+                      className={`cursor-pointer flex flex-col items-center justify-center p-4 rounded-2xl border ${product.border} bg-white shadow-sm hover:shadow-xl hover:${product.shadow} transition-all duration-300 h-full group`}
+                    >
+                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${product.bg}`}>
+                        <product.icon className={`w-6 h-6 ${product.color}`} />
+                      </div>
+                      <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 text-center leading-tight">
+                        {product.name}
+                      </span>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            </motion.div>
           </div>
+
+          <motion.div
+            className="relative"
+            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2 }}
+          >
+            <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
+              <Image
+                src="/images/hero-dashboard.png"
+                alt="BankBuz Dashboard"
+                width={800}
+                height={600}
+                className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
+              />
+              {/* Overlay Gradient */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 to-transparent pointer-events-none"></div>
+            </div>
+
+            {/* Floating Glass Cards */}
+            <motion.div
+              className="absolute -left-12 top-20 z-20 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 hidden lg:block max-w-xs"
+              animate={{ y: [0, -15, 0] }}
+              transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-emerald-600" />
+                </div>
+                <div>
+                  <div className="text-xs text-slate-500 font-semibold uppercase">Eligibility Confirmed</div>
+                  <div className="text-sm font-bold text-slate-900">HDFC Regalia Gold</div>
+                </div>
+              </div>
+              <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
+                <div className="bg-emerald-500 h-full w-[92%]"></div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              className="absolute -right-8 bottom-20 z-20 bg-white/90 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-white/20 hidden lg:block"
+              animate={{ y: [0, 15, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            >
+              <div className="flex items-center gap-4">
+                <div className="text-center">
+                  <div className="text-xs text-slate-400 uppercase font-bold">Savings</div>
+                  <div className="text-xl font-bold text-emerald-600">+₹12.5k</div>
+                </div>
+                <div className="h-8 w-px bg-slate-200"></div>
+                <div className="text-center">
+                  <div className="text-xs text-slate-400 uppercase font-bold">Score</div>
+                  <div className="text-xl font-bold text-blue-600">785</div>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="py-24 bg-gradient-to-r from-blue-600 via-indigo-700 to-purple-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <motion.div
-              className="inline-block mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="bg-gradient-to-r from-yellow-400 to-orange-500 w-20 h-1 rounded-full mx-auto"></div>
-            </motion.div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-white mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              Dual User Flow System
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-blue-100 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Two ways to find your perfect financial product: Compare by input criteria or check eligibility with verification
-            </motion.p>
-          </div>
-
-          <div className="grid lg:grid-cols-2 gap-16">
-            {/* User Input Flow */}
-            <motion.div
-              className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 border border-white/20"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold">1</span>
-                </div>
-                <h3 className="text-3xl font-bold text-white">Flow 1: User Input Comparison</h3>
-              </div>
-              <div className="space-y-8">
-                {[
-                  {
-                    step: "1",
-                    title: "Select Product Category",
-                    description: "Choose from Credit Cards, Loans, Insurance, Mutual Funds, etc."
-                  },
-                  {
-                    step: "2", 
-                    title: "Enter Your Requirements",
-                    description: "Age, Income, Spending Pattern, Risk Appetite, Loan Amount, etc."
-                  },
-                  {
-                    step: "3",
-                    title: "Compare Across Banks",
-                    description: "System compares all available options with rates and features"
-                  },
-                  {
-                    step: "4",
-                    title: "Top 3 Best Results",
-                    description: "Get personalized recommendations with apply links"
-                  }
-                ].map((step, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-start gap-6 p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                  >
-                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-white">{step.step}</span>
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-semibold text-white mb-2">{step.title}</h4>
-                      <p className="text-blue-100 text-lg">{step.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-
-            {/* Eligibility Flow */}
-            <motion.div
-              className="bg-white/10 backdrop-blur-xl rounded-3xl p-10 border border-white/20"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div className="flex items-center gap-4 mb-8">
-                <div className="w-12 h-12 bg-gradient-to-r from-purple-500 to-pink-600 rounded-xl flex items-center justify-center">
-                  <span className="text-white font-bold">2</span>
-                </div>
-                <h3 className="text-3xl font-bold text-white">Flow 2: Eligibility Check</h3>
-              </div>
-              <div className="space-y-8">
-                {[
-                  {
-                    step: "1",
-                    title: "Secure Login",
-                    description: "Login with PAN/Aadhaar/OTP for secure verification"
-                  },
-                  {
-                    step: "2",
-                    title: "Credit Bureau Check",
-                    description: "System fetches CIBIL score, income, and liabilities data"
-                  },
-                  {
-                    step: "3",
-                    title: "Eligibility Engine",
-                    description: "AI shortlists products you qualify for with high approval chance"
-                  },
-                  {
-                    step: "4",
-                    title: "Pre-Approved Products",
-                    description: "Get products with high approval probability and instant apply"
-                  }
-                ].map((step, index) => (
-                  <motion.div
-                    key={index}
-                    className="flex items-start gap-6 p-5 bg-white/5 rounded-2xl hover:bg-white/10 transition-colors"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.2 + index * 0.1 }}
-                  >
-                    <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center flex-shrink-0">
-                      <span className="text-sm font-bold text-white">{step.step}</span>
-                    </div>
-                    <div>
-                      <h4 className="text-xl font-semibold text-white mb-2">{step.title}</h4>
-                      <p className="text-blue-100 text-lg">{step.description}</p>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+      {/* Marquee Section */}
+      <section className="py-10 border-y border-slate-100 bg-slate-50/50 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 mb-6 text-center">
+          <p className="text-sm font-semibold text-slate-400 uppercase tracking-widest">Analyzing products from top institutions</p>
+        </div>
+        <div className="flex gap-16 animate-marquee whitespace-nowrap">
+          {/* Repeated logos for seamless loop */}
+          {[...Array(2)].map((_, i) => (
+            <div key={i} className="flex gap-16 items-center opacity-50 grayscale hover:grayscale-0 transition-all duration-500">
+              {['HDFC Bank', 'ICICI Bank', 'SBI Card', 'Axis Bank', 'Kotak Mahindra', 'American Express', 'IDFC First', 'Standard Chartered'].map((bank) => (
+                <span key={bank} className="text-2xl font-bold text-slate-400 hover:text-slate-900 cursor-default">{bank}</span>
+              ))}
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Sample Calculations Section */}
-      <section className="py-24 bg-gradient-to-br from-white to-gray-50">
+      {/* Problem / Solution Section */}
+      <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
-              className="inline-block mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6 }}
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
             >
-              <div className="bg-gradient-to-r from-green-500 to-teal-600 w-20 h-1 rounded-full mx-auto"></div>
+              <SectionHeading subtitle="The Problem">
+                Finance is Complex. <br />
+                <span className="text-slate-400">We Made It Simple.</span>
+              </SectionHeading>
+              <div className="space-y-8">
+                <motion.div variants={itemVariants} className="flex gap-4">
+                  <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center flex-shrink-0">
+                    <Search className="w-6 h-6 text-red-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Information Overload</h3>
+                    <p className="text-slate-600">Hundreds of cards, thousands of schemes. Finding the right one manually is impossible.</p>
+                  </div>
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex gap-4">
+                  <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center flex-shrink-0">
+                    <Lock className="w-6 h-6 text-orange-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Hidden Charges</h3>
+                    <p className="text-slate-600">Banks hide fees in fine print. We expose every single charge upfront.</p>
+                  </div>
+                </motion.div>
+                <motion.div variants={itemVariants} className="flex gap-4">
+                  <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center flex-shrink-0">
+                    <Target className="w-6 h-6 text-blue-500" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-slate-900 mb-2">Generic Advice</h3>
+                    <p className="text-slate-600">"Best Card" lists don't know your spending. We analyze YOUR data for custom matches.</p>
+                  </div>
+                </motion.div>
+              </div>
             </motion.div>
-            <motion.h2 
-              className="text-4xl md:text-5xl font-bold text-gray-900 mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-            >
-              See Real Results
-            </motion.h2>
-            <motion.p 
-              className="text-xl text-gray-600 max-w-3xl mx-auto"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              Sample calculations showing how our platform finds you the best deals across different financial products
-            </motion.p>
-          </div>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {/* Credit Card Example */}
             <motion.div
-              className="bg-gradient-to-br from-blue-50 to-indigo-100 p-8 rounded-3xl shadow-xl border border-blue-100/50"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="bg-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden"
             >
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-gradient-to-r from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mr-4">
-                  <CreditCard className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Credit Card</h3>
-              </div>
-              <div className="space-y-3 text-sm text-gray-700 mb-6 bg-white/50 p-4 rounded-xl">
-                <p><span className="font-semibold">Input:</span> Age 28, ₹12 LPA, Travel + Shopping</p>
-                <p><span className="font-semibold">CIBIL:</span> 760 → Premium cards eligible</p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl mb-6 shadow-lg">
-                <h4 className="font-bold text-lg text-blue-600 mb-3">Best Result: HDFC Regalia</h4>
-                <ul className="space-y-2 text-gray-700">
-                  <li className="flex justify-between">
-                    <span>Annual Fee:</span>
-                    <span className="font-semibold">₹2,500</span>
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              <div className="relative z-10">
+                <h3 className="text-2xl font-bold mb-6">The Finadvise Advantage</h3>
+                <ul className="space-y-6">
+                  <li className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg">100% Unbiased Recommendations</span>
                   </li>
-                  <li className="flex justify-between">
-                    <span>Cashback:</span>
-                    <span className="font-semibold">~1.3%</span>
+                  <li className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg">Real-time Eligibility Check</span>
                   </li>
-                  <li className="flex justify-between">
-                    <span>Lounge:</span>
-                    <span className="font-semibold">12/year</span>
+                  <li className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg">Direct Bank Application Links</span>
+                  </li>
+                  <li className="flex items-center gap-4">
+                    <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center">
+                      <CheckCircle className="w-5 h-5 text-white" />
+                    </div>
+                    <span className="text-lg">Bank-Grade Data Security</span>
                   </li>
                 </ul>
-              </div>
-              <button className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-[1.02] shadow-lg">
-                Apply Now
-              </button>
-            </motion.div>
-
-            {/* Personal Loan Example */}
-            <motion.div
-              className="bg-gradient-to-br from-purple-50 to-pink-100 p-8 rounded-3xl shadow-xl border border-purple-100/50"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-            >
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-gradient-to-r from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mr-4">
-                  <PiggyBank className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Personal Loan</h3>
-              </div>
-              <div className="space-y-3 text-sm text-gray-700 mb-6 bg-white/50 p-4 rounded-xl">
-                <p><span className="font-semibold">Amount:</span> ₹5,00,000 | <span className="font-semibold">Tenure:</span> 3 years</p>
-                <p><span className="font-semibold">Income:</span> ₹60,000/month | <span className="font-semibold">CIBIL:</span> 720</p>
-              </div>
-              <div className="space-y-3 mb-6 bg-white p-5 rounded-2xl shadow-lg">
-                <div className="flex justify-between items-center p-3 rounded-lg">
-                  <span>HDFC @11%</span>
-                  <span className="text-red-600 font-semibold">₹16,369 EMI</span>
-                </div>
-                <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg border-2 border-green-300">
-                  <span className="font-semibold text-green-800">ICICI @10.5%</span>
-                  <span className="text-green-600 font-bold">₹16,233 EMI</span>
-                </div>
-                <div className="flex justify-between items-center p-3 rounded-lg">
-                  <span>SBI @12%</span>
-                  <span className="text-red-600 font-semibold">₹16,607 EMI</span>
+                <div className="mt-10 pt-10 border-t border-slate-700">
+                  <div className="text-4xl font-bold text-emerald-400 mb-2">0%</div>
+                  <div className="text-slate-400">Commission from you. We are free forever.</div>
                 </div>
               </div>
-              <button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-4 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all transform hover:scale-[1.02] shadow-lg">
-                Apply Now
-              </button>
-            </motion.div>
-
-            {/* Mutual Fund Example */}
-            <motion.div
-              className="bg-gradient-to-br from-green-50 to-teal-100 p-8 rounded-3xl shadow-xl border border-green-100/50"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <div className="flex items-center mb-6">
-                <div className="w-14 h-14 bg-gradient-to-r from-green-500 to-teal-600 rounded-2xl flex items-center justify-center mr-4">
-                  <TrendingUp className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-2xl font-bold text-gray-900">Mutual Fund</h3>
-              </div>
-              <div className="space-y-3 text-sm text-gray-700 mb-6 bg-white/50 p-4 rounded-xl">
-                <p><span className="font-semibold">Goal:</span> ₹10L in 10 years</p>
-                <p><span className="font-semibold">SIP:</span> ₹10,000/month | <span className="font-semibold">Risk:</span> Moderate</p>
-              </div>
-              <div className="bg-white p-6 rounded-2xl mb-6 shadow-lg">
-                <h4 className="font-bold text-lg text-green-600 mb-3">Best Result: Axis Bluechip</h4>
-                <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-blue-50 p-3 rounded-lg">
-                    <div className="text-sm text-gray-600">CAGR</div>
-                    <div className="font-bold text-blue-700">~12%</div>
-                  </div>
-                  <div className="bg-green-50 p-3 rounded-lg">
-                    <div className="text-sm text-gray-600">Projected Value</div>
-                    <div className="font-bold text-green-700">₹23.2L</div>
-                  </div>
-                  <div className="bg-yellow-50 p-3 rounded-lg">
-                    <div className="text-sm text-gray-600">Risk</div>
-                    <div className="font-bold text-yellow-700">Moderate</div>
-                  </div>
-                  <div className="bg-purple-50 p-3 rounded-lg">
-                    <div className="text-sm text-gray-600">Rating</div>
-                    <div className="font-bold text-purple-700">5★</div>
-                  </div>
-                </div>
-              </div>
-              <button className="w-full bg-gradient-to-r from-green-600 to-teal-600 text-white py-4 rounded-xl font-semibold hover:from-green-700 hover:to-teal-700 transition-all transform hover:scale-[1.02] shadow-lg">
-                Start SIP
-              </button>
             </motion.div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-gray-900 via-indigo-900 to-gray-900">
-        <div className="max-w-5xl mx-auto text-center px-4 sm:px-6 lg:px-8">
+      {/* Features Grid (Bento) */}
+      <section id="features" className="py-24 bg-slate-50 scroll-mt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading subtitle="Our Ecosystem">
+            Everything You Need. <br />
+            One Platform.
+          </SectionHeading>
+
           <motion.div
-            className="inline-block mb-8"
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.6 }}
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid grid-cols-1 md:grid-cols-3 gap-6"
           >
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 w-24 h-1 rounded-full mx-auto"></div>
+            {/* Large Card */}
+            <motion.div
+              className="md:col-span-2 bg-white rounded-3xl p-8 md:p-12 shadow-sm border border-slate-100 relative overflow-hidden group"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="relative z-10 max-w-lg">
+                <div className="w-14 h-14 bg-blue-50 rounded-2xl flex items-center justify-center mb-6">
+                  <CreditCard className="w-7 h-7 text-blue-600" />
+                </div>
+                <h3 className="text-3xl font-bold text-slate-900 mb-4">Smart Credit Card Engine</h3>
+                <p className="text-lg text-slate-600 mb-8">
+                  Don't just get a card. Get a card that pays you back. Our engine calculates potential rewards based on your actual spending patterns (dining, travel, fuel) to maximize your annual returns.
+                </p>
+                <Link href="/platform?product=credit-cards" className="text-blue-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                  Find Your Card <ArrowRight className="w-5 h-5" />
+                </Link>
+              </div>
+              <div className="absolute right-0 bottom-0 w-1/2 h-full bg-gradient-to-l from-blue-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </motion.div>
+
+            {/* Tall Card */}
+            <motion.div
+              className="md:row-span-2 bg-slate-900 rounded-3xl p-8 md:p-12 shadow-xl relative overflow-hidden group"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mt-16"></div>
+              <div className="relative z-10 h-full flex flex-col justify-between">
+                <div>
+                  <div className="w-14 h-14 bg-slate-800 rounded-2xl flex items-center justify-center mb-6">
+                    <Shield className="w-7 h-7 text-emerald-400" />
+                  </div>
+                  <h3 className="text-3xl font-bold text-white mb-4">Insurance Shield</h3>
+                  <p className="text-lg text-slate-400 leading-relaxed">
+                    Health, Life, and Auto insurance decoded. We strip away the jargon and highlight the exclusions, waiting periods, and claim settlement ratios that actually matter.
+                  </p>
+                </div>
+                <div className="mt-8">
+                  <div className="bg-slate-800/50 rounded-xl p-4 mb-4 border border-slate-700">
+                    <div className="flex justify-between text-sm mb-2">
+                      <span className="text-slate-300">Coverage</span>
+                      <span className="text-white font-bold">₹1 Cr</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-slate-300">Premium</span>
+                      <span className="text-emerald-400 font-bold">₹850/mo</span>
+                    </div>
+                  </div>
+                  <Link href="/platform?product=health-insurance" className="text-emerald-400 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
+                    Compare Plans <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Medium Card */}
+            <motion.div
+              className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="w-14 h-14 bg-purple-50 rounded-2xl flex items-center justify-center mb-6">
+                <Wallet className="w-7 h-7 text-purple-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">Personal Loans</h3>
+              <p className="text-slate-600 mb-6">
+                Instant approval loans with the lowest interest rates. Compare processing fees and foreclosure charges instantly.
+              </p>
+              <Link href="/platform?product=personal-loans" className="text-purple-600 font-semibold flex items-center gap-2">
+                Check Rates <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
+
+            {/* Medium Card */}
+            <motion.div
+              className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group"
+              variants={itemVariants}
+              whileHover={{ y: -5 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="w-14 h-14 bg-orange-50 rounded-2xl flex items-center justify-center mb-6">
+                <TrendingUp className="w-7 h-7 text-orange-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-900 mb-3">Mutual Funds</h3>
+              <p className="text-slate-600 mb-6">
+                Direct plans with 0% commission. curated portfolios based on your risk appetite and time horizon.
+              </p>
+              <Link href="/platform?product=mutual-funds" className="text-orange-600 font-semibold flex items-center gap-2">
+                Start Investing <ChevronRight className="w-4 h-4" />
+              </Link>
+            </motion.div>
           </motion.div>
-          <motion.h2 
-            className="text-4xl md:text-6xl font-bold text-white mb-8 leading-tight"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <span className="block text-2xl md:text-3xl font-normal text-blue-300 mb-4">
-              One Platform. All Financial Solutions.
-            </span>
-            Ready to Find Your Best Match?
-          </motion.h2>
-          <motion.p 
-            className="text-xl text-gray-300 mb-12"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            Compare products across banks, check eligibility, and get top 3 recommendations with direct apply links
-          </motion.p>
-          <motion.div
-            className="flex flex-col sm:flex-row gap-6 justify-center items-center"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-          >
-            <Link href="/platform" className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-12 py-6 rounded-2xl text-2xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all transform hover:scale-110 inline-flex items-center gap-4 shadow-2xl shadow-blue-500/30">
-              Get Started Now 
-              <ArrowRight className="w-8 h-8 transition-transform group-hover:translate-x-2" />
-            </Link>
-            <div className="text-gray-300 text-center">
-              <div className="text-5xl font-bold text-white mb-2">98%</div>
-              <div className="text-lg">User Satisfaction</div>
+        </div>
+      </section>
+
+      {/* How It Works (Visual) */}
+      <section id="how-it-works" className="py-24 bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="order-2 lg:order-1 relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-emerald-100 to-blue-100 rounded-full blur-3xl opacity-50 transform -translate-x-1/2"></div>
+              <motion.div
+                initial={{ opacity: 0, x: -50 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.8 }}
+                className="relative z-10"
+              >
+                <Image
+                  src="/images/mobile-app.png"
+                  alt="BankBuz Mobile App"
+                  width={600}
+                  height={800}
+                  className="w-full h-auto drop-shadow-2xl rounded-3xl"
+                />
+              </motion.div>
             </div>
-          </motion.div>
+
+            <div className="order-1 lg:order-2">
+              <SectionHeading subtitle="Workflow">
+                From Confusion to <br />
+                Approval in 3 Steps.
+              </SectionHeading>
+
+              <div className="space-y-12 relative">
+                <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-slate-100"></div>
+
+                {[
+                  {
+                    step: "01",
+                    title: "Share Your Profile",
+                    desc: "Tell us about your income, spending habits, and financial goals. No sensitive documents needed initially."
+                  },
+                  {
+                    step: "02",
+                    title: "AI Analysis",
+                    desc: "Our engine scans 500+ products, calculating your eligibility probability and potential savings for each."
+                  },
+                  {
+                    step: "03",
+                    title: "Instant Application",
+                    desc: "Select the best match and apply directly on the bank's official secure portal. No middlemen."
+                  }
+                ].map((item, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, x: 20 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.2 }}
+                    className="relative pl-24"
+                  >
+                    <div className="absolute left-0 top-0 w-16 h-16 bg-white border border-slate-100 rounded-2xl flex items-center justify-center shadow-sm z-10 text-xl font-bold text-slate-300">
+                      {item.step}
+                    </div>
+                    <h3 className="text-2xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                    <p className="text-lg text-slate-600 leading-relaxed">{item.desc}</p>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Security Section */}
+      <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-3xl mx-auto mb-16">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800 border border-slate-700 text-emerald-400 text-sm font-medium mb-8">
+              <Lock className="w-4 h-4" /> Bank-Grade Security
+            </div>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6">Your Privacy is Our Priority.</h2>
+            <p className="text-xl text-slate-400">
+              We do not store your personal financial data. Your information is processed in real-time and never saved on our servers.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 backdrop-blur-sm">
+              <Lock className="w-10 h-10 text-emerald-400 mb-6" />
+              <h3 className="text-xl font-bold mb-3">No Data Storage</h3>
+              <p className="text-slate-400">We operate on a zero-retention policy. Your data is processed in real-time and discarded immediately.</p>
+            </div>
+            <div className="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 backdrop-blur-sm">
+              <Shield className="w-10 h-10 text-blue-400 mb-6" />
+              <h3 className="text-xl font-bold mb-3">No Spam Policy</h3>
+              <p className="text-slate-400">We hate spam calls too. We never share your number with telemarketers.</p>
+            </div>
+            <div className="bg-slate-800/50 p-8 rounded-3xl border border-slate-700 backdrop-blur-sm">
+              <Globe className="w-10 h-10 text-purple-400 mb-6" />
+              <h3 className="text-xl font-bold mb-3">Official Partners</h3>
+              <p className="text-slate-400">We redirect you to official bank websites for the final application. No phishing.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-24 bg-white">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+          <SectionHeading subtitle="FAQ">
+            Frequently Asked <br /> Questions
+          </SectionHeading>
+
+          <div className="space-y-2">
+            <FaqItem
+              question="Is BankBuz really free?"
+              answer="Yes, 100%. We earn a small referral fee from banks only when your application is approved. This cost is never passed on to you."
+            />
+            <FaqItem
+              question="Will checking my eligibility affect my credit score?"
+              answer="No. We perform a 'soft inquiry' which does not impact your CIBIL score. Only when you submit the final application to the bank is a hard inquiry made."
+            />
+            <FaqItem
+              question="How accurate are the approval chances?"
+              answer="Our AI model is trained on thousands of successful applications. While no one can guarantee approval (that's up to the bank), our high-probability matches have a 90%+ success rate."
+            />
+            <FaqItem
+              question="Do you offer business loans?"
+              answer="Yes, we have a dedicated section for business finance including commercial credit cards, MSME loans, and working capital solutions."
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-24 bg-slate-50 border-t border-slate-100">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl md:text-6xl font-bold text-slate-900 mb-8 tracking-tight">
+            Stop Overpaying. <br /> Start Optimizing.
+          </h2>
+          <p className="text-xl text-slate-600 mb-12 max-w-2xl mx-auto">
+            Join the platform that is simplifying finance for the modern Indian user. No fees, no spam, just results.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link href="/platform" className="bg-slate-900 text-white px-10 py-5 rounded-2xl text-xl font-bold hover:bg-slate-800 transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1 flex items-center justify-center gap-3 relative overflow-hidden group">
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
+              Get Started Now <ArrowRight className="w-6 h-6" />
+            </Link>
+          </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="bg-gradient-to-br from-gray-900 to-black text-gray-300 py-20">
+      <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12">
-            <div className="lg:col-span-2">
-              <div className="flex items-center space-x-3 mb-6">
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl blur-lg opacity-30"></div>
-                  <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl flex items-center justify-center relative z-10">
-                    <Sparkles className="w-5 h-5 text-white" />
-                  </div>
-                </div>
-                <div>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-white to-blue-300 bg-clip-text text-transparent">Unifiny</span>
-                  <div className="text-sm text-indigo-400 font-medium">Premium Finance Platform</div>
-                </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
+            <div className="col-span-2">
+              <div className="flex items-center gap-2 mb-6">
+                <Image
+                  src="/images/logo.png"
+                  alt="BankBuz Logo"
+                  width={150}
+                  height={40}
+                  className="h-8 w-auto object-contain"
+                />
               </div>
-              <p className="text-gray-400 mb-6 max-w-md">
-                Making financial decisions smarter with AI-powered insights. Compare, analyze, and choose the best financial products for your needs.
+              <p className="text-slate-500 mb-6 max-w-sm leading-relaxed">
+                The next generation of financial aggregation. We use AI to match you with the perfect financial products, saving you time and money.
               </p>
               <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer" aria-label="Facebook">
-                  <Facebook className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-blue-600 hover:to-indigo-600 transition-all cursor-pointer" aria-label="LinkedIn">
-                  <Linkedin className="w-5 h-5" />
-                </a>
-                <a href="#" className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-gradient-to-r hover:from-pink-600 hover:to-purple-600 transition-all cursor-pointer" aria-label="Instagram">
-                  <Instagram className="w-5 h-5" />
-                </a>
+                {/* Social Placeholders */}
+                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
+                  <Globe className="w-5 h-5 text-slate-600" />
+                </div>
+                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
+                  <Users className="w-5 h-5 text-slate-600" />
+                </div>
               </div>
             </div>
-            
+
             <div>
-              <h3 className="text-white font-bold text-lg mb-6">Products</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Credit Cards
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Debit Cards
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Personal Loans
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Home Loans
-                </a></li>
+              <h4 className="font-bold text-slate-900 mb-6">Products</h4>
+              <ul className="space-y-4 text-slate-600">
+                <li><Link href="/platform?product=credit-cards" className="hover:text-blue-600 transition-colors">Credit Cards</Link></li>
+                <li><Link href="/platform?product=personal-loans" className="hover:text-blue-600 transition-colors">Personal Loans</Link></li>
+                <li><Link href="/platform?product=home-loans" className="hover:text-blue-600 transition-colors">Home Loans</Link></li>
+                <li><Link href="/platform?product=mutual-funds" className="hover:text-blue-600 transition-colors">Mutual Funds</Link></li>
               </ul>
             </div>
+
             <div>
-              <h3 className="text-white font-bold text-lg mb-6">Services</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Insurance
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Mutual Funds
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Bank Accounts
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Fixed Deposits
-                </a></li>
+              <h4 className="font-bold text-slate-900 mb-6">Company</h4>
+              <ul className="space-y-4 text-slate-600">
+                <li><a href="#" className="hover:text-blue-600 transition-colors">About Us</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Careers</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Press</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Contact</a></li>
               </ul>
             </div>
+
             <div>
-              <h3 className="text-white font-bold text-lg mb-6">Company</h3>
-              <ul className="space-y-3">
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  About
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Careers
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Contact
-                </a></li>
-                <li><a href="#" className="hover:text-white transition-colors group flex items-center">
-                  <span className="w-1 h-1 bg-gray-500 rounded-full mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                  Blog
-                </a></li>
+              <h4 className="font-bold text-slate-900 mb-6">Legal</h4>
+              <ul className="space-y-4 text-slate-600">
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a></li>
+                <li><a href="#" className="hover:text-blue-600 transition-colors">Disclaimer</a></li>
               </ul>
             </div>
           </div>
-          
-          <div className="border-t border-gray-800 mt-16 pt-10 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-500 text-sm">&copy; 2024 Unifiny. All rights reserved.</p>
-            <div className="flex gap-8 mt-4 md:mt-0">
-              <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Privacy Policy</a>
-              <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Terms of Service</a>
-              <a href="#" className="text-gray-500 hover:text-white transition-colors text-sm">Security</a>
+
+          <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="text-slate-500 text-sm">
+              © 2025 BankBuz. All rights reserved.
+            </div>
+            <div className="text-slate-400 text-sm">
+              Made with ❤️ for India 🇮🇳
             </div>
           </div>
         </div>

@@ -48,18 +48,23 @@ body {
 }
 
 /* Enhanced form inputs */
-input, select, textarea {
+input,
+select,
+textarea {
   background-color: #ffffff !important;
   color: #1f2937 !important;
 }
 
-input:focus, select:focus, textarea:focus {
+input:focus,
+select:focus,
+textarea:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
 /* Placeholder styling */
-input::placeholder, textarea::placeholder {
+input::placeholder,
+textarea::placeholder {
   color: #9ca3af !important;
   opacity: 1;
 }
@@ -88,95 +93,110 @@ select option:hover {
 
 /* Override dark mode for forms */
 @media (prefers-color-scheme: dark) {
-  input, select, textarea {
+
+  input,
+  select,
+  textarea {
     background-color: #ffffff !important;
     color: #1f2937 !important;
     border-color: #d1d5db !important;
   }
-  
-  input::placeholder, textarea::placeholder {
+
+  input::placeholder,
+  textarea::placeholder {
     color: #9ca3af !important;
   }
-  
+
   select option {
     background-color: #ffffff !important;
     color: #1f2937 !important;
   }
 }
 
-/* Smooth animations for framer-motion */
+/* Professional subtle animations */
 .motion-safe\:transform {
   transition: transform 0.3s ease-in-out;
 }
 
-/* Custom gradient backgrounds */
+/* Professional gradients */
 .gradient-bg {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
 }
 
 .gradient-text {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #0f172a 0%, #334155 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
+/* Modern Grid Background */
+.bg-grid-pattern {
+  background-size: 40px 40px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
 /* Professional card shadows */
 .card-shadow {
-  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+  border: 1px solid #e2e8f0;
 }
 
 .card-shadow:hover {
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
+  border-color: #cbd5e1;
 }
 
 /* Button hover effects */
 .btn-primary {
-  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-  transition: all 0.3s ease;
+  background: #0f172a;
+  color: white;
+  transition: all 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: linear-gradient(135deg, #1d4ed8, #1e40af);
+  background: #1e293b;
   transform: translateY(-1px);
-  box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
 }
 
 /* Loading animation */
 @keyframes pulse {
-  0%, 100% {
+
+  0%,
+  100% {
     opacity: 1;
   }
+
   50% {
     opacity: .5;
   }
 }
 
-@keyframes blob {
+/* Marquee Animation */
+@keyframes marquee {
   0% {
-    transform: translate(0px, 0px) scale(1);
+    transform: translateX(0);
   }
-  33% {
-    transform: translate(30px, -50px) scale(1.1);
-  }
-  66% {
-    transform: translate(-20px, 20px) scale(0.9);
-  }
+
   100% {
-    transform: translate(0px, 0px) scale(1);
+    transform: translateX(-50%);
   }
 }
 
-.animate-blob {
-  animation: blob 7s infinite;
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
-.animation-delay-2000 {
-  animation-delay: 2s;
+/* Hide scrollbar for clean UI */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
-.animation-delay-4000 {
-  animation-delay: 4s;
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 /* Professional recommendation styling */
@@ -184,7 +204,9 @@ select option:hover {
   line-height: 1.7;
 }
 
-.recommendations h1, .recommendations h2, .recommendations h3 {
+.recommendations h1,
+.recommendations h2,
+.recommendations h3 {
   color: #1f2937;
   font-weight: 600;
   margin-top: 2rem;

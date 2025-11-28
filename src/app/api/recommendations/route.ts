@@ -10,11 +10,11 @@ interface GroundingSource {
 
 export async function POST(request: Request) {
   console.log('API route called');
-  
+
   try {
     const data = await request.json();
     console.log('Received data:', data);
-    
+
     // Check if API key is available
     if (!process.env.GEMINI_API_KEY || process.env.GEMINI_API_KEY === 'your_gemini_api_key_here') {
       console.log('No valid Gemini API key found');
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
         error: 'Gemini API key not configured. Please set GEMINI_API_KEY in your environment variables to get real AI recommendations.'
       });
     }
-    
+
     // Enable grounding with a simplified approach
     const model = genAI.getGenerativeModel(
       {
@@ -31,41 +31,175 @@ export async function POST(request: Request) {
         tools: [
           {
             googleSearch: {},
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
           } as any,
         ],
       },
       { apiVersion: 'v1beta' }
     );
     console.log('Model initialized with grounding enabled');
-    
-    const prompt = `SEARCH OFFICIAL BANK WEBSITES for current ${data.product} offers from HDFC Bank, ICICI Bank, SBI, Axis Bank, Kotak Mahindra Bank.
 
-User: ${data.income || 'middle income'}, CIBIL ${data.cibilScore || '700+'}, ${data.employment || 'salaried'}, interests: ${data.spendingPattern?.join(', ') || 'general'}
+    // Generate product-specific prompt based on product type
+    const getProductPrompt = (productType: string) => {
+      const productName = productType.replace('-', ' ');
+
+      // Common user profile
+      const userProfile = `User Profile: ${data.income || 'middle income'}, CIBIL ${data.cibilScore || '700+'}, ${data.employment || 'salaried'}, Age: ${data.age || data.ageRange || '25-35'}`;
+
+      switch (productType) {
+        case 'credit-cards':
+          const isBusiness = data.cardCategory === 'business';
+          const cardType = isBusiness ? 'Business/Commercial Credit Cards' : 'Personal/Retail Credit Cards';
+          const incomeLabel = isBusiness ? 'Annual Turnover/Business Income' : 'Monthly Salary';
+          const profileDetails = isBusiness
+            ? `Business Type: ${data.businessType || 'General'}, Turnover: ${data.income || '10L-20L'}`
+            : `Income: ${data.income || 'middle income'}, Employment: ${data.employment || 'salaried'}`;
+
+          return `SEARCH OFFICIAL BANK WEBSITES for current ${cardType} offers from HDFC Bank, ICICI Bank, SBI, Axis Bank, Kotak Mahindra Bank, Amex.
+
+${userProfile}
+${profileDetails}
+Spending Needs: ${data.spendingPattern?.join(', ') || 'general'}
+Card Preferences: ${data.cardPreference?.join(', ') || 'general'}
 
 CRITICAL REQUIREMENTS:
-1. ONLY use data from official bank websites (.com domains): hdfc.com, icicibank.com, sbi.in, axisbank.com, kotak.com
+1. ONLY use data from official bank websites
 2. Verify ALL numbers are current (December 2024/January 2025)
-3. DO NOT include approval probability/percentage - this is not public information
-4. Distinguish: "rewardRate" = cashback/points %, "interestRate" = APR on unpaid balance
-5. Verify reward partners are accurate (e.g., SBI SimplyCLICK: BookMyShow/Cleartrip are 10x, Amazon is 5x)
-6. Check latest reward point rates (e.g., Kotak 811: 4 RP per ₹100 online, not 2)
+3. STRICTLY return ONLY ${isBusiness ? 'Business/Corporate' : 'Personal/Retail'} credit cards. Do not mix them.
+4. For High Income (>₹2L/month) or High Turnover, include PREMIUM cards (e.g., ICICI Emerald, HDFC Infinia, SBI Aurum, Amex Platinum).
+5. Verify reward partners and rates are accurate
 
 Return ONLY this JSON (no text before/after):
 
 {
   "recommendations": [
-    {"rank": 1, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"},
-    {"rank": 2, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"},
-    {"rank": 3, "productName": "exact official name", "bankName": "bank", "keyBenefits": ["verified benefit 1", "verified benefit 2", "verified benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual (mention waiver if applicable)", "applyUrl": "https://officialbank.com/exact-page"}
+    {"rank": 1, "productName": "exact card name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual", "applyUrl": "https://officialbank.com/cards/page"},
+    {"rank": 2, "productName": "exact card name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual", "applyUrl": "https://officialbank.com/cards/page"},
+    {"rank": 3, "productName": "exact card name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "rewardRate": "X% cashback OR X points per ₹100", "interestRate": "XX.X% p.a. APR", "fees": "₹XXX joining, ₹XXX annual", "applyUrl": "https://officialbank.com/cards/page"}
   ],
   "comparisons": [
-    {"bank": "bank1", "product": "product1", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"},
-    {"bank": "bank2", "product": "product2", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"},
-    {"bank": "bank3", "product": "product3", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key verified benefit", "interestRate": "XX% APR"}
+    {"bank": "bank1", "product": "card1", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key benefit", "interestRate": "XX% APR"},
+    {"bank": "bank2", "product": "card2", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key benefit", "interestRate": "XX% APR"},
+    {"bank": "bank3", "product": "card3", "rewardRate": "X% OR X pts/₹100", "fee": "₹XXX", "benefits": "key benefit", "interestRate": "XX% APR"}
   ],
-  "insights": ["verified insight based on official data", "insight about suitability for user profile", "actionable recommendation"]
+  "insights": ["insight 1", "insight 2", "insight 3"]
 }`;
+
+        case 'health-insurance':
+        case 'life-insurance':
+        case 'auto-insurance':
+        case 'home-insurance':
+          return `SEARCH OFFICIAL INSURANCE COMPANY WEBSITES for current ${productName} plans from HDFC ERGO, ICICI Lombard, SBI General, Max Bupa, Star Health, Care Health.
+
+${userProfile}, Family: ${data.familySize || 'individual'}, Coverage: ${data.sumInsured || '₹5L'}
+
+CRITICAL REQUIREMENTS:
+1. ONLY use data from official insurance company websites
+2. Verify ALL premiums and coverage amounts are current (December 2024/January 2025)
+3. For insurance: "premium" = annual premium amount, "coverage" = sum insured/coverage amount
+4. Include network hospitals/garages for health/auto insurance
+5. DO NOT make up data - only use verified information
+
+Return ONLY this JSON (no text before/after):
+
+{
+  "recommendations": [
+    {"rank": 1, "productName": "exact plan name", "bankName": "insurance company", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/plans/page"},
+    {"rank": 2, "productName": "exact plan name", "bankName": "insurance company", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/plans/page"},
+    {"rank": 3, "productName": "exact plan name", "bankName": "insurance company", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "premium": "₹XX,XXX per year", "coverage": "₹XX Lakhs", "fees": "No hidden charges", "applyUrl": "https://officialinsurer.com/plans/page"}
+  ],
+  "comparisons": [
+    {"bank": "insurer1", "product": "plan1", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "key features"},
+    {"bank": "insurer2", "product": "plan2", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "key features"},
+    {"bank": "insurer3", "product": "plan3", "rate": "₹XX,XXX/year", "fee": "₹XX Lakhs coverage", "benefits": "key features"}
+  ],
+  "insights": ["insight 1", "insight 2", "insight 3"]
+}`;
+
+        case 'personal-loans':
+        case 'home-loans':
+        case 'auto-loans':
+        case 'education-loans':
+          return `SEARCH OFFICIAL BANK WEBSITES for current ${productName} offers from HDFC Bank, ICICI Bank, SBI, Axis Bank, Kotak Mahindra Bank.
+
+${userProfile}, Loan Amount: ${data.loanAmount || '₹5L'}, Tenure: ${data.tenure || '3 years'}
+
+CRITICAL REQUIREMENTS:
+1. ONLY use data from official bank websites
+2. Verify ALL interest rates and fees are current (December 2024/January 2025)
+3. For loans: "interestRate" = annual interest rate %, "emi" = monthly EMI amount
+4. Include processing fees and other charges
+5. Calculate accurate EMI based on loan amount and tenure
+
+Return ONLY this JSON (no text before/after):
+
+{
+  "recommendations": [
+    {"rank": 1, "productName": "exact loan name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "interestRate": "X.X% p.a.", "emi": "₹XX,XXX/month", "fees": "₹XXX processing fee", "applyUrl": "https://officialbank.com/loans/page"},
+    {"rank": 2, "productName": "exact loan name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "interestRate": "X.X% p.a.", "emi": "₹XX,XXX/month", "fees": "₹XXX processing fee", "applyUrl": "https://officialbank.com/loans/page"},
+    {"rank": 3, "productName": "exact loan name", "bankName": "bank", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "interestRate": "X.X% p.a.", "emi": "₹XX,XXX/month", "fees": "₹XXX processing fee", "applyUrl": "https://officialbank.com/loans/page"}
+  ],
+  "comparisons": [
+    {"bank": "bank1", "product": "loan1", "rate": "X.X% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX", "benefits": "key features"},
+    {"bank": "bank2", "product": "loan2", "rate": "X.X% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX", "benefits": "key features"},
+    {"bank": "bank3", "product": "loan3", "rate": "X.X% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX", "benefits": "key features"}
+  ],
+  "insights": ["insight 1", "insight 2", "insight 3"]
+}`;
+
+        case 'mutual-funds':
+          return `SEARCH OFFICIAL AMC WEBSITES for current mutual fund schemes from HDFC MF, ICICI Prudential MF, SBI MF, Axis MF, Kotak MF.
+
+${userProfile}, Investment: ${data.investmentAmount || '₹10,000/month'}, Goal: ${data.goal || 'wealth creation'}, Risk: ${data.riskAppetite || 'medium'}
+
+CRITICAL REQUIREMENTS:
+1. ONLY use data from official AMC websites
+2. Verify ALL returns and expense ratios are current (December 2024/January 2025)
+3. For mutual funds: "returns" = annualized returns %, "expenseRatio" = annual expense ratio %
+4. Include fund category and risk level
+5. Use actual historical performance data
+
+Return ONLY this JSON (no text before/after):
+
+{
+  "recommendations": [
+    {"rank": 1, "productName": "exact fund name", "bankName": "AMC", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "returns": "XX% (3Y CAGR)", "expenseRatio": "X.X%", "fees": "Exit load: X% if redeemed before 1 year", "applyUrl": "https://officialamc.com/funds/page"},
+    {"rank": 2, "productName": "exact fund name", "bankName": "AMC", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "returns": "XX% (3Y CAGR)", "expenseRatio": "X.X%", "fees": "Exit load: X% if redeemed before 1 year", "applyUrl": "https://officialamc.com/funds/page"},
+    {"rank": 3, "productName": "exact fund name", "bankName": "AMC", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "returns": "XX% (3Y CAGR)", "expenseRatio": "X.X%", "fees": "Exit load: X% if redeemed before 1 year", "applyUrl": "https://officialamc.com/funds/page"}
+  ],
+  "comparisons": [
+    {"bank": "AMC1", "product": "fund1", "rate": "XX% (3Y)", "fee": "X.X% expense ratio", "benefits": "fund category & risk"},
+    {"bank": "AMC2", "product": "fund2", "rate": "XX% (3Y)", "fee": "X.X% expense ratio", "benefits": "fund category & risk"},
+    {"bank": "AMC3", "product": "fund3", "rate": "XX% (3Y)", "fee": "X.X% expense ratio", "benefits": "fund category & risk"}
+  ],
+  "insights": ["insight 1", "insight 2", "insight 3"]
+}`;
+
+        default:
+          // Generic fallback for other products
+          return `SEARCH OFFICIAL WEBSITES for current ${productName} offers from major banks and financial institutions.
+
+${userProfile}
+
+Return ONLY this JSON (no text before/after):
+
+{
+  "recommendations": [
+    {"rank": 1, "productName": "product name", "bankName": "institution", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "fees": "applicable fees", "applyUrl": "https://official.com/page"},
+    {"rank": 2, "productName": "product name", "bankName": "institution", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "fees": "applicable fees", "applyUrl": "https://official.com/page"},
+    {"rank": 3, "productName": "product name", "bankName": "institution", "keyBenefits": ["benefit 1", "benefit 2", "benefit 3"], "fees": "applicable fees", "applyUrl": "https://official.com/page"}
+  ],
+  "comparisons": [
+    {"bank": "institution1", "product": "product1", "rate": "rate/price", "fee": "fees", "benefits": "features"},
+    {"bank": "institution2", "product": "product2", "rate": "rate/price", "fee": "fees", "benefits": "features"},
+    {"bank": "institution3", "product": "product3", "rate": "rate/price", "fee": "fees", "benefits": "features"}
+  ],
+  "insights": ["insight 1", "insight 2", "insight 3"]
+}`;
+      }
+    };
+
+    const prompt = getProductPrompt(data.product);
 
     console.log('Generating content with Gemini...');
     const result = await model.generateContent(prompt);
@@ -101,7 +235,7 @@ Return ONLY this JSON (no text before/after):
       if (firstBrace !== -1 && lastBrace !== -1 && firstBrace < lastBrace) {
         jsonString = jsonString.substring(firstBrace, lastBrace + 1);
       }
-      
+
       // Parse the JSON response
       const structuredData = JSON.parse(jsonString);
       console.log('Structured data parsed successfully');
@@ -155,19 +289,19 @@ Return ONLY this JSON (no text before/after):
     } catch (parseError) {
       console.error('Failed to parse AI response as JSON:', parseError);
       console.error('Raw AI response:', aiResponse);
-      
+
       return NextResponse.json({
         success: false,
         error: 'AI returned invalid response format. Please try again.'
       });
     }
-    
+
   } catch (error) {
     console.error('Error generating recommendations:', error);
     return NextResponse.json(
-      { 
-        success: false, 
-        error: `Failed to generate recommendations: ${error instanceof Error ? error.message : 'Unknown error'}` 
+      {
+        success: false,
+        error: `Failed to generate recommendations: ${error instanceof Error ? error.message : 'Unknown error'}`
       },
       { status: 500 }
     );

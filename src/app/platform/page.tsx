@@ -22,10 +22,10 @@ import {
 import Link from 'next/link';
 import { FinancialAdvisorChat } from '../../components/FinancialAdvisorChat';
 
-type ProductCategory = 
-  | 'credit-cards' 
+type ProductCategory =
+  | 'credit-cards'
   | 'debit-cards'
-  | 'personal-loans' 
+  | 'personal-loans'
   | 'home-loans'
   | 'auto-loans'
   | 'education-loans'
@@ -49,6 +49,11 @@ interface Recommendation {
   rewardRate?: string;
   interestRate?: string;
   fees?: string;
+  premium?: string;  // For insurance
+  coverage?: string;  // For insurance
+  emi?: string;  // For loans
+  returns?: string;  // For mutual funds
+  expenseRatio?: string;  // For mutual funds
   applyLink: string;
 }
 
@@ -72,6 +77,11 @@ interface ApiRecommendation {
   rewardRate?: string;
   interestRate?: string;
   fees?: string;
+  premium?: string;  // For insurance
+  coverage?: string;  // For insurance
+  emi?: string;  // For loans
+  returns?: string;  // For mutual funds
+  expenseRatio?: string;  // For mutual funds
   applyUrl?: string;
 }
 
@@ -178,7 +188,7 @@ function PlatformContent() {
                 <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
               </div>
             </Link>
-            
+
             <div className="flex items-center gap-4">
               <div className="px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-medium shadow-lg shadow-blue-500/20">
                 Find Best Products
@@ -199,7 +209,7 @@ function PlatformContent() {
           >
             <div className="bg-gradient-to-r from-blue-600 to-indigo-600 w-20 h-1 rounded-full mx-auto"></div>
           </motion.div>
-          
+
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -209,8 +219,8 @@ function PlatformContent() {
               Compare Products → Get Top Recommendations → Apply
             </div>
           </motion.div>
-          
-          <motion.h1 
+
+          <motion.h1
             className="text-4xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -218,8 +228,8 @@ function PlatformContent() {
           >
             Find Your Perfect Financial Product
           </motion.h1>
-          
-          <motion.p 
+
+          <motion.p
             className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
@@ -229,54 +239,54 @@ function PlatformContent() {
           </motion.p>
         </div>
 
-   
+
 
         {/* Product Selection Grid */}
         <div className="space-y-12">
           {productCategories.map((category, categoryIndex) => (
-              <motion.div
-                key={categoryIndex}
-                className={`p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all ${category.gradient} border border-gray-100/50`}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+            <motion.div
+              key={categoryIndex}
+              className={`p-8 rounded-3xl shadow-xl hover:shadow-2xl transition-all ${category.gradient} border border-gray-100/50`}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
+            >
+              <div
+                className="flex items-center mb-8 cursor-pointer group"
+                onClick={() => setSelectedProduct(category.products[0]?.id as ProductCategory)}
               >
-                <div 
-                  className="flex items-center mb-8 cursor-pointer group"
-                  onClick={() => setSelectedProduct(category.products[0]?.id as ProductCategory)}
-                >
-                  <div className="relative mr-6">
-                    <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                    <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform`}>
-                      <category.icon className="w-8 h-8 text-white" />
+                <div className="relative mr-6">
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-400 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
+                  <div className={`w-16 h-16 bg-gradient-to-r ${category.color} rounded-2xl flex items-center justify-center relative z-10 group-hover:scale-110 transition-transform`}>
+                    <category.icon className="w-8 h-8 text-white" />
+                  </div>
+                </div>
+                <h2 className="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{category.category}</h2>
+                <div className="ml-auto">
+                  <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
+                {category.products.map((product, productIndex) => (
+                  <motion.div
+                    key={productIndex}
+                    className="p-6 border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all cursor-pointer group bg-white/50 backdrop-blur-sm"
+                    whileHover={{ y: -8, scale: 1.02 }}
+                    onClick={() => setSelectedProduct(product.id as ProductCategory)}
+                  >
+                    <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
+                      {product.name}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">{product.description}</p>
+                    <div className="flex items-center text-blue-600 font-semibold group-hover:underline">
+                      Compare Now <ArrowRight className="w-4 h-4 ml-2" />
                     </div>
-                  </div>
-                  <h2 className="text-3xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">{category.category}</h2>
-                  <div className="ml-auto">
-                    <ArrowRight className="w-6 h-6 text-gray-400 group-hover:text-blue-600 transition-colors" />
-                  </div>
-                </div>
-                
-                <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-10">
-                  {category.products.map((product, productIndex) => (
-                    <motion.div
-                      key={productIndex}
-                      className="p-6 border border-gray-200 rounded-2xl hover:border-blue-300 hover:shadow-xl transition-all cursor-pointer group bg-white/50 backdrop-blur-sm"
-                      whileHover={{ y: -8, scale: 1.02 }}
-                      onClick={() => setSelectedProduct(product.id as ProductCategory)}
-                    >
-                      <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                        {product.name}
-                      </h3>
-                      <p className="text-sm text-gray-600 mb-4">{product.description}</p>
-                      <div className="flex items-center text-blue-600 font-semibold group-hover:underline">
-                        Compare Now <ArrowRight className="w-4 h-4 ml-2" />
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
-            ))}
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
         </div>
       </div>
 
@@ -304,7 +314,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
   const [comparisons, setComparisons] = useState<Comparison[]>([]);
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [sources, setSources] = useState<GroundingSource[]>([]);
-  
+
   const handleInputChange = (field: string, value: string | string[] | number) => {
     setFormData((prev: FormData) => ({ ...prev, [field]: value }));
   };
@@ -312,7 +322,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
   const handleCompare = async () => {
     setLoading(true);
     setStep(2);
-    
+
     try {
       // Call the actual API for real recommendations
       const response = await fetch('/api/recommendations', {
@@ -341,6 +351,11 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             rewardRate: rec.rewardRate,
             interestRate: rec.interestRate,
             fees: rec.fees,
+            premium: rec.premium,  // For insurance
+            coverage: rec.coverage,  // For insurance
+            emi: rec.emi,  // For loans
+            returns: rec.returns,  // For mutual funds
+            expenseRatio: rec.expenseRatio,  // For mutual funds
             applyLink: rec.applyUrl || '#'
           }));
           setRecommendations(formattedRecs);
@@ -379,7 +394,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
       setLoading(false);
       return;
     }
-    
+
     setLoading(false);
     setStep(3);
   };
@@ -402,7 +417,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
                 <div className="text-xs text-indigo-600 font-medium">Premium Finance</div>
               </div>
             </Link>
-            
+
             <button
               onClick={onBack}
               className="flex items-center text-gray-600 hover:text-gray-900 transition-colors font-medium group"
@@ -423,16 +438,16 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
 }
 
 // Input Form Component
-function InputForm({ 
-  product, 
-  formData, 
-  onInputChange, 
-  onCompare 
-}: { 
-  product: ProductCategory; 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
-  onCompare: () => void; 
+function InputForm({
+  product,
+  formData,
+  onInputChange,
+  onCompare
+}: {
+  product: ProductCategory;
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
+  onCompare: () => void;
 }) {
   const getProductForm = () => {
     switch (product) {
@@ -472,7 +487,7 @@ function InputForm({
 
       <div className="bg-white p-10 rounded-3xl shadow-2xl border border-gray-100/50 backdrop-blur-sm">
         {getProductForm()}
-        
+
         <div className="mt-12 pt-8 border-t border-gray-200">
           <button
             onClick={onCompare}
@@ -488,13 +503,15 @@ function InputForm({
 }
 
 // Credit Card Form
-function CreditCardForm({ 
-  formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+function CreditCardForm({
+  formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
+  const isBusiness = formData['cardCategory'] === 'business';
+
   return (
     <div className="space-y-8">
       <div className="flex items-center gap-4 mb-8">
@@ -503,11 +520,45 @@ function CreditCardForm({
         </div>
         <h2 className="text-3xl font-bold text-gray-900">Credit Card Requirements</h2>
       </div>
-      
+
+      {/* Card Category Selection */}
+      <div className="bg-blue-50 p-6 rounded-2xl border border-blue-100">
+        <label className="block text-sm font-bold text-gray-900 mb-4">Card Category</label>
+        <div className="flex gap-6">
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input
+              type="radio"
+              name="cardCategory"
+              value="retail"
+              defaultChecked
+              className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+              onChange={() => onInputChange('cardCategory', 'retail')}
+            />
+            <div>
+              <span className="block text-sm font-bold text-gray-900">Retail (Personal)</span>
+              <span className="text-xs text-gray-500">For personal use, shopping, travel</span>
+            </div>
+          </label>
+          <label className="flex items-center space-x-3 cursor-pointer">
+            <input
+              type="radio"
+              name="cardCategory"
+              value="business"
+              className="w-5 h-5 text-blue-600 border-gray-300 focus:ring-blue-500"
+              onChange={() => onInputChange('cardCategory', 'business')}
+            />
+            <div>
+              <span className="block text-sm font-bold text-gray-900">Commercial (Business)</span>
+              <span className="text-xs text-gray-500">For business expenses, shopkeepers, corporates</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('ageRange', e.target.value)}
           >
@@ -518,36 +569,58 @@ function CreditCardForm({
             <option value="50+">50+ years</option>
           </select>
         </div>
-        
+
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Income</label>
-          <select 
+          <label className="block text-sm font-medium text-gray-700 mb-3">
+            {isBusiness ? 'Monthly Business Income / Turnover' : 'Monthly Income'}
+          </label>
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('income', e.target.value)}
           >
-      <option value="">Select income range</option>
-      <option value="50k-100k">₹50k - ₹1L/month</option>
-      <option value="100k-200k">₹1L - ₹2L/month</option>
-      <option value="200k+">₹2L+ /month</option>
+            <option value="">Select income range</option>
+            <option value="50k-100k">₹50k - ₹1L</option>
+            <option value="100k-200k">₹1L - ₹2L</option>
+            <option value="200k-500k">₹2L - ₹5L</option>
+            <option value="500k+">₹5L+ (Premium)</option>
           </select>
         </div>
-        
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Employment Type</label>
-          <select 
-            className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
-            onChange={(e) => onInputChange('employment', e.target.value)}
-          >
-            <option value="">Select employment type</option>
-            <option value="salaried">Salaried</option>
-            <option value="self-employed">Self-employed</option>
-            <option value="student">Student</option>
-          </select>
-        </div>
-        
+
+        {!isBusiness && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Employment Type</label>
+            <select
+              className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+              onChange={(e) => onInputChange('employment', e.target.value)}
+            >
+              <option value="">Select employment type</option>
+              <option value="salaried">Salaried</option>
+              <option value="self-employed">Self-employed</option>
+              <option value="student">Student</option>
+            </select>
+          </div>
+        )}
+
+        {isBusiness && (
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-3">Business Type</label>
+            <select
+              className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
+              onChange={(e) => onInputChange('businessType', e.target.value)}
+            >
+              <option value="">Select business type</option>
+              <option value="retail-shop">Retail Shop / Store</option>
+              <option value="wholesale">Wholesale / Distributor</option>
+              <option value="manufacturing">Manufacturing</option>
+              <option value="services">Services / Consultant</option>
+              <option value="freelancer">Freelancer / Professional</option>
+            </select>
+          </div>
+        )}
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score (if known)</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
@@ -559,18 +632,23 @@ function CreditCardForm({
           </select>
         </div>
       </div>
-      
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">Spending Pattern (Select all that apply)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-4">
+          {isBusiness ? 'Business Spending Needs' : 'Spending Pattern (Select all that apply)'}
+        </label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {['Travel', 'Online Shopping', 'Dining', 'Fuel', 'Groceries', 'Entertainment', 'Bills', 'Others'].map((pattern) => (
+          {(isBusiness
+            ? ['Inventory', 'Travel/Hotels', 'Utility Bills', 'Office Supplies', 'Dining/Client Meetings', 'Fuel', 'Online Ads', 'Software/SaaS']
+            : ['Travel', 'Online Shopping', 'Dining', 'Fuel', 'Groceries', 'Entertainment', 'Bills', 'Others']
+          ).map((pattern) => (
             <label key={pattern} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-blue-50 transition-colors">
               <input
                 type="checkbox"
                 className="w-5 h-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 onChange={(e) => {
                   const current = Array.isArray(formData.spendingPattern) ? formData.spendingPattern : [];
-                  const updated = e.target.checked 
+                  const updated = e.target.checked
                     ? [...current, pattern]
                     : current.filter((p: string) => p !== pattern);
                   onInputChange('spendingPattern', updated);
@@ -581,9 +659,9 @@ function CreditCardForm({
           ))}
         </div>
       </div>
-      
+
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-4">Card Preferences (Select all that apply)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-4">Card Preferences</label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {['Cashback', 'Rewards Points', 'Travel Miles', 'Lounge Access', 'Premium Benefits', 'Low/No Annual Fee'].map((pref) => (
             <label key={pref} className="flex items-center space-x-3 cursor-pointer p-4 rounded-xl hover:bg-blue-50 transition-colors border border-gray-100">
@@ -609,13 +687,13 @@ function CreditCardForm({
 }
 
 // Personal Loan Form  
-function PersonalLoanForm({ 
+function PersonalLoanForm({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  formData: _formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+  formData: _formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -625,7 +703,7 @@ function PersonalLoanForm({
         </div>
         <h2 className="text-3xl font-bold text-gray-900">Personal Loan Requirements</h2>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Loan Amount (₹)</label>
@@ -636,10 +714,10 @@ function PersonalLoanForm({
             onChange={(e) => onInputChange('loanAmount', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Tenure</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('tenure', e.target.value)}
           >
@@ -651,7 +729,7 @@ function PersonalLoanForm({
             <option value="60">5 Years</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
           <input
@@ -661,10 +739,10 @@ function PersonalLoanForm({
             onChange={(e) => onInputChange('monthlyIncome', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Employment Type</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('employment', e.target.value)}
           >
@@ -674,10 +752,10 @@ function PersonalLoanForm({
             <option value="business">Business Owner</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
@@ -688,10 +766,10 @@ function PersonalLoanForm({
             <option value="750+">750+</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Purpose</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-purple-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('purpose', e.target.value)}
           >
@@ -706,7 +784,7 @@ function PersonalLoanForm({
           </select>
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">Interest Type Preference</label>
         <div className="flex gap-6">
@@ -735,12 +813,12 @@ function PersonalLoanForm({
 }
 
 // Other form components would follow similar patterns
-function HealthInsuranceForm({ 
-  formData: _formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+function HealthInsuranceForm({
+  formData: _formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -750,7 +828,7 @@ function HealthInsuranceForm({
         </div>
         <h2 className="text-3xl font-bold text-gray-900">Health Insurance Requirements</h2>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
@@ -761,10 +839,10 @@ function HealthInsuranceForm({
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Family Size</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('familySize', e.target.value)}
           >
@@ -775,10 +853,10 @@ function HealthInsuranceForm({
             <option value="large-family">2 Adults + 2+ Children</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Sum Insured (₹)</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('sumInsured', e.target.value)}
           >
@@ -790,10 +868,10 @@ function HealthInsuranceForm({
             <option value="5000000">₹50 Lakhs</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Premium Budget (Annual)</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-red-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('premiumBudget', e.target.value)}
           >
@@ -805,7 +883,7 @@ function HealthInsuranceForm({
           </select>
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-4">Required Add-ons (Select all that apply)</label>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
@@ -816,7 +894,7 @@ function HealthInsuranceForm({
                 className="w-5 h-5 text-red-600 border-gray-300 rounded focus:ring-red-500"
                 onChange={(e) => {
                   const current = Array.isArray(_formData.addons) ? _formData.addons : [];
-                  const updated = e.target.checked 
+                  const updated = e.target.checked
                     ? [...current, addon]
                     : current.filter((a: string) => a !== addon);
                   onInputChange('addons', updated);
@@ -831,13 +909,13 @@ function HealthInsuranceForm({
   );
 }
 
-function MutualFundForm({ 
+function MutualFundForm({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  formData: _formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+  formData: _formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -847,7 +925,7 @@ function MutualFundForm({
         </div>
         <h2 className="text-3xl font-bold text-gray-900">Mutual Fund Investment</h2>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Age</label>
@@ -858,10 +936,10 @@ function MutualFundForm({
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Investment Experience</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('experience', e.target.value)}
           >
@@ -871,7 +949,7 @@ function MutualFundForm({
             <option value="experienced">Experienced</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Monthly SIP Amount (₹)</label>
           <input
@@ -881,10 +959,10 @@ function MutualFundForm({
             onChange={(e) => onInputChange('sipAmount', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Investment Horizon</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('horizon', e.target.value)}
           >
@@ -895,7 +973,7 @@ function MutualFundForm({
           </select>
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">Risk Appetite</label>
         <div className="grid grid-cols-3 gap-4">
@@ -919,10 +997,10 @@ function MutualFundForm({
           ))}
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">Investment Goal</label>
-        <select 
+        <select
           className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white shadow-sm"
           onChange={(e) => onInputChange('goal', e.target.value)}
         >
@@ -938,13 +1016,13 @@ function MutualFundForm({
   );
 }
 
-function HomeLoanForm({ 
+function HomeLoanForm({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  formData: _formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+  formData: _formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -954,7 +1032,7 @@ function HomeLoanForm({
         </div>
         <h2 className="text-3xl font-bold text-gray-900">Home Loan Requirements</h2>
       </div>
-      
+
       <div className="grid md:grid-cols-2 gap-8">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Loan Amount (₹)</label>
@@ -965,10 +1043,10 @@ function HomeLoanForm({
             onChange={(e) => onInputChange('loanAmount', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Tenure (Years)</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('tenure', e.target.value)}
           >
@@ -980,7 +1058,7 @@ function HomeLoanForm({
             <option value="30">30 Years</option>
           </select>
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
           <input
@@ -990,10 +1068,10 @@ function HomeLoanForm({
             onChange={(e) => onInputChange('monthlyIncome', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">CIBIL Score</label>
-          <select 
+          <select
             className="w-full px-6 py-4 border border-gray-200 rounded-2xl focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white shadow-sm"
             onChange={(e) => onInputChange('cibilScore', e.target.value)}
           >
@@ -1004,7 +1082,7 @@ function HomeLoanForm({
           </select>
         </div>
       </div>
-      
+
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-3">Property Type</label>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -1025,13 +1103,13 @@ function HomeLoanForm({
   );
 }
 
-function GenericForm({ 
+function GenericForm({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  formData: _formData, 
-  onInputChange 
-}: { 
-  formData: FormData; 
-  onInputChange: (field: string, value: string | string[] | number) => void; 
+  formData: _formData,
+  onInputChange
+}: {
+  formData: FormData;
+  onInputChange: (field: string, value: string | string[] | number) => void;
 }) {
   return (
     <div className="space-y-8">
@@ -1051,7 +1129,7 @@ function GenericForm({
             onChange={(e) => onInputChange('age', e.target.value)}
           />
         </div>
-        
+
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-3">Monthly Income (₹)</label>
           <input
@@ -1196,14 +1274,13 @@ function ComparisonResults({
             >
               {/* Decorative element */}
               <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-l from-blue-100 to-transparent opacity-50 -z-10"></div>
-              
+
               {/* Rank Badge */}
               <div className="absolute -top-4 -left-4">
-                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg ${
-                  index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
+                <div className={`w-20 h-20 rounded-full flex items-center justify-center text-white font-bold text-lg ${index === 0 ? 'bg-gradient-to-r from-yellow-400 to-yellow-600' :
                   index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-600' :
-                  'bg-gradient-to-r from-orange-400 to-orange-600'
-                }`}>
+                    'bg-gradient-to-r from-orange-400 to-orange-600'
+                  }`}>
                   #{index + 1}
                 </div>
               </div>
@@ -1212,7 +1289,7 @@ function ComparisonResults({
               <div className="mt-8 mb-8">
                 <h3 className="text-2xl font-bold text-gray-900 mb-6">{rec.product}</h3>
 
-                {/* Reward Rate - Prominent Display */}
+                {/* Credit Cards: Reward Rate */}
                 {rec.rewardRate && (
                   <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-4 rounded-xl mb-3 border border-blue-200">
                     <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Rewards</div>
@@ -1220,18 +1297,58 @@ function ComparisonResults({
                   </div>
                 )}
 
+                {/* Insurance: Premium & Coverage */}
+                {rec.premium && (
+                  <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-xl mb-3 border border-green-200">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Annual Premium</div>
+                    <div className="text-base font-bold text-green-600 leading-relaxed">{rec.premium}</div>
+                  </div>
+                )}
+                {rec.coverage && (
+                  <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl mb-3 border border-purple-200">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Coverage Amount</div>
+                    <div className="text-base font-bold text-purple-600 leading-relaxed">{rec.coverage}</div>
+                  </div>
+                )}
+
+                {/* Loans: EMI */}
+                {rec.emi && (
+                  <div className="bg-gradient-to-r from-orange-50 to-red-50 p-4 rounded-xl mb-3 border border-orange-200">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Monthly EMI</div>
+                    <div className="text-base font-bold text-orange-600 leading-relaxed">{rec.emi}</div>
+                  </div>
+                )}
+
+                {/* Mutual Funds: Returns */}
+                {rec.returns && (
+                  <div className="bg-gradient-to-r from-green-50 to-teal-50 p-4 rounded-xl mb-3 border border-green-200">
+                    <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Returns</div>
+                    <div className="text-base font-bold text-green-600 leading-relaxed">{rec.returns}</div>
+                  </div>
+                )}
+
                 {/* Fees & Interest - Compact Grid */}
                 <div className="grid grid-cols-2 gap-3">
                   {rec.fees && (
                     <div className="bg-gray-50 p-3 rounded-lg">
-                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Fees</div>
+                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+                        {rec.premium ? 'Additional Fees' : rec.emi ? 'Processing Fee' : rec.expenseRatio ? 'Exit Load' : 'Fees'}
+                      </div>
                       <div className="text-sm font-semibold text-gray-700 leading-snug">{rec.fees}</div>
                     </div>
                   )}
                   {rec.interestRate && (
                     <div className="bg-gray-50 p-3 rounded-lg">
-                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Interest APR</div>
+                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">
+                        {rec.emi ? 'Interest Rate' : 'Interest APR'}
+                      </div>
                       <div className="text-sm text-gray-600">{rec.interestRate}</div>
+                    </div>
+                  )}
+                  {rec.expenseRatio && (
+                    <div className="bg-gray-50 p-3 rounded-lg">
+                      <div className="text-xs uppercase tracking-wide text-gray-500 mb-1">Expense Ratio</div>
+                      <div className="text-sm text-gray-600">{rec.expenseRatio}</div>
                     </div>
                   )}
                 </div>
@@ -1324,7 +1441,7 @@ function ComparisonResults({
           <Calculator className="w-8 h-8 text-blue-600" />
           <h2 className="text-3xl font-bold text-gray-900">Side-by-Side Comparison</h2>
         </div>
-        
+
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
@@ -1353,18 +1470,36 @@ function ComparisonResults({
                       <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
                     </>
                   )}
-                  {product === 'personal-loans' && (
-                    <>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.rate}</td>
-                      <td className="p-5 border border-gray-200 font-bold text-gray-900 text-lg">{comp.emi}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.processing || '1-2%'}</td>
-                    </>
-                  )}
-                  {(product !== 'credit-cards' && product !== 'personal-loans') && (
+                  {(product === 'personal-loans' || product === 'home-loans' || product === 'auto-loans' || product === 'education-loans') && (
                     <>
                       <td className="p-5 border border-gray-200 text-gray-700">{comp.rate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.processing || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 font-bold text-gray-900 text-lg">{comp.emi || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                    </>
+                  )}
+                  {(product === 'health-insurance' || product === 'life-insurance' || product === 'auto-insurance' || product === 'home-insurance') && (
+                    <>
+                      <td className="p-5 border border-gray-200 font-semibold text-blue-600">{comp.rate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                    </>
+                  )}
+                  {product === 'mutual-funds' && (
+                    <>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 font-semibold text-green-600">{comp.rate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'N/A'}</td>
+                    </>
+                  )}
+                  {!['credit-cards', 'personal-loans', 'home-loans', 'auto-loans', 'education-loans', 'health-insurance', 'life-insurance', 'auto-insurance', 'home-insurance', 'mutual-funds'].includes(product) && (
+                    <>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.rate || 'N/A'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'N/A'}</td>
                       <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'Standard'}</td>
-                      <td className="p-5 border border-gray-200 text-gray-700">{comp.fee || 'As applicable'}</td>
+                      <td className="p-5 border border-gray-200 text-gray-700">{comp.benefits || 'Standard'}</td>
                     </>
                   )}
                 </tr>
@@ -1379,7 +1514,7 @@ function ComparisonResults({
             <div>
               <h4 className="font-bold text-xl text-blue-900 mb-2">How We Rank Products</h4>
               <p className="text-blue-800">
-                Our AI considers your profile, current market rates, approval probability, and overall value 
+                Our AI considers your profile, current market rates, approval probability, and overall value
                 to rank products. The &quot;Best Match&quot; considers your specific requirements and eligibility.
               </p>
             </div>

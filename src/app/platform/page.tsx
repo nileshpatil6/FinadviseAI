@@ -15,17 +15,9 @@ import {
   Landmark,
   Calculator,
   Star,
-  Sparkles,
   ArrowLeft,
   ExternalLink,
-  ChevronDown,
-  Car,
-  GraduationCap,
-  Heart,
-  Plane,
-  Wallet,
-  BarChart3,
-  DollarSign
+  ChevronDown
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -757,7 +749,6 @@ function CreditCardForm({
 // Personal Loan Form  
 // Personal Loan Form
 function PersonalLoanForm({
-  formData,
   onInputChange
 }: {
   formData: FormData;

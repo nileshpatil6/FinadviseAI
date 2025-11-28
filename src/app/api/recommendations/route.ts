@@ -50,7 +50,6 @@ export async function POST(request: Request) {
         case 'credit-cards':
           const isBusiness = data.cardCategory === 'business';
           const cardType = isBusiness ? 'Business/Commercial Credit Cards' : 'Personal/Retail Credit Cards';
-          const incomeLabel = isBusiness ? 'Annual Turnover/Business Income' : 'Monthly Salary';
           const profileDetails = isBusiness
             ? `Business Type: ${data.businessType || 'General'}, Turnover: ${data.income || '10L-20L'}`
             : `Income: ${data.income || 'middle income'}, Employment: ${data.employment || 'salaried'}`;

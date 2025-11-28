@@ -1,35 +1,28 @@
 'use client';
 
-import { motion, useScroll, useTransform, Variants, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, AnimatePresence } from 'framer-motion';
 import {
   CreditCard,
   Shield,
   TrendingUp,
   CheckCircle,
   ArrowRight,
-  PieChart,
-  Landmark,
-  Building2,
   Wallet,
   Calculator,
   Target,
   Globe,
   Lock,
-  Zap,
   ChevronRight,
-  BarChart3,
-  Smartphone,
   ChevronDown,
   Search,
   Users,
-  Briefcase,
-  Briefcase,
   Home as HomeIcon,
-  Heart
+  Heart,
+  BarChart3
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 // --- Components ---
@@ -64,28 +57,7 @@ const SectionHeading = ({ children, subtitle }: { children: React.ReactNode, sub
   </div>
 );
 
-const FeatureCard = ({ icon: Icon, title, desc, delay }: { icon: any, title: string, desc: string, delay: number }) => (
-  <motion.div
-    initial={{ opacity: 0, y: 20 }}
-    whileInView={{ opacity: 1, y: 0 }}
-    viewport={{ once: true }}
-    transition={{ delay, duration: 0.5 }}
-    className="group p-8 rounded-3xl bg-white border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
-  >
-    <div className="w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-6 group-hover:bg-slate-900 transition-colors duration-300">
-      <Icon className="w-7 h-7 text-slate-900 group-hover:text-white transition-colors duration-300" />
-    </div>
-    <h3 className="text-xl font-bold text-slate-900 mb-3">{title}</h3>
-    <p className="text-slate-500 leading-relaxed">{desc}</p>
-  </motion.div>
-);
 
-const StatCard = ({ value, label }: { value: string, label: string }) => (
-  <div className="text-center p-6 border-r border-slate-100 last:border-0">
-    <div className="text-4xl font-bold text-slate-900 mb-2">{value}</div>
-    <div className="text-sm text-slate-500 font-medium uppercase tracking-wider">{label}</div>
-  </div>
-);
 
 const FaqItem = ({ question, answer }: { question: string, answer: string }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,19 +82,19 @@ const FaqItem = ({ question, answer }: { question: string, answer: string }) => 
   );
 };
 
-// --- Animation Variants ---
-
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const containerVariants: any = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.3,
+      delayChildren: 0.2
     }
   }
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const itemVariants: any = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -135,11 +107,8 @@ const itemVariants: any = {
   }
 };
 
-// --- Main Page ---
-
 export default function Home() {
   const { scrollYProgress } = useScroll();
-  const y = useTransform(scrollYProgress, [0, 1], [0, -50]);
   const [isProductsOpen, setIsProductsOpen] = useState(false);
   const router = useRouter();
 
@@ -271,7 +240,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 lg:pt-48 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="pt-32 pb-20 lg:pt-32 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-50/50 via-white to-white z-0"></div>
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="max-w-2xl">
@@ -335,7 +304,7 @@ export default function Home() {
                     { name: 'Life Ins.', icon: Heart, path: '/platform?product=life-insurance', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100', shadow: 'shadow-rose-100' },
                     { name: 'Stocks', icon: BarChart3, path: '/platform?product=stocks', color: 'text-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-100', shadow: 'shadow-cyan-100' },
                     { name: 'Calculators', icon: Calculator, path: '/platform?product=emi-calculator', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', shadow: 'shadow-amber-100' },
-                  ].map((product, i) => (
+                  ].map((product) => (
                     <motion.div
                       key={product.name}
                       whileHover={{ y: -5, scale: 1.02 }}
@@ -471,7 +440,7 @@ export default function Home() {
                   </div>
                   <div>
                     <h3 className="text-xl font-bold text-slate-900 mb-2">Generic Advice</h3>
-                    <p className="text-slate-600">"Best Card" lists don't know your spending. We analyze YOUR data for custom matches.</p>
+                    <p className="text-slate-600">&quot;Best Card&quot; lists don&apos;t know your spending. We analyze YOUR data for custom matches.</p>
                   </div>
                 </motion.div>
               </div>
@@ -550,7 +519,7 @@ export default function Home() {
                 </div>
                 <h3 className="text-3xl font-bold text-slate-900 mb-4">Smart Credit Card Engine</h3>
                 <p className="text-lg text-slate-600 mb-8">
-                  Don't just get a card. Get a card that pays you back. Our engine calculates potential rewards based on your actual spending patterns (dining, travel, fuel) to maximize your annual returns.
+                  Don&apos;t just get a card. Get a card that pays you back. Our engine calculates potential rewards based on your actual spending patterns (dining, travel, fuel) to maximize your annual returns.
                 </p>
                 <Link href="/platform?product=credit-cards" className="text-blue-600 font-semibold flex items-center gap-2 hover:gap-3 transition-all">
                   Find Your Card <ArrowRight className="w-5 h-5" />

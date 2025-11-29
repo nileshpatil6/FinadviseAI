@@ -289,39 +289,7 @@ export default function Home() {
                 </a>
               </motion.div>
 
-              <motion.div
-                variants={itemVariants}
-                className="mt-12 pt-8 border-t border-slate-100"
-              >
-                <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6">Instant Access to Premium Products</p>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                  {[
-                    { name: 'Credit Cards', icon: CreditCard, path: '/platform?product=credit-cards', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', shadow: 'shadow-blue-100' },
-                    { name: 'Personal Loans', icon: Wallet, path: '/platform?product=personal-loans', color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100', shadow: 'shadow-purple-100' },
-                    { name: 'Home Loans', icon: HomeIcon, path: '/platform?product=home-loans', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', shadow: 'shadow-indigo-100' },
-                    { name: 'Mutual Funds', icon: TrendingUp, path: '/platform?product=mutual-funds', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', shadow: 'shadow-orange-100' },
-                    { name: 'Health Ins.', icon: Shield, path: '/platform?product=health-insurance', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', shadow: 'shadow-emerald-100' },
-                    { name: 'Life Ins.', icon: Heart, path: '/platform?product=life-insurance', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100', shadow: 'shadow-rose-100' },
-                    { name: 'Stocks', icon: BarChart3, path: '/platform?product=stocks', color: 'text-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-100', shadow: 'shadow-cyan-100' },
-                    { name: 'Calculators', icon: Calculator, path: '/platform?product=emi-calculator', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', shadow: 'shadow-amber-100' },
-                  ].map((product) => (
-                    <motion.div
-                      key={product.name}
-                      whileHover={{ y: -5, scale: 1.02 }}
-                      whileTap={{ scale: 0.95 }}
-                      onClick={() => router.push(product.path)}
-                      className={`cursor-pointer flex flex-col items-center justify-center p-4 rounded-2xl border ${product.border} bg-white shadow-sm hover:shadow-xl hover:${product.shadow} transition-all duration-300 h-full group`}
-                    >
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${product.bg}`}>
-                        <product.icon className={`w-6 h-6 ${product.color}`} />
-                      </div>
-                      <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 text-center leading-tight">
-                        {product.name}
-                      </span>
-                    </motion.div>
-                  ))}
-                </div>
-              </motion.div>
+
             </motion.div>
           </div>
 
@@ -382,6 +350,44 @@ export default function Home() {
             </motion.div>
           </motion.div>
         </div>
+
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="max-w-7xl mx-auto mt-20 relative z-10"
+        >
+          <p className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-6 text-center">Instant Access to Premium Products</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-4">
+            {[
+              { name: 'Credit Cards', icon: CreditCard, path: '/platform?product=credit-cards', color: 'text-blue-600', bg: 'bg-blue-50', border: 'border-blue-100', shadow: 'shadow-blue-100' },
+              { name: 'Personal Loans', icon: Wallet, path: '/platform?product=personal-loans', color: 'text-purple-600', bg: 'bg-purple-50', border: 'border-purple-100', shadow: 'shadow-purple-100' },
+              { name: 'Home Loans', icon: HomeIcon, path: '/platform?product=home-loans', color: 'text-indigo-600', bg: 'bg-indigo-50', border: 'border-indigo-100', shadow: 'shadow-indigo-100' },
+              { name: 'Mutual Funds', icon: TrendingUp, path: '/platform?product=mutual-funds', color: 'text-orange-600', bg: 'bg-orange-50', border: 'border-orange-100', shadow: 'shadow-orange-100' },
+              { name: 'Health Ins.', icon: Shield, path: '/platform?product=health-insurance', color: 'text-emerald-600', bg: 'bg-emerald-50', border: 'border-emerald-100', shadow: 'shadow-emerald-100' },
+              { name: 'Life Ins.', icon: Heart, path: '/platform?product=life-insurance', color: 'text-rose-600', bg: 'bg-rose-50', border: 'border-rose-100', shadow: 'shadow-rose-100' },
+              { name: 'Stocks', icon: BarChart3, path: '/platform?product=stocks', color: 'text-cyan-600', bg: 'bg-cyan-50', border: 'border-cyan-100', shadow: 'shadow-cyan-100' },
+              { name: 'Calculators', icon: Calculator, path: '/platform?product=emi-calculator', color: 'text-amber-600', bg: 'bg-amber-50', border: 'border-amber-100', shadow: 'shadow-amber-100' },
+            ].map((product) => (
+              <motion.div
+                key={product.name}
+                variants={itemVariants}
+                whileHover={{ y: -5, scale: 1.02 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => router.push(product.path)}
+                className={`cursor-pointer flex flex-col items-center justify-center p-4 rounded-2xl border ${product.border} bg-white shadow-sm hover:shadow-xl hover:${product.shadow} transition-all duration-300 h-full group`}
+              >
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3 ${product.bg}`}>
+                  <product.icon className={`w-6 h-6 ${product.color}`} />
+                </div>
+                <span className="text-xs font-bold text-slate-600 group-hover:text-slate-900 text-center leading-tight">
+                  {product.name}
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       {/* Marquee Section */}

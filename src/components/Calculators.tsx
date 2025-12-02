@@ -1,6 +1,47 @@
 import React, { useState } from 'react';
 import { Calculator, DollarSign, TrendingUp, Shield, Clock } from 'lucide-react';
 
+interface SliderInputProps {
+    label: string;
+    value: number;
+    onChange: (value: number) => void;
+    min: number;
+    max: number;
+    step: number;
+    prefix?: string;
+    suffix?: string;
+}
+
+const SliderInput = ({ label, value, onChange, min, max, step, prefix = '', suffix = '' }: SliderInputProps) => {
+    const percentage = ((value - min) / (max - min)) * 100;
+
+    return (
+        <div>
+            <div className="flex justify-between items-center mb-2">
+                <label className="block text-sm font-medium text-slate-700">{label}</label>
+                <span className="text-xs text-slate-500 font-medium bg-slate-100 px-2 py-1 rounded-full">Drag to adjust</span>
+            </div>
+            <div className="relative">
+                <input
+                    type="range"
+                    min={min}
+                    max={max}
+                    step={step}
+                    value={value}
+                    onChange={(e) => onChange(Number(e.target.value))}
+                    style={{
+                        background: `linear-gradient(to right, #10b981 0%, #10b981 ${percentage}%, #cbd5e1 ${percentage}%, #cbd5e1 100%)`
+                    }}
+                    className="w-full h-3 rounded-lg appearance-none cursor-pointer hover:opacity-90 transition-opacity focus:outline-none focus:ring-2 focus:ring-emerald-500/30 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-emerald-600 [&::-webkit-slider-thumb]:cursor-pointer [&::-webkit-slider-thumb]:shadow-md [&::-webkit-slider-thumb]:hover:bg-emerald-700 [&::-webkit-slider-thumb]:transition-colors [&::-moz-range-thumb]:w-5 [&::-moz-range-thumb]:h-5 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:bg-emerald-600 [&::-moz-range-thumb]:cursor-pointer [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:shadow-md [&::-moz-range-thumb]:hover:bg-emerald-700 [&::-moz-range-thumb]:transition-colors"
+                />
+            </div>
+            <div className="mt-2 text-lg font-bold text-slate-900">
+                {prefix}{value.toLocaleString()}{suffix}
+            </div>
+        </div>
+    );
+};
+
 export const EMICalculator = () => {
     const [loanAmount, setLoanAmount] = useState(1000000);
     const [interestRate, setInterestRate] = useState(10.5);
@@ -28,47 +69,33 @@ export const EMICalculator = () => {
 
             <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Loan Amount (₹)</label>
-                        <input
-                            type="range"
-                            min="100000"
-                            max="10000000"
-                            step="50000"
-                            value={loanAmount}
-                            onChange={(e) => setLoanAmount(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{loanAmount.toLocaleString()}</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Interest Rate (% p.a)</label>
-                        <input
-                            type="range"
-                            min="5"
-                            max="20"
-                            step="0.1"
-                            value={interestRate}
-                            onChange={(e) => setInterestRate(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{interestRate}%</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Loan Tenure (Years)</label>
-                        <input
-                            type="range"
-                            min="1"
-                            max="30"
-                            step="1"
-                            value={tenure}
-                            onChange={(e) => setTenure(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{tenure} Years</div>
-                    </div>
+                    <SliderInput
+                        label="Loan Amount (₹)"
+                        value={loanAmount}
+                        onChange={setLoanAmount}
+                        min={100000}
+                        max={10000000}
+                        step={50000}
+                        prefix="₹"
+                    />
+                    <SliderInput
+                        label="Interest Rate (% p.a)"
+                        value={interestRate}
+                        onChange={setInterestRate}
+                        min={5}
+                        max={20}
+                        step={0.1}
+                        suffix="%"
+                    />
+                    <SliderInput
+                        label="Loan Tenure (Years)"
+                        value={tenure}
+                        onChange={setTenure}
+                        min={1}
+                        max={30}
+                        step={1}
+                        suffix=" Years"
+                    />
                 </div>
 
                 <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-center">
@@ -124,47 +151,33 @@ export const SIPCalculator = () => {
 
             <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Investment (₹)</label>
-                        <input
-                            type="range"
-                            min="500"
-                            max="100000"
-                            step="500"
-                            value={monthlyInvestment}
-                            onChange={(e) => setMonthlyInvestment(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{monthlyInvestment.toLocaleString()}</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Expected Return (% p.a)</label>
-                        <input
-                            type="range"
-                            min="5"
-                            max="30"
-                            step="0.5"
-                            value={expectedReturn}
-                            onChange={(e) => setExpectedReturn(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{expectedReturn}%</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Time Period (Years)</label>
-                        <input
-                            type="range"
-                            min="1"
-                            max="30"
-                            step="1"
-                            value={timePeriod}
-                            onChange={(e) => setTimePeriod(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{timePeriod} Years</div>
-                    </div>
+                    <SliderInput
+                        label="Monthly Investment (₹)"
+                        value={monthlyInvestment}
+                        onChange={setMonthlyInvestment}
+                        min={500}
+                        max={100000}
+                        step={500}
+                        prefix="₹"
+                    />
+                    <SliderInput
+                        label="Expected Return (% p.a)"
+                        value={expectedReturn}
+                        onChange={setExpectedReturn}
+                        min={5}
+                        max={30}
+                        step={0.5}
+                        suffix="%"
+                    />
+                    <SliderInput
+                        label="Time Period (Years)"
+                        value={timePeriod}
+                        onChange={setTimePeriod}
+                        min={1}
+                        max={30}
+                        step={1}
+                        suffix=" Years"
+                    />
                 </div>
 
                 <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-center">
@@ -220,33 +233,24 @@ export const InsuranceCalculator = () => {
 
             <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Age of Eldest Member</label>
-                        <input
-                            type="range"
-                            min="18"
-                            max="75"
-                            step="1"
-                            value={age}
-                            onChange={(e) => setAge(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{age} Years</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Sum Insured (₹)</label>
-                        <input
-                            type="range"
-                            min="300000"
-                            max="5000000"
-                            step="100000"
-                            value={sumInsured}
-                            onChange={(e) => setSumInsured(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{sumInsured.toLocaleString()}</div>
-                    </div>
+                    <SliderInput
+                        label="Age of Eldest Member"
+                        value={age}
+                        onChange={setAge}
+                        min={18}
+                        max={75}
+                        step={1}
+                        suffix=" Years"
+                    />
+                    <SliderInput
+                        label="Sum Insured (₹)"
+                        value={sumInsured}
+                        onChange={setSumInsured}
+                        min={300000}
+                        max={5000000}
+                        step={100000}
+                        prefix="₹"
+                    />
 
                     <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Number of Members</label>
@@ -306,47 +310,33 @@ export const RetirementCalculator = () => {
 
             <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Current Age</label>
-                        <input
-                            type="range"
-                            min="20"
-                            max="50"
-                            step="1"
-                            value={currentAge}
-                            onChange={(e) => setCurrentAge(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{currentAge} Years</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Retirement Age</label>
-                        <input
-                            type="range"
-                            min="50"
-                            max="70"
-                            step="1"
-                            value={retirementAge}
-                            onChange={(e) => setRetirementAge(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{retirementAge} Years</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Current Monthly Expenses (₹)</label>
-                        <input
-                            type="range"
-                            min="20000"
-                            max="200000"
-                            step="5000"
-                            value={monthlyExpenses}
-                            onChange={(e) => setMonthlyExpenses(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{monthlyExpenses.toLocaleString()}</div>
-                    </div>
+                    <SliderInput
+                        label="Current Age"
+                        value={currentAge}
+                        onChange={setCurrentAge}
+                        min={20}
+                        max={50}
+                        step={1}
+                        suffix=" Years"
+                    />
+                    <SliderInput
+                        label="Retirement Age"
+                        value={retirementAge}
+                        onChange={setRetirementAge}
+                        min={50}
+                        max={70}
+                        step={1}
+                        suffix=" Years"
+                    />
+                    <SliderInput
+                        label="Current Monthly Expenses (₹)"
+                        value={monthlyExpenses}
+                        onChange={setMonthlyExpenses}
+                        min={20000}
+                        max={200000}
+                        step={5000}
+                        prefix="₹"
+                    />
                 </div>
 
                 <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-center">
@@ -395,61 +385,42 @@ export const SavingsCalculator = () => {
 
             <div className="grid md:grid-cols-2 gap-12">
                 <div className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Initial Savings (₹)</label>
-                        <input
-                            type="range"
-                            min="0"
-                            max="500000"
-                            step="5000"
-                            value={initialSavings}
-                            onChange={(e) => setInitialSavings(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{initialSavings.toLocaleString()}</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Monthly Contribution (₹)</label>
-                        <input
-                            type="range"
-                            min="500"
-                            max="50000"
-                            step="500"
-                            value={monthlyContribution}
-                            onChange={(e) => setMonthlyContribution(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">₹{monthlyContribution.toLocaleString()}</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Interest Rate (% p.a)</label>
-                        <input
-                            type="range"
-                            min="1"
-                            max="15"
-                            step="0.1"
-                            value={interestRate}
-                            onChange={(e) => setInterestRate(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{interestRate}%</div>
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">Duration (Years)</label>
-                        <input
-                            type="range"
-                            min="1"
-                            max="30"
-                            step="1"
-                            value={years}
-                            onChange={(e) => setYears(Number(e.target.value))}
-                            className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-emerald-600"
-                        />
-                        <div className="mt-2 text-lg font-bold text-slate-900">{years} Years</div>
-                    </div>
+                    <SliderInput
+                        label="Initial Savings (₹)"
+                        value={initialSavings}
+                        onChange={setInitialSavings}
+                        min={0}
+                        max={500000}
+                        step={5000}
+                        prefix="₹"
+                    />
+                    <SliderInput
+                        label="Monthly Contribution (₹)"
+                        value={monthlyContribution}
+                        onChange={setMonthlyContribution}
+                        min={500}
+                        max={50000}
+                        step={500}
+                        prefix="₹"
+                    />
+                    <SliderInput
+                        label="Interest Rate (% p.a)"
+                        value={interestRate}
+                        onChange={setInterestRate}
+                        min={1}
+                        max={15}
+                        step={0.1}
+                        suffix="%"
+                    />
+                    <SliderInput
+                        label="Duration (Years)"
+                        value={years}
+                        onChange={setYears}
+                        min={1}
+                        max={30}
+                        step={1}
+                        suffix=" Years"
+                    />
                 </div>
 
                 <div className="bg-slate-50 p-8 rounded-3xl border border-slate-200 flex flex-col justify-center">

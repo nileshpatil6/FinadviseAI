@@ -24,6 +24,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Footer } from '@/components/Footer';
 
 // --- Components ---
 
@@ -240,7 +241,7 @@ export default function Home() {
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-32 pb-20 lg:pt-32 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="pt-40 pb-20 lg:pt-44 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-50/50 via-white to-white z-0"></div>
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="max-w-2xl">
@@ -587,10 +588,10 @@ export default function Home() {
               <Link href="/platform?product=personal-loans" className="text-purple-600 font-semibold flex items-center gap-2">
                 Check Rates <ChevronRight className="w-4 h-4" />
               </Link>
-            </motion.div>
+            </motion.div >
 
             {/* Medium Card */}
-            <motion.div
+            < motion.div
               className="bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group"
               variants={itemVariants}
               whileHover={{ y: -5 }}
@@ -606,13 +607,13 @@ export default function Home() {
               <Link href="/platform?product=mutual-funds" className="text-orange-600 font-semibold flex items-center gap-2">
                 Start Investing <ChevronRight className="w-4 h-4" />
               </Link>
-            </motion.div>
-          </motion.div>
-        </div>
-      </section>
+            </motion.div >
+          </motion.div >
+        </div >
+      </section >
 
       {/* How It Works (Visual) */}
-      <section id="how-it-works" className="py-24 bg-white overflow-hidden">
+      < section id="how-it-works" className="py-24 bg-white overflow-hidden" >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div className="order-2 lg:order-1 relative">
@@ -679,10 +680,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Security Section */}
-      <section className="py-24 bg-slate-900 text-white relative overflow-hidden">
+      < section className="py-24 bg-slate-900 text-white relative overflow-hidden" >
         <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-10"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center max-w-3xl mx-auto mb-16">
@@ -713,10 +714,10 @@ export default function Home() {
             </div>
           </div>
         </div>
-      </section>
+      </section >
 
       {/* FAQ Section */}
-      <section className="py-24 bg-white">
+      < section className="py-24 bg-white" >
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <SectionHeading subtitle="FAQ">
             Frequently Asked <br /> Questions
@@ -741,10 +742,10 @@ export default function Home() {
             />
           </div>
         </div>
-      </section>
+      </section >
 
       {/* Final CTA */}
-      <section className="py-24 bg-slate-50 border-t border-slate-100">
+      < section className="py-24 bg-slate-50 border-t border-slate-100" >
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl md:text-6xl font-bold text-slate-900 mb-8 tracking-tight">
             Stop Overpaying. <br /> Start Optimizing.
@@ -759,76 +760,9 @@ export default function Home() {
             </Link>
           </div>
         </div>
-      </section>
+      </section >
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
-            <div className="col-span-2">
-              <div className="flex items-center gap-2 mb-6">
-                <Image
-                  src="/images/logo.png"
-                  alt="BankBuz Logo"
-                  width={150}
-                  height={40}
-                  className="h-8 w-auto object-contain"
-                />
-              </div>
-              <p className="text-slate-500 mb-6 max-w-sm leading-relaxed">
-                The next generation of financial aggregation. We use AI to match you with the perfect financial products, saving you time and money.
-              </p>
-              <div className="flex gap-4">
-                {/* Social Placeholders */}
-                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
-                  <Globe className="w-5 h-5 text-slate-600" />
-                </div>
-                <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
-                  <Users className="w-5 h-5 text-slate-600" />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-900 mb-6">Products</h4>
-              <ul className="space-y-4 text-slate-600">
-                <li><Link href="/platform?product=credit-cards" className="hover:text-blue-600 transition-colors">Credit Cards</Link></li>
-                <li><Link href="/platform?product=personal-loans" className="hover:text-blue-600 transition-colors">Personal Loans</Link></li>
-                <li><Link href="/platform?product=home-loans" className="hover:text-blue-600 transition-colors">Home Loans</Link></li>
-                <li><Link href="/platform?product=mutual-funds" className="hover:text-blue-600 transition-colors">Mutual Funds</Link></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-900 mb-6">Company</h4>
-              <ul className="space-y-4 text-slate-600">
-                <li><a href="#" className="hover:text-blue-600 transition-colors">About Us</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Careers</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Press</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Contact</a></li>
-              </ul>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-900 mb-6">Legal</h4>
-              <ul className="space-y-4 text-slate-600">
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Privacy Policy</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Terms of Service</a></li>
-                <li><a href="#" className="hover:text-blue-600 transition-colors">Disclaimer</a></li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <div className="text-slate-500 text-sm">
-              © 2025 BankBuz. All rights reserved.
-            </div>
-            <div className="text-slate-400 text-sm">
-              Made with ❤️ for India 🇮🇳
-            </div>
-          </div>
-        </div>
-      </footer>
-    </div>
+      <Footer />
+    </div >
   );
 }

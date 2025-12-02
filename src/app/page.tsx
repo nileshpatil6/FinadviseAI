@@ -15,7 +15,6 @@ import {
   ChevronRight,
   ChevronDown,
   Search,
-  Users,
   Home as HomeIcon,
   Heart,
   BarChart3

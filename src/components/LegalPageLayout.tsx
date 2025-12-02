@@ -16,7 +16,7 @@ export const LegalPageLayout = ({ title, lastUpdated, children }: LegalPageLayou
                     {lastUpdated && (
                         <p className="text-slate-500 mb-8">Last Updated: {lastUpdated}</p>
                     )}
-                    <div className="prose prose-slate max-w-none prose-headings:font-bold prose-headings:text-slate-900 prose-p:text-slate-600 prose-a:text-blue-600 hover:prose-a:text-blue-700">
+                    <div className="text-slate-900 prose prose-slate max-w-none prose-headings:!text-slate-900 prose-p:!text-slate-900 prose-strong:!text-slate-900 prose-li:!text-slate-900 prose-a:!text-blue-600 hover:prose-a:!text-blue-700">
                         {children}
                     </div>
                 </div>

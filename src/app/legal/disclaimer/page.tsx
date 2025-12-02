@@ -4,16 +4,38 @@ import { LegalPageLayout } from '@/components/LegalPageLayout';
 
 export default function DisclaimerPage() {
     return (
-        <LegalPageLayout title="Disclaimer" lastUpdated="September 15, 2025">
+        <LegalPageLayout title="Disclaimer" lastUpdated="2025">
             <p>
-                <strong>[Content from BankBuz_Legal_Content.docx - Disclaimer Section]</strong>
+                BankBuz is an AI-driven financial comparison platform. We do not guarantee approvals, accuracy of bank data, or investment outcomes.
             </p>
+
             <p>
-                The information provided by BankBuz ("we," "us," or "our") on our website is for general informational purposes only. All information on the Site is provided in good faith, however we make no representation or warranty of any kind, express or implied, regarding the accuracy, adequacy, validity, reliability, availability, or completeness of any information on the Site.
+                <strong>Important Notice:</strong> We are not a bank, NBFC, or SEBI/RBI registered advisor. The information and recommendations provided on this platform are for informational purposes only and should not be considered as financial advice.
             </p>
-            <h3>Financial Disclaimer</h3>
+
+            <h3>No Guarantee of Approval</h3>
             <p>
-                BankBuz is not a financial advisor. The content on this site is not intended to be a substitute for professional financial advice. Always seek the advice of your financial advisor or other qualified financial provider with any questions you may have regarding your financial situation.
+                While our AI algorithms analyze your profile and suggest suitable products, we cannot guarantee that you will be approved for any financial product. Final approval decisions rest with the respective banks and financial institutions.
+            </p>
+
+            <h3>Data Accuracy</h3>
+            <p>
+                We make every effort to ensure that the information displayed is accurate and up-to-date. However, interest rates, fees, terms, and conditions are subject to change by the financial institutions. Users should verify all details independently before applying.
+            </p>
+
+            <h3>Investment Outcomes</h3>
+            <p>
+                Past performance of mutual funds or other investment products is not indicative of future results. All investments carry risk, and users should conduct their own research or consult with a certified financial advisor before making investment decisions.
+            </p>
+
+            <h3>User Responsibility</h3>
+            <p>
+                By using BankBuz, you acknowledge that you are responsible for verifying all information and making your own informed financial decisions. We recommend consulting with qualified financial professionals for personalized advice.
+            </p>
+
+            <h3>Contact</h3>
+            <p>
+                For any questions or concerns, please contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

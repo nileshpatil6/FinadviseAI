@@ -4,16 +4,50 @@ import { LegalPageLayout } from '@/components/LegalPageLayout';
 
 export default function TermsOfServicePage() {
     return (
-        <LegalPageLayout title="Terms of Service" lastUpdated="September 15, 2025">
+        <LegalPageLayout title="Terms & Conditions" lastUpdated="2025">
+            <h3>1. Service Overview</h3>
             <p>
-                <strong>[Content from BankBuz_Legal_Content.docx - Terms of Service Section]</strong>
+                BankBuz provides financial information, product comparisons, and AI-generated recommendations. We do not issue cards, loans, or provide regulated advisory services.
             </p>
+
+            <h3>2. Information Accuracy</h3>
             <p>
-                These Terms of Service ("Terms") govern your access to and use of the BankBuz website and services. By accessing or using the Service, you agree to be bound by these Terms.
+                We strive for accuracy but cannot guarantee real-time correctness. Users must verify details with banks before making any financial decisions.
             </p>
-            <h3>1. Acceptance of Terms</h3>
+
+            <h3>3. AI Recommendations</h3>
             <p>
-                By accessing this website, we assume you accept these terms and conditions. Do not continue to use BankBuz if you do not agree to take all of the terms and conditions stated on this page.
+                AI suggestions do not assure approval and are not financial advice. They are based on available data and algorithms.
+            </p>
+
+            <h3>4. Third-Party Services</h3>
+            <p>
+                BankBuz is not responsible for external websites or offers. When you click on bank links, you are subject to their terms and conditions.
+            </p>
+
+            <h3>5. User Responsibilities</h3>
+            <p>
+                Users must not misuse, scrape, reverse-engineer, or input false information on the platform.
+            </p>
+
+            <h3>6. Intellectual Property</h3>
+            <p>
+                All website content, branding, and algorithms belong to BankBuz and are protected by intellectual property laws.
+            </p>
+
+            <h3>7. Limitation of Liability</h3>
+            <p>
+                BankBuz is not liable for any financial losses or decision outcomes resulting from the use of our platform.
+            </p>
+
+            <h3>8. Updates</h3>
+            <p>
+                These terms may be updated at any time. Continued use of the platform constitutes acceptance of updated terms.
+            </p>
+
+            <h3>9. Contact</h3>
+            <p>
+                For questions about these terms, contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

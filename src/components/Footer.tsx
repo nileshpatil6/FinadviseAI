@@ -1,77 +1,134 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Globe, Users } from 'lucide-react';
 
-export function Footer() {
+export const Footer = () => {
     return (
-        <footer className="bg-white border-t border-slate-200 pt-20 pb-10">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12 mb-16">
-                    <div className="col-span-2">
-                        <div className="flex items-center gap-2 mb-6">
-                            <Image
-                                src="/images/logo.png"
-                                alt="BankBuz Logo"
-                                width={150}
-                                height={40}
-                                className="h-8 w-auto object-contain"
-                            />
-                        </div>
-                        <p className="text-slate-500 mb-6 max-w-sm leading-relaxed">
-                            The next generation of financial aggregation. We use AI to match you with the perfect financial products, saving you time and money.
-                        </p>
-                        <div className="flex gap-4">
-                            {/* Social Placeholders */}
-                            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
-                                <Globe className="w-5 h-5 text-slate-600" />
-                            </div>
-                            <div className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center hover:bg-slate-200 cursor-pointer transition-colors">
-                                <Users className="w-5 h-5 text-slate-600" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <h4 className="font-bold text-slate-900 mb-6">Products</h4>
-                        <ul className="space-y-4 text-slate-600">
-                            <li><Link href="/platform?product=credit-cards" className="hover:text-blue-600 transition-colors">Credit Cards</Link></li>
-                            <li><Link href="/platform?product=personal-loans" className="hover:text-blue-600 transition-colors">Personal Loans</Link></li>
-                            <li><Link href="/platform?product=home-loans" className="hover:text-blue-600 transition-colors">Home Loans</Link></li>
-                            <li><Link href="/platform?product=mutual-funds" className="hover:text-blue-600 transition-colors">Mutual Funds</Link></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="font-bold text-slate-900 mb-6">Company</h4>
-                        <ul className="space-y-4 text-slate-600">
-                            <li><Link href="/about" className="hover:text-blue-600 transition-colors">About Us</Link></li>
-                            <li><Link href="/careers" className="hover:text-blue-600 transition-colors">Careers</Link></li>
-                            <li><Link href="/contact" className="hover:text-blue-600 transition-colors">Contact</Link></li>
-                        </ul>
-                    </div>
-
-                    <div>
-                        <h4 className="font-bold text-slate-900 mb-6">Legal</h4>
-                        <ul className="space-y-4 text-slate-600">
-                            <li><Link href="/legal/privacy-policy" className="hover:text-blue-600 transition-colors">Privacy Policy</Link></li>
-                            <li><Link href="/legal/terms-of-service" className="hover:text-blue-600 transition-colors">Terms of Service</Link></li>
-                            <li><Link href="/legal/disclaimer" className="hover:text-blue-600 transition-colors">Disclaimer</Link></li>
-                            <li><Link href="/legal/cookie-policy" className="hover:text-blue-600 transition-colors">Cookie Policy</Link></li>
-                        </ul>
-                    </div>
+        <footer className="bg-slate-900 text-white py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-12">
+                {/* Products */}
+                <div>
+                    <h4 className="text-lg font-semibold mb-6">Products</h4>
+                    <ul className="space-y-3">
+                        <li>
+                            <Link href="/platform?product=credit-cards" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Credit Cards
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">AI-powered card recommendations</p>
+                        </li>
+                        <li>
+                            <Link href="/platform?product=personal-loans" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Personal Loans
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">Instant matched loan offers</p>
+                        </li>
+                        <li>
+                            <Link href="/platform?product=home-loans" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Home Loans
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">Compare rates and eligibility</p>
+                        </li>
+                        <li>
+                            <Link href="/platform?product=mutual-funds" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Mutual Funds
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">Goal-based fund recommendations</p>
+                        </li>
+                    </ul>
                 </div>
 
-                <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-slate-400 text-sm">
-                        © {new Date().getFullYear()} BankBuz. All rights reserved.
-                    </p>
-                    <div className="flex gap-6 text-sm text-slate-400">
-                        <Link href="/legal/privacy-policy" className="hover:text-slate-600 transition-colors">Privacy</Link>
-                        <Link href="/legal/terms-of-service" className="hover:text-slate-600 transition-colors">Terms</Link>
-                        <Link href="/sitemap" className="hover:text-slate-600 transition-colors">Sitemap</Link>
-                    </div>
+                {/* Company */}
+                <div>
+                    <h4 className="text-lg font-semibold mb-6">Company</h4>
+                    <ul className="space-y-3">
+                        <li>
+                            <Link href="/about" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                About Us
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">AI-driven financial platform</p>
+                        </li>
+                        <li>
+                            <Link href="/careers" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Careers
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">Join our team</p>
+                        </li>
+                        <li>
+                            <Link href="/press" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Press
+                            </Link>
+                            <p className="text-xs text-slate-500 mt-1">Latest announcements</p>
+                        </li>
+                        <li>
+                            <a href="mailto:bankbuz@gmail.com" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Contact
+                            </a>
+                            <p className="text-xs text-slate-500 mt-1">bankbuz@gmail.com</p>
+                        </li>
+                    </ul>
                 </div>
+
+                {/* Resources */}
+                <div>
+                    <h4 className="text-lg font-semibold mb-6">Resources</h4>
+                    <ul className="space-y-3">
+                        <li>
+                            <Link href="/platform" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Platform
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/platform?product=emi-calculator" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Calculators
+                            </Link>
+                        </li>
+                        <li>
+                            <a href="#how-it-works" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                How It Works
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#features" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Features
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                {/* Legal */}
+                <div>
+                    <h4 className="text-lg font-semibold mb-6">Legal</h4>
+                    <ul className="space-y-3">
+                        <li>
+                            <Link href="/legal/privacy-policy" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Privacy Policy
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/legal/terms-of-service" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Terms & Conditions
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/legal/disclaimer" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Disclaimer
+                            </Link>
+                        </li>
+                        <li>
+                            <Link href="/legal/cookie-policy" className="hover:text-emerald-400 transition-colors text-slate-300">
+                                Cookie Policy
+                            </Link>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div className="border-t border-slate-800 mt-12 pt-8 text-center">
+                <p className="text-slate-400 text-sm mb-2">
+                    BankBuz is an AI-driven financial comparison platform. We are not a bank, NBFC, or SEBI/RBI registered advisor.
+                </p>
+                <p className="text-slate-500 text-sm">
+                    © 2025 BankBuz. All rights reserved. Made with ❤️ for India 🇮🇳
+                </p>
             </div>
         </footer>
     );
-}
+};

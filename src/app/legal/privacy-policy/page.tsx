@@ -4,22 +4,51 @@ import { LegalPageLayout } from '@/components/LegalPageLayout';
 
 export default function PrivacyPolicyPage() {
     return (
-        <LegalPageLayout title="Privacy Policy" lastUpdated="September 15, 2025">
-            <p>
-                <strong>[Content from BankBuz_Legal_Content.docx - Privacy Policy Section]</strong>
-            </p>
-            <p>
-                At BankBuz, we take your privacy seriously. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website.
-            </p>
-            {/* Placeholder content - User needs to fill this in */}
+        <LegalPageLayout title="Privacy Policy" lastUpdated="2025">
             <h3>1. Information We Collect</h3>
             <p>
-                We may collect information about you in a variety of ways. The information we may collect on the Site includes:
+                We collect personal information, usage data, device data, and financial preferences to provide you with personalized recommendations.
             </p>
-            <ul>
-                <li><strong>Personal Data:</strong> Personally identifiable information, such as your name, shipping address, email address, and telephone number.</li>
-                <li><strong>Derivative Data:</strong> Information our servers automatically collect when you access the Site, such as your IP address, your browser type, your operating system, your access times, and the pages you have viewed directly before and after accessing the Site.</li>
-            </ul>
+
+            <h3>2. How We Use Data</h3>
+            <p>
+                We use your data to improve recommendations, personalise results, and enhance platform performance.
+            </p>
+
+            <h3>3. Sharing of Information</h3>
+            <p>
+                We only share limited information with partners when you initiate an action (such as applying for a product).
+            </p>
+
+            <h3>4. Data Security</h3>
+            <p>
+                We use encryption and industry standards to protect your data, but we cannot guarantee absolute security.
+            </p>
+
+            <h3>5. Cookies</h3>
+            <p>
+                We use cookies for a better user experience and analytics.
+            </p>
+
+            <h3>6. User Rights</h3>
+            <p>
+                You have the right to request data deletion, correction, and access to your information.
+            </p>
+
+            <h3>7. Third-Party Links</h3>
+            <p>
+                External sites linked from our platform operate under their own privacy policies.
+            </p>
+
+            <h3>8. Updates</h3>
+            <p>
+                This policy may be updated from time to time. Please check back regularly.
+            </p>
+
+            <h3>9. Contact</h3>
+            <p>
+                For any privacy-related questions, please contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
+            </p>
         </LegalPageLayout>
     );
 }

@@ -41,7 +41,7 @@ Edit `src/app/api/financial-advice/route.ts`:
 // Add @ts-ignore before the tools array
 const model = genAI.getGenerativeModel(
   {
-    model: 'gemini-2.5-flash',
+    model: 'gemini-3-pro-preview',
     systemInstruction: '...',
     // @ts-ignore - googleSearch works at runtime
     tools: [{ googleSearch: {} }],

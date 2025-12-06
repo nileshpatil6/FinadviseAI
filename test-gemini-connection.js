@@ -21,7 +21,7 @@ async function testBasicConnection() {
   // Test 1: Basic API call without grounding
   console.log('Test 1: Basic API call (no grounding)...');
   try {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-3-pro-preview' });
     const result = await model.generateContent('Say hello in one word');
     const response = await result.response;
     console.log('✓ Basic API works!');
@@ -37,7 +37,7 @@ async function testBasicConnection() {
   try {
     const model = genAI.getGenerativeModel(
       {
-        model: 'gemini-2.5-flash',
+        model: 'gemini-3-pro-preview',
         tools: [{ googleSearch: {} }],
       },
       { apiVersion: 'v1beta' }

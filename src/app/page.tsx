@@ -132,8 +132,8 @@ export default function Home() {
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-2">
               <Image
-                src="/images/logo.png"
-                alt="BankBuz Logo"
+                src="/images/unyfiny-logo.png"
+                alt="UnyFiny Logo"
                 width={150}
                 height={40}
                 className="h-10 w-auto object-contain"
@@ -302,7 +302,7 @@ export default function Home() {
             <div className="relative z-10 rounded-3xl overflow-hidden shadow-2xl border border-slate-200 bg-slate-900">
               <Image
                 src="/images/hero-dashboard.png"
-                alt="BankBuz Dashboard"
+                alt="UnyFiny Dashboard"
                 width={800}
                 height={600}
                 className="w-full h-auto object-cover opacity-90 hover:opacity-100 transition-opacity duration-500"
@@ -460,7 +460,7 @@ export default function Home() {
             >
               <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
               <div className="relative z-10">
-                <h3 className="text-2xl font-bold mb-6">The Finadvise Advantage</h3>
+                <h3 className="text-2xl font-bold mb-6">The UnyFiny Advantage</h3>
                 <ul className="space-y-6">
                   <li className="flex items-center gap-4">
                     <div className="w-8 h-8 rounded-full bg-emerald-500 flex items-center justify-center">
@@ -626,7 +626,7 @@ export default function Home() {
               >
                 <Image
                   src="/images/mobile-app.png"
-                  alt="BankBuz Mobile App"
+                  alt="UnyFiny Mobile App"
                   width={600}
                   height={800}
                   className="w-full h-auto drop-shadow-2xl rounded-3xl"
@@ -724,7 +724,7 @@ export default function Home() {
 
           <div className="space-y-2">
             <FaqItem
-              question="Is BankBuz really free?"
+              question="Is UnyFiny really free?"
               answer="Yes, 100%. We earn a small referral fee from banks only when your application is approved. This cost is never passed on to you."
             />
             <FaqItem

@@ -11,7 +11,7 @@ export default function CareersPage() {
 
             <h3>Contact</h3>
             <p>
-                For career inquiries, please email us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
+                For career inquiries, please email us at: <a href="mailto:unyfiny@gmail.com">unyfiny@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

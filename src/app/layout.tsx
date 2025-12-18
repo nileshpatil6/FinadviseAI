@@ -15,10 +15,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "BankBuz - Your Personal Financial Advisor",
+  title: "UnyFiny - Your Personal Financial Advisor",
   description: "Get AI-powered recommendations for credit cards, loans, insurance, investments, and more. Make smarter financial decisions with personalized insights.",
   keywords: ["financial advisor", "AI recommendations", "credit cards", "loans", "insurance", "investments"],
-  authors: [{ name: "BankBuz Team" }],
+  authors: [{ name: "UnyFiny Team" }],
+  icons: {
+    icon: '/images/unyfiny-logo.png',
+    shortcut: '/images/unyfiny-logo.png',
+    apple: '/images/unyfiny-logo.png',
+  },
 };
 
 export const viewport: Viewport = {

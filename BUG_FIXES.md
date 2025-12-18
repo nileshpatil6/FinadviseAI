@@ -1,4 +1,4 @@
-# Bankbuz- Bug Fixes Summary
+# Unifiny- Bug Fixes Summary
 
 ## Issues Identified and Fixed
 

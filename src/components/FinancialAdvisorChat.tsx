@@ -21,7 +21,7 @@ const initialMessages: ChatMessage[] = [
   {
     role: 'assistant',
     content:
-      'Hi! I am BankBuz Assistant. Ask me anything about credit cards, loans, insurance, or investments and I will walk you through the considerations.',
+      'Hi! I am UnyFiny Assistant. Ask me anything about credit cards, loans, insurance, or investments and I will walk you through the considerations.',
   },
 ];
 
@@ -103,7 +103,7 @@ export function FinancialAdvisorChat() {
         aria-expanded={isOpen}
       >
         <MessageCircle className="h-5 w-5" />
-        <span className="text-sm font-semibold">Ask FinadAI</span>
+        <span className="text-sm font-semibold">Ask UnyFiny</span>
       </button>
 
       {isOpen && (
@@ -114,7 +114,7 @@ export function FinancialAdvisorChat() {
                 <Sparkles className="h-5 w-5" />
               </div>
               <div>
-                <h3 className="text-base font-semibold text-gray-900">FinadAI Assistant</h3>
+                <h3 className="text-base font-semibold text-gray-900">UnyFiny Assistant</h3>
                 <p className="text-xs text-gray-500">Financial insights tailored for you</p>
               </div>
             </div>
@@ -136,8 +136,8 @@ export function FinancialAdvisorChat() {
               >
                 <div
                   className={`max-w-[85%] md:max-w-[80%] rounded-2xl px-4 py-3 shadow-sm ${message.role === 'user'
-                      ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-900'
+                    ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white'
+                    : 'bg-gray-100 text-gray-900'
                     }`}
                 >
                   {message.role === 'assistant' ? (

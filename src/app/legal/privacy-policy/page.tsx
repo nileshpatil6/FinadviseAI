@@ -47,7 +47,7 @@ export default function PrivacyPolicyPage() {
 
             <h3>9. Contact</h3>
             <p>
-                For any privacy-related questions, please contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
+                For any privacy-related questions, please contact us at: <a href="mailto:unyfiny@gmail.com">unyfiny@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

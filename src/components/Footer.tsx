@@ -58,10 +58,10 @@ export const Footer = () => {
                             <p className="text-xs text-slate-500 mt-1">Latest announcements</p>
                         </li>
                         <li>
-                            <a href="mailto:bankbuz@gmail.com" className="hover:text-emerald-400 transition-colors text-slate-300">
+                            <a href="mailto:unifiny@gmail.com" className="hover:text-emerald-400 transition-colors text-slate-300">
                                 Contact
                             </a>
-                            <p className="text-xs text-slate-500 mt-1">bankbuz@gmail.com</p>
+                            <p className="text-xs text-slate-500 mt-1">unifiny@gmail.com</p>
                         </li>
                     </ul>
                 </div>
@@ -123,10 +123,10 @@ export const Footer = () => {
 
             <div className="border-t border-slate-800 mt-12 pt-8 text-center">
                 <p className="text-slate-400 text-sm mb-2">
-                    BankBuz is an AI-driven financial comparison platform. We are not a bank, NBFC, or SEBI/RBI registered advisor.
+                    UnyFiny is an AI-driven financial comparison platform. We are not a bank, NBFC, or SEBI/RBI registered advisor.
                 </p>
                 <p className="text-slate-500 text-sm">
-                    © 2025 BankBuz. All rights reserved. Made with ❤️ for India 🇮🇳
+                    © 2025 UnyFiny. All rights reserved. Made with ❤️ for India 🇮🇳
                 </p>
             </div>
         </footer>

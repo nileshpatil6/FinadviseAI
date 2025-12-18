@@ -218,8 +218,8 @@ function PlatformContent() {
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3">
               <Image
-                src="/images/logo.png"
-                alt="BankBuz Logo"
+                src="/images/unyfiny-logo.png"
+                alt="UnyFiny Logo"
                 width={150}
                 height={40}
                 className="h-10 w-auto object-contain"
@@ -449,8 +449,8 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
           <div className="flex items-center justify-between h-20">
             <Link href="/" className="flex items-center space-x-3">
               <Image
-                src="/images/logo.png"
-                alt="BankBuz Logo"
+                src="/images/unyfiny-logo.png"
+                alt="UnyFiny Logo"
                 width={150}
                 height={40}
                 className="h-10 w-auto object-contain"

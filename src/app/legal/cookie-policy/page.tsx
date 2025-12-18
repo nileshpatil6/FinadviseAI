@@ -6,7 +6,7 @@ export default function CookiePolicyPage() {
     return (
         <LegalPageLayout title="Cookie Policy" lastUpdated="2025">
             <p>
-                This Cookie Policy explains how BankBuz uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
+                This Cookie Policy explains how UnyFiny uses cookies and similar technologies to recognize you when you visit our website. It explains what these technologies are and why we use them, as well as your rights to control our use of them.
             </p>
 
             <h3>What are cookies?</h3>
@@ -44,7 +44,7 @@ export default function CookiePolicyPage() {
 
             <h3>Contact</h3>
             <p>
-                If you have any questions about our use of cookies, please contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
+                If you have any questions about our use of cookies, please contact us at: <a href="mailto:unyfiny@gmail.com">unyfiny@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

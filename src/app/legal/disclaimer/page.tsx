@@ -6,7 +6,7 @@ export default function DisclaimerPage() {
     return (
         <LegalPageLayout title="Disclaimer" lastUpdated="2025">
             <p>
-                BankBuz is an AI-driven financial comparison platform. We do not guarantee approvals, accuracy of bank data, or investment outcomes.
+                UnyFiny is an AI-driven financial comparison platform. We do not guarantee approvals, accuracy of bank data, or investment outcomes.
             </p>
 
             <p>
@@ -30,12 +30,12 @@ export default function DisclaimerPage() {
 
             <h3>User Responsibility</h3>
             <p>
-                By using BankBuz, you acknowledge that you are responsible for verifying all information and making your own informed financial decisions. We recommend consulting with qualified financial professionals for personalized advice.
+                By using UnyFiny, you acknowledge that you are responsible for verifying all information and making your own informed financial decisions. We recommend consulting with qualified financial professionals for personalized advice.
             </p>
 
             <h3>Contact</h3>
             <p>
-                For any questions or concerns, please contact us at: <a href="mailto:bankbuz@gmail.com">bankbuz@gmail.com</a>
+                For any questions or concerns, please contact us at: <a href="mailto:unyfiny@gmail.com">unyfiny@gmail.com</a>
             </p>
         </LegalPageLayout>
     );

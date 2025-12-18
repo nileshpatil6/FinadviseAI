@@ -119,3 +119,19 @@ const prompt = getProductPrompt(data.product);
 2. Verify API responses are returning correct data structures
 3. Check that grounding sources are from official websites
 4. Monitor for any edge cases or missing product types
+
+## Branding & UI Update Log (Dec 18, 2025)
+
+### 1. Rebranding (BankBuz -> UnyFiny)
+**Files:** All pages, components, and metadata.
+**Change:** Updated all instances of "BankBuz" to "UnyFiny", updated contact email to "unyfiny@gmail.com", and replaced the logo.
+
+### 2. Mobile Responsiveness Fixes
+**File:** `src/app/page.tsx`
+**Issues:** 
+- "Unnecessary space" in Hero section on mobile.
+- Missing navigation menu on mobile view.
+**Fixes:**
+- Reduced Hero section top padding from `pt-40` to `pt-28` on mobile devices.
+- Implemented a responsive mobile hamburger menu using `lucide-react` icons and `framer-motion` for smooth transitions.
+- Added mobile-optimized navigation drawer that lists all links and product categories.

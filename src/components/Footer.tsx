@@ -58,10 +58,10 @@ export const Footer = () => {
                             <p className="text-xs text-slate-500 mt-1">Latest announcements</p>
                         </li>
                         <li>
-                            <a href="mailto:unifiny@gmail.com" className="hover:text-emerald-400 transition-colors text-slate-300">
+                            <a href="mailto:unyfiny@gmail.com" className="hover:text-emerald-400 transition-colors text-slate-300">
                                 Contact
                             </a>
-                            <p className="text-xs text-slate-500 mt-1">unifiny@gmail.com</p>
+                            <p className="text-xs text-slate-500 mt-1">unyfiny@gmail.com</p>
                         </li>
                     </ul>
                 </div>

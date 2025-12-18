@@ -17,7 +17,9 @@ import {
   Search,
   Home as HomeIcon,
   Heart,
-  BarChart3
+  BarChart3,
+  Menu,
+  X
 } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -110,11 +112,13 @@ const itemVariants: any = {
 export default function Home() {
   const { scrollYProgress } = useScroll();
   const [isProductsOpen, setIsProductsOpen] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const router = useRouter();
 
   const handleProductClick = (path: string) => {
     router.push(path);
     setIsProductsOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -134,12 +138,13 @@ export default function Home() {
               <Image
                 src="/images/unyfiny-logo.png"
                 alt="UnyFiny Logo"
-                width={150}
-                height={40}
-                className="h-10 w-auto object-contain"
+                width={180}
+                height={50}
+                className="h-14 w-auto object-contain"
               />
             </div>
 
+            {/* Desktop Menu */}
             <div className="hidden md:flex items-center space-x-8">
               <a href="#features" className="text-sm font-medium text-slate-600 hover:text-slate-900 transition-colors">Features</a>
 
@@ -235,12 +240,73 @@ export default function Home() {
                 Launch Platform <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden">
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors"
+                aria-label="Toggle menu"
+              >
+                {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Mobile Menu Dropdown */}
+        <AnimatePresence>
+          {isMobileMenuOpen && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: "easeInOut" }}
+              className="md:hidden overflow-hidden bg-white border-b border-slate-100"
+            >
+              <div className="px-4 pt-2 pb-6 space-y-4">
+                <a
+                  href="#features"
+                  className="block px-4 py-3 text-base font-semibold text-slate-800 hover:bg-slate-50 rounded-xl"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  Features
+                </a>
+                <div className="px-4 py-2">
+                  <div className="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2">Products</div>
+                  <div className="space-y-1 pl-2 border-l-2 border-slate-100">
+                    <button onClick={() => handleProductClick("/platform?product=credit-cards")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Credit Cards</button>
+                    <button onClick={() => handleProductClick("/platform?product=personal-loans")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Personal Loans</button>
+                    <button onClick={() => handleProductClick("/platform?product=home-loans")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Home Loans</button>
+                    <button onClick={() => handleProductClick("/platform?product=mutual-funds")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Mutual Funds</button>
+                    <button onClick={() => handleProductClick("/platform?product=health-insurance")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Health Insurance</button>
+                    <button onClick={() => handleProductClick("/platform?product=emi-calculator")} className="block w-full text-left py-2 px-2 text-sm text-slate-600 hover:text-emerald-600">Calculators</button>
+                  </div>
+                </div>
+                <a
+                  href="#how-it-works"
+                  className="block px-4 py-3 text-base font-semibold text-slate-800 hover:bg-slate-50 rounded-xl"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  How it Works
+                </a>
+                <div className="pt-2">
+                  <Link
+                    href="/platform"
+                    className="flex w-full items-center justify-center gap-2 bg-slate-900 text-white px-6 py-4 rounded-xl text-base font-bold shadow-lg active:scale-95 transition-transform"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    Launch Platform <ArrowRight className="w-5 h-5" />
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </nav>
 
       {/* Hero Section */}
-      <section className="pt-40 pb-20 lg:pt-44 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      <section className="pt-28 pb-16 lg:pt-44 lg:pb-32 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-emerald-50/50 via-white to-white z-0"></div>
         <div className="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center relative z-10">
           <div className="max-w-2xl">

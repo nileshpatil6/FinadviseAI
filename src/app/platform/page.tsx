@@ -1525,10 +1525,20 @@ function ComparisonResults({
               {comparisons.map((comp: Comparison, index: number) => (
                 <tr key={index} className="hover:bg-slate-50/50 transition-colors">
                   <td className="p-5 font-bold text-slate-900">
-                    {comp.bank}
+                    <button
+                      className="text-emerald-700 underline font-bold bg-transparent border-none cursor-pointer px-0 py-0 hover:text-emerald-900 focus:outline-none"
+                      onClick={() => window.open(comp.applyLink || '#', '_blank')}
+                    >
+                      {comp.bank}
+                    </button>
                   </td>
                   <td className="p-5 text-slate-700 font-medium">
-                    {comp.product}
+                    <button
+                      className="text-blue-700 underline font-semibold bg-transparent border-none cursor-pointer px-0 py-0 hover:text-blue-900 focus:outline-none"
+                      onClick={() => window.open(comp.applyLink || '#', '_blank')}
+                    >
+                      {comp.product}
+                    </button>
                   </td>
                   {product === 'credit-cards' && (
                     <>

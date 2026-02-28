@@ -72,6 +72,7 @@ interface Recommendation {
 interface Comparison {
   bank: string;
   product: string;
+  applyLink?: string;
   rewardRate?: string;
   rate?: string;
   fee?: string;
@@ -256,7 +257,7 @@ function PlatformContent() {
             transition={{ duration: 0.6, delay: 0.1 }}
           >
             Find Your Perfect <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-slate-900 via-emerald-800 to-slate-900">Financial Product</span>
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-slate-900 via-emerald-800 to-slate-900">Financial Product</span>
           </motion.h1>
 
           <motion.p
@@ -339,7 +340,7 @@ function PlatformContent() {
 
 export default function PlatformPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+    <Suspense fallback={<div className="min-h-screen bg-linear-to-br from-slate-50 to-blue-50 flex items-center justify-center">
       <div className="text-lg text-gray-600">Loading...</div>
     </div>}>
       <PlatformContent />
@@ -965,7 +966,7 @@ function HealthInsuranceForm({
             <label key={addon} className="flex items-center space-x-3 cursor-pointer p-3 rounded-xl hover:bg-slate-50 transition-colors border border-transparent hover:border-slate-200">
               <input
                 type="checkbox"
-                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 flex-shrink-0"
+                className="w-4 h-4 text-emerald-600 border-slate-300 rounded focus:ring-emerald-500 shrink-0"
                 onChange={(e) => {
                   const current = Array.isArray(_formData.addons) ? _formData.addons : [];
                   const updated = e.target.checked
@@ -1328,8 +1329,8 @@ function ComparisonResults({
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               {/* Rank Badge */}
-              <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-              {index === 0 && <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-amber-300 via-yellow-400 to-amber-300"></div>}
+              <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-transparent via-slate-200 to-transparent"></div>
+              {index === 0 && <div className="absolute top-0 left-0 right-0 h-1.5 bg-linear-to-r from-amber-300 via-yellow-400 to-amber-300"></div>}
 
               <div className="p-8 pb-0">
                 <div className="flex justify-between items-start mb-6">
@@ -1346,7 +1347,7 @@ function ComparisonResults({
                   )}
                 </div>
 
-                <h3 className="text-2xl font-bold text-slate-900 mb-6 leading-tight min-h-[4rem]">{rec.product}</h3>
+                <h3 className="text-2xl font-bold text-slate-900 mb-6 leading-tight min-h-16">{rec.product}</h3>
 
                 {/* Key Metrics Grid */}
                 <div className="grid grid-cols-2 gap-4 mb-6">
@@ -1413,7 +1414,7 @@ function ComparisonResults({
                   <ul className="space-y-3">
                     {rec.benefits.slice(0, 3).map((benefit: string, i: number) => (
                       <li key={i} className="flex items-start gap-3 text-slate-600 text-sm leading-relaxed">
-                        <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 flex-shrink-0" />
+                        <CheckCircle className="w-4 h-4 text-emerald-500 mt-0.5 shrink-0" />
                         <span>{benefit}</span>
                       </li>
                     ))}
@@ -1473,7 +1474,7 @@ function ComparisonResults({
           <p className="text-slate-600 mb-6 text-sm">
             Information verified from {sources.length} official bank websites in real-time
           </p>
-          <div id="sources-grid" className="hidden grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div id="sources-grid" className="md:grid-cols-2 lg:grid-cols-3 gap-4">
             {sources.map((source, idx) => (
               <a
                 key={idx}

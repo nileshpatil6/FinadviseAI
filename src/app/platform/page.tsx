@@ -73,6 +73,7 @@ interface Comparison {
   bank: string;
   product: string;
   applyLink?: string;
+  applyUrl?: string;
   rewardRate?: string;
   rate?: string;
   fee?: string;
@@ -385,8 +386,16 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
       if (data.success && data.data) {
         // Handle structured JSON response
 
+        const normalizeText = (value?: string) =>
+          (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+        const isHttpUrl = (url?: string) =>
+          typeof url === 'string' && /^https?:\/\//i.test(url.trim());
+
         // Set recommendations from AI response
+        let recommendationRows: ApiRecommendation[] = [];
         if (data.data.recommendations && data.data.recommendations.length > 0) {
+          recommendationRows = data.data.recommendations;
           const formattedRecs = data.data.recommendations.map((rec: ApiRecommendation) => ({
             rank: rec.rank || 1,
             product: `${rec.bankName || 'Bank'} ${rec.productName || 'Product'}`,
@@ -414,7 +423,37 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
 
         // Set comparisons from AI response
         if (data.data.comparisons && data.data.comparisons.length > 0) {
-          setComparisons(data.data.comparisons);
+          const enrichedComparisons = data.data.comparisons.map((comp: Comparison) => {
+            const directLink = isHttpUrl(comp.applyLink)
+              ? comp.applyLink
+              : isHttpUrl(comp.applyUrl)
+                ? comp.applyUrl
+                : undefined;
+
+            if (directLink) {
+              return { ...comp, applyLink: directLink };
+            }
+
+            const compBank = normalizeText(comp.bank);
+            const compProduct = normalizeText(comp.product);
+
+            const matchedRecommendation = recommendationRows.find((rec) => {
+              const recBank = normalizeText(rec.bankName);
+              const recProduct = normalizeText(rec.productName);
+
+              const bankMatches = compBank && recBank && (compBank.includes(recBank) || recBank.includes(compBank));
+              const productMatches = compProduct && recProduct && (compProduct.includes(recProduct) || recProduct.includes(compProduct));
+
+              return bankMatches || productMatches;
+            });
+
+            return {
+              ...comp,
+              applyLink: isHttpUrl(matchedRecommendation?.applyUrl) ? matchedRecommendation?.applyUrl : undefined,
+            };
+          });
+
+          setComparisons(enrichedComparisons);
         } else {
           setComparisons([]);
         }
@@ -1266,6 +1305,56 @@ function ComparisonResults({
   recommendations: Recommendation[];
   sources: GroundingSource[];
 }) {
+  const isValidExternalLink = (url?: string) => {
+    if (!url) {
+      return false;
+    }
+
+    try {
+      const parsedUrl = new URL(url);
+      const isHttp = parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+      if (!isHttp) {
+        return false;
+      }
+
+      if (typeof window !== 'undefined') {
+        return parsedUrl.origin !== window.location.origin;
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  };
+
+  const normalizeText = (value?: string) =>
+    (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+
+  const getComparisonApplyLink = (comp: Comparison) => {
+    if (isValidExternalLink(comp.applyLink)) {
+      return comp.applyLink;
+    }
+
+    if (isValidExternalLink(comp.applyUrl)) {
+      return comp.applyUrl;
+    }
+
+    const compBank = normalizeText(comp.bank);
+    const compProduct = normalizeText(comp.product);
+
+    const matchedRecommendation = recommendations.find((rec) => {
+      const recProduct = normalizeText(rec.product);
+      const bankMatches = compBank && recProduct.includes(compBank);
+      const productMatches = compProduct && recProduct.includes(compProduct);
+
+      return bankMatches || productMatches;
+    });
+
+    return isValidExternalLink(matchedRecommendation?.applyLink)
+      ? matchedRecommendation?.applyLink
+      : undefined;
+  };
+
   const getProductDisplayName = (product: string) => {
     return product.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
@@ -1527,16 +1616,34 @@ function ComparisonResults({
                 <tr key={index} className="hover:bg-slate-50/50 transition-colors">
                   <td className="p-5 font-bold text-slate-900">
                     <button
-                      className="text-emerald-700 underline font-bold bg-transparent border-none cursor-pointer px-0 py-0 hover:text-emerald-900 focus:outline-none"
-                      onClick={() => window.open(comp.applyLink || '#', '_blank')}
+                      className={`font-bold bg-transparent border-none px-0 py-0 focus:outline-none ${getComparisonApplyLink(comp)
+                        ? 'text-emerald-700 underline cursor-pointer hover:text-emerald-900'
+                        : 'text-slate-500 cursor-not-allowed'
+                        }`}
+                      onClick={() => {
+                        const applyLink = getComparisonApplyLink(comp);
+                        if (applyLink) {
+                          window.open(applyLink, '_blank', 'noopener,noreferrer');
+                        }
+                      }}
+                      disabled={!getComparisonApplyLink(comp)}
                     >
                       {comp.bank}
                     </button>
                   </td>
                   <td className="p-5 text-slate-700 font-medium">
                     <button
-                      className="text-blue-700 underline font-semibold bg-transparent border-none cursor-pointer px-0 py-0 hover:text-blue-900 focus:outline-none"
-                      onClick={() => window.open(comp.applyLink || '#', '_blank')}
+                      className={`font-semibold bg-transparent border-none px-0 py-0 focus:outline-none ${getComparisonApplyLink(comp)
+                        ? 'text-blue-700 underline cursor-pointer hover:text-blue-900'
+                        : 'text-slate-500 cursor-not-allowed'
+                        }`}
+                      onClick={() => {
+                        const applyLink = getComparisonApplyLink(comp);
+                        if (applyLink) {
+                          window.open(applyLink, '_blank', 'noopener,noreferrer');
+                        }
+                      }}
+                      disabled={!getComparisonApplyLink(comp)}
                     >
                       {comp.product}
                     </button>

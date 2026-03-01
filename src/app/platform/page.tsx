@@ -389,8 +389,38 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
         const normalizeText = (value?: string) =>
           (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-        const isHttpUrl = (url?: string) =>
-          typeof url === 'string' && /^https?:\/\//i.test(url.trim());
+        const normalizeExternalUrl = (url?: string) => {
+          if (!url) {
+            return undefined;
+          }
+
+          const raw = url.trim();
+          const normalizedRaw = raw.toLowerCase();
+
+          if (
+            !raw ||
+            raw === '#' ||
+            normalizedRaw.includes('official-url') ||
+            normalizedRaw.includes('officialbank.com') ||
+            normalizedRaw.includes('example.com')
+          ) {
+            return undefined;
+          }
+
+          const withProtocol = /^https?:\/\//i.test(raw)
+            ? raw
+            : /^(www\.|[a-z0-9.-]+\.[a-z]{2,})(\/|$)/i.test(raw)
+              ? `https://${raw}`
+              : raw;
+
+          try {
+            const parsedUrl = new URL(withProtocol);
+            const isHttp = parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+            return isHttp ? parsedUrl.toString() : undefined;
+          } catch {
+            return undefined;
+          }
+        };
 
         // Set recommendations from AI response
         let recommendationRows: ApiRecommendation[] = [];
@@ -408,7 +438,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             emi: rec.emi,  // For loans
             returns: rec.returns,  // For mutual funds
             expenseRatio: rec.expenseRatio,  // For mutual funds
-            applyLink: rec.applyUrl || '#'
+            applyLink: normalizeExternalUrl(rec.applyUrl) || '#'
           }));
           setRecommendations(formattedRecs);
         } else {
@@ -423,12 +453,10 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
 
         // Set comparisons from AI response
         if (data.data.comparisons && data.data.comparisons.length > 0) {
+          const groundedSources: GroundingSource[] = Array.isArray(data.sources) ? data.sources : [];
+
           const enrichedComparisons = data.data.comparisons.map((comp: Comparison) => {
-            const directLink = isHttpUrl(comp.applyLink)
-              ? comp.applyLink
-              : isHttpUrl(comp.applyUrl)
-                ? comp.applyUrl
-                : undefined;
+            const directLink = normalizeExternalUrl(comp.applyLink) || normalizeExternalUrl(comp.applyUrl);
 
             if (directLink) {
               return { ...comp, applyLink: directLink };
@@ -447,9 +475,18 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
               return bankMatches || productMatches;
             });
 
+            const matchedSource = groundedSources.find((source: GroundingSource) => {
+              const sourceText = normalizeText(`${source.title} ${source.uri}`);
+              const bankMatches = compBank && sourceText.includes(compBank);
+              const productMatches = compProduct && sourceText.includes(compProduct);
+
+              return bankMatches || productMatches;
+            });
+
             return {
               ...comp,
-              applyLink: isHttpUrl(matchedRecommendation?.applyUrl) ? matchedRecommendation?.applyUrl : undefined,
+              applyLink: normalizeExternalUrl(matchedRecommendation?.applyUrl)
+                || normalizeExternalUrl(matchedSource?.uri),
             };
           });
 
@@ -1305,13 +1342,48 @@ function ComparisonResults({
   recommendations: Recommendation[];
   sources: GroundingSource[];
 }) {
-  const isValidExternalLink = (url?: string) => {
+  const normalizeExternalUrl = (url?: string) => {
     if (!url) {
+      return undefined;
+    }
+
+    const raw = url.trim();
+    const normalizedRaw = raw.toLowerCase();
+
+    if (
+      !raw ||
+      raw === '#' ||
+      normalizedRaw.includes('official-url') ||
+      normalizedRaw.includes('officialbank.com') ||
+      normalizedRaw.includes('example.com')
+    ) {
+      return undefined;
+    }
+
+    const withProtocol = /^https?:\/\//i.test(raw)
+      ? raw
+      : /^(www\.|[a-z0-9.-]+\.[a-z]{2,})(\/|$)/i.test(raw)
+        ? `https://${raw}`
+        : raw;
+
+    try {
+      const parsedUrl = new URL(withProtocol);
+      const isHttp = parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
+
+      return isHttp ? parsedUrl.toString() : undefined;
+    } catch {
+      return undefined;
+    }
+  };
+
+  const isValidExternalLink = (url?: string) => {
+    const normalizedUrl = normalizeExternalUrl(url);
+    if (!normalizedUrl) {
       return false;
     }
 
     try {
-      const parsedUrl = new URL(url);
+      const parsedUrl = new URL(normalizedUrl);
       const isHttp = parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:';
       if (!isHttp) {
         return false;
@@ -1331,12 +1403,9 @@ function ComparisonResults({
     (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
   const getComparisonApplyLink = (comp: Comparison) => {
-    if (isValidExternalLink(comp.applyLink)) {
-      return comp.applyLink;
-    }
-
-    if (isValidExternalLink(comp.applyUrl)) {
-      return comp.applyUrl;
+    const compDirectLink = normalizeExternalUrl(comp.applyLink) || normalizeExternalUrl(comp.applyUrl);
+    if (isValidExternalLink(compDirectLink)) {
+      return compDirectLink;
     }
 
     const compBank = normalizeText(comp.bank);
@@ -1350,8 +1419,22 @@ function ComparisonResults({
       return bankMatches || productMatches;
     });
 
-    return isValidExternalLink(matchedRecommendation?.applyLink)
-      ? matchedRecommendation?.applyLink
+    const matchedSource = sources.find((source) => {
+      const sourceText = normalizeText(`${source.title} ${source.uri}`);
+      const bankMatches = compBank && sourceText.includes(compBank);
+      const productMatches = compProduct && sourceText.includes(compProduct);
+
+      return bankMatches || productMatches;
+    });
+
+    const sourceUrl = normalizeExternalUrl(matchedSource?.uri);
+    if (isValidExternalLink(sourceUrl)) {
+      return sourceUrl;
+    }
+
+    const recommendationUrl = normalizeExternalUrl(matchedRecommendation?.applyLink);
+    return isValidExternalLink(recommendationUrl)
+      ? recommendationUrl
       : undefined;
   };
 

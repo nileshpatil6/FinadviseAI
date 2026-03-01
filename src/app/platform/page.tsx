@@ -389,6 +389,11 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
         const normalizeText = (value?: string) =>
           (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
+        const getFallbackSearchUrl = (bank?: string, product?: string) => {
+          const query = `${bank || ''} ${product || ''} official`.trim() || 'financial product official';
+          return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        };
+
         const normalizeExternalUrl = (url?: string) => {
           if (!url) {
             return undefined;
@@ -438,7 +443,8 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             emi: rec.emi,  // For loans
             returns: rec.returns,  // For mutual funds
             expenseRatio: rec.expenseRatio,  // For mutual funds
-            applyLink: normalizeExternalUrl(rec.applyUrl) || '#'
+            applyLink: normalizeExternalUrl(rec.applyUrl)
+              || getFallbackSearchUrl(rec.bankName, rec.productName)
           }));
           setRecommendations(formattedRecs);
         } else {
@@ -447,7 +453,7 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             rank: 1,
             product: 'No suitable products found',
             benefits: ['Please check your inputs and try again', 'Consider adjusting your requirements'],
-            applyLink: '#'
+            applyLink: getFallbackSearchUrl(product, 'best options')
           }]);
         }
 
@@ -486,7 +492,8 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
             return {
               ...comp,
               applyLink: normalizeExternalUrl(matchedRecommendation?.applyUrl)
-                || normalizeExternalUrl(matchedSource?.uri),
+                || normalizeExternalUrl(matchedSource?.uri)
+                || getFallbackSearchUrl(comp.bank, comp.product),
             };
           });
 
@@ -1342,6 +1349,11 @@ function ComparisonResults({
   recommendations: Recommendation[];
   sources: GroundingSource[];
 }) {
+  const getFallbackSearchUrl = (bank?: string, productName?: string) => {
+    const query = `${bank || ''} ${productName || ''} official`.trim() || 'financial product official';
+    return `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+  };
+
   const normalizeExternalUrl = (url?: string) => {
     if (!url) {
       return undefined;
@@ -1433,9 +1445,18 @@ function ComparisonResults({
     }
 
     const recommendationUrl = normalizeExternalUrl(matchedRecommendation?.applyLink);
+    if (isValidExternalLink(recommendationUrl)) {
+      return recommendationUrl;
+    }
+
+    return getFallbackSearchUrl(comp.bank, comp.product);
+  };
+
+  const getRecommendationApplyLink = (rec: Recommendation) => {
+    const recommendationUrl = normalizeExternalUrl(rec.applyLink);
     return isValidExternalLink(recommendationUrl)
       ? recommendationUrl
-      : undefined;
+      : getFallbackSearchUrl(undefined, rec.product);
   };
 
   const getProductDisplayName = (product: string) => {
@@ -1597,7 +1618,7 @@ function ComparisonResults({
               {/* Footer Action */}
               <div className="mt-auto p-6 pt-0">
                 <a
-                  href={rec.applyLink}
+                  href={getRecommendationApplyLink(rec)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`w-full py-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-all transform hover:-translate-y-0.5 shadow-lg ${index === 0
@@ -1699,34 +1720,22 @@ function ComparisonResults({
                 <tr key={index} className="hover:bg-slate-50/50 transition-colors">
                   <td className="p-5 font-bold text-slate-900">
                     <button
-                      className={`font-bold bg-transparent border-none px-0 py-0 focus:outline-none ${getComparisonApplyLink(comp)
-                        ? 'text-emerald-700 underline cursor-pointer hover:text-emerald-900'
-                        : 'text-slate-500 cursor-not-allowed'
-                        }`}
+                      className="font-bold bg-transparent border-none px-0 py-0 focus:outline-none text-emerald-700 underline cursor-pointer hover:text-emerald-900"
                       onClick={() => {
                         const applyLink = getComparisonApplyLink(comp);
-                        if (applyLink) {
-                          window.open(applyLink, '_blank', 'noopener,noreferrer');
-                        }
+                        window.open(applyLink, '_blank', 'noopener,noreferrer');
                       }}
-                      disabled={!getComparisonApplyLink(comp)}
                     >
                       {comp.bank}
                     </button>
                   </td>
                   <td className="p-5 text-slate-700 font-medium">
                     <button
-                      className={`font-semibold bg-transparent border-none px-0 py-0 focus:outline-none ${getComparisonApplyLink(comp)
-                        ? 'text-blue-700 underline cursor-pointer hover:text-blue-900'
-                        : 'text-slate-500 cursor-not-allowed'
-                        }`}
+                      className="font-semibold bg-transparent border-none px-0 py-0 focus:outline-none text-blue-700 underline cursor-pointer hover:text-blue-900"
                       onClick={() => {
                         const applyLink = getComparisonApplyLink(comp);
-                        if (applyLink) {
-                          window.open(applyLink, '_blank', 'noopener,noreferrer');
-                        }
+                        window.open(applyLink, '_blank', 'noopener,noreferrer');
                       }}
-                      disabled={!getComparisonApplyLink(comp)}
                     >
                       {comp.product}
                     </button>

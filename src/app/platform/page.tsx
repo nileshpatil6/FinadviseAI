@@ -71,7 +71,9 @@ interface Recommendation {
 
 interface Comparison {
   bank: string;
+  bankUrl?: string;
   product: string;
+  productUrl?: string;
   applyLink?: string;
   applyUrl?: string;
   rewardRate?: string;
@@ -462,39 +464,37 @@ function ProductForm({ product, onBack }: { product: ProductCategory; onBack: ()
           const groundedSources: GroundingSource[] = Array.isArray(data.sources) ? data.sources : [];
 
           const enrichedComparisons = data.data.comparisons.map((comp: Comparison) => {
-            const directLink = normalizeExternalUrl(comp.applyLink) || normalizeExternalUrl(comp.applyUrl);
-
-            if (directLink) {
-              return { ...comp, applyLink: directLink };
-            }
-
             const compBank = normalizeText(comp.bank);
             const compProduct = normalizeText(comp.product);
 
-            const matchedRecommendation = recommendationRows.find((rec) => {
+            // Resolve bankUrl — prefer direct field, then grounded source, then fallback search
+            const bankUrl = normalizeExternalUrl(comp.bankUrl)
+              || groundedSources.find((s: GroundingSource) => {
+                const t = normalizeText(`${s.title} ${s.uri}`);
+                return compBank && t.includes(compBank);
+              })?.uri
+              || getFallbackSearchUrl(comp.bank, '');
+
+            // Resolve productUrl — prefer direct field, then matched recommendation applyUrl, then grounded source, then fallback search
+            const matchedRec = recommendationRows.find((rec) => {
               const recBank = normalizeText(rec.bankName);
               const recProduct = normalizeText(rec.productName);
-
               const bankMatches = compBank && recBank && (compBank.includes(recBank) || recBank.includes(compBank));
               const productMatches = compProduct && recProduct && (compProduct.includes(recProduct) || recProduct.includes(compProduct));
-
               return bankMatches || productMatches;
             });
 
-            const matchedSource = groundedSources.find((source: GroundingSource) => {
-              const sourceText = normalizeText(`${source.title} ${source.uri}`);
-              const bankMatches = compBank && sourceText.includes(compBank);
-              const productMatches = compProduct && sourceText.includes(compProduct);
+            const productUrl = normalizeExternalUrl(comp.productUrl)
+              || normalizeExternalUrl(comp.applyLink)
+              || normalizeExternalUrl(comp.applyUrl)
+              || normalizeExternalUrl(matchedRec?.applyUrl)
+              || groundedSources.find((s: GroundingSource) => {
+                const t = normalizeText(`${s.title} ${s.uri}`);
+                return compProduct && t.includes(compProduct);
+              })?.uri
+              || getFallbackSearchUrl(comp.bank, comp.product);
 
-              return bankMatches || productMatches;
-            });
-
-            return {
-              ...comp,
-              applyLink: normalizeExternalUrl(matchedRecommendation?.applyUrl)
-                || normalizeExternalUrl(matchedSource?.uri)
-                || getFallbackSearchUrl(comp.bank, comp.product),
-            };
+            return { ...comp, bankUrl, productUrl, applyLink: productUrl };
           });
 
           setComparisons(enrichedComparisons);
@@ -1414,40 +1414,45 @@ function ComparisonResults({
   const normalizeText = (value?: string) =>
     (value || '').toLowerCase().replace(/[^a-z0-9]/g, '');
 
-  const getComparisonApplyLink = (comp: Comparison) => {
-    const compDirectLink = normalizeExternalUrl(comp.applyLink) || normalizeExternalUrl(comp.applyUrl);
-    if (isValidExternalLink(compDirectLink)) {
-      return compDirectLink;
-    }
+  const getComparisonBankLink = (comp: Comparison): string => {
+    const direct = normalizeExternalUrl(comp.bankUrl);
+    if (isValidExternalLink(direct)) return direct!;
+
+    const compBank = normalizeText(comp.bank);
+    const sourceUrl = normalizeExternalUrl(
+      sources.find((s) => {
+        const t = normalizeText(`${s.title} ${s.uri}`);
+        return compBank && t.includes(compBank);
+      })?.uri
+    );
+    if (isValidExternalLink(sourceUrl)) return sourceUrl!;
+
+    return getFallbackSearchUrl(comp.bank, '');
+  };
+
+  const getComparisonProductLink = (comp: Comparison): string => {
+    const direct = normalizeExternalUrl(comp.productUrl)
+      || normalizeExternalUrl(comp.applyLink)
+      || normalizeExternalUrl(comp.applyUrl);
+    if (isValidExternalLink(direct)) return direct!;
 
     const compBank = normalizeText(comp.bank);
     const compProduct = normalizeText(comp.product);
 
     const matchedRecommendation = recommendations.find((rec) => {
       const recProduct = normalizeText(rec.product);
-      const bankMatches = compBank && recProduct.includes(compBank);
-      const productMatches = compProduct && recProduct.includes(compProduct);
-
-      return bankMatches || productMatches;
+      return (compBank && recProduct.includes(compBank)) || (compProduct && recProduct.includes(compProduct));
     });
+    const recUrl = normalizeExternalUrl(matchedRecommendation?.applyLink);
+    if (isValidExternalLink(recUrl)) return recUrl!;
 
-    const matchedSource = sources.find((source) => {
-      const sourceText = normalizeText(`${source.title} ${source.uri}`);
-      const bankMatches = compBank && sourceText.includes(compBank);
-      const productMatches = compProduct && sourceText.includes(compProduct);
-
-      return bankMatches || productMatches;
-    });
-
-    const sourceUrl = normalizeExternalUrl(matchedSource?.uri);
-    if (isValidExternalLink(sourceUrl)) {
-      return sourceUrl;
-    }
-
-    const recommendationUrl = normalizeExternalUrl(matchedRecommendation?.applyLink);
-    if (isValidExternalLink(recommendationUrl)) {
-      return recommendationUrl;
-    }
+    const sourceUrl = normalizeExternalUrl(
+      sources.find((s) => {
+        const t = normalizeText(`${s.title} ${s.uri}`);
+        return compProduct && t.includes(compProduct);
+      })?.uri
+    );
+    if (isValidExternalLink(sourceUrl)) return sourceUrl!;
 
     return getFallbackSearchUrl(comp.bank, comp.product);
   };
@@ -1721,10 +1726,7 @@ function ComparisonResults({
                   <td className="p-5 font-bold text-slate-900">
                     <button
                       className="font-bold bg-transparent border-none px-0 py-0 focus:outline-none text-emerald-700 underline cursor-pointer hover:text-emerald-900"
-                      onClick={() => {
-                        const applyLink = getComparisonApplyLink(comp);
-                        window.open(applyLink, '_blank', 'noopener,noreferrer');
-                      }}
+                      onClick={() => window.open(getComparisonBankLink(comp), '_blank', 'noopener,noreferrer')}
                     >
                       {comp.bank}
                     </button>
@@ -1732,10 +1734,7 @@ function ComparisonResults({
                   <td className="p-5 text-slate-700 font-medium">
                     <button
                       className="font-semibold bg-transparent border-none px-0 py-0 focus:outline-none text-blue-700 underline cursor-pointer hover:text-blue-900"
-                      onClick={() => {
-                        const applyLink = getComparisonApplyLink(comp);
-                        window.open(applyLink, '_blank', 'noopener,noreferrer');
-                      }}
+                      onClick={() => window.open(getComparisonProductLink(comp), '_blank', 'noopener,noreferrer')}
                     >
                       {comp.product}
                     </button>

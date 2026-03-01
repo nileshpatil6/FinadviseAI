@@ -170,11 +170,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "Bank 1", "product": "Card 1 exact name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
-    {"bank": "Bank 2", "product": "Card 2 exact name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
-    {"bank": "Bank 3", "product": "Card 3 exact name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
-    {"bank": "Bank 4 (DIFFERENT from top 3)", "product": "Card 4 exact name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
-    {"bank": "Bank 5 (DIFFERENT from all above)", "product": "Card 5 exact name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."}
+    {"bank": "Bank 1", "bankUrl": "https://www.officialbank1.com", "product": "Card 1 exact name", "productUrl": "https://www.officialbank1.com/credit-cards/card-name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
+    {"bank": "Bank 2", "bankUrl": "https://www.officialbank2.com", "product": "Card 2 exact name", "productUrl": "https://www.officialbank2.com/credit-cards/card-name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
+    {"bank": "Bank 3", "bankUrl": "https://www.officialbank3.com", "product": "Card 3 exact name", "productUrl": "https://www.officialbank3.com/credit-cards/card-name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
+    {"bank": "Bank 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialbank4.com", "product": "Card 4 exact name", "productUrl": "https://www.officialbank4.com/credit-cards/card-name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."},
+    {"bank": "Bank 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialbank5.com", "product": "Card 5 exact name", "productUrl": "https://www.officialbank5.com/credit-cards/card-name", "rewardRate": "Exact rate", "fee": "₹XXX", "benefits": "Top differentiator", "interestRate": "XX% p.a."}
   ],
   "insights": [
     "Specific insight about why card 1 is best (e.g., HDFC Regalia offers highest reward rate of 4 points per ₹150 on dining vs Card 2's 2 points per ₹150)",
@@ -193,6 +193,7 @@ PRE-SUBMISSION VALIDATION CHECKLIST - VERIFY BEFORE RESPONDING:
 □ All numbers (fees, rates, rewards) are REAL and CURRENT (Jan 2025)
 □ All benefits include SPECIFIC numbers and details (no vague descriptions)
 □ All URLs point to official bank websites (.hdfcbank.com, .icicibank.com, etc.)
+□ Each comparison entry has BOTH bankUrl (bank homepage) AND productUrl (specific product page)
 □ NO placeholder text like "TBD", "varies", "check website"
 □ NO made-up or estimated data
 
@@ -298,11 +299,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "Bank 1", "product": "Debit Card 1 exact name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
-    {"bank": "Bank 2", "product": "Debit Card 2 exact name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
-    {"bank": "Bank 3", "product": "Debit Card 3 exact name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
-    {"bank": "Bank 4 (DIFFERENT from top 3)", "product": "Debit Card 4 exact name", "rewardRate": "Rate", "fee": "₹XXX", "benefits": "Key feature"},
-    {"bank": "Bank 5 (DIFFERENT from all above)", "product": "Debit Card 5 exact name", "rewardRate": "Rate", "fee": "₹XXX", "benefits": "Key feature"}
+    {"bank": "Bank 1", "bankUrl": "https://www.officialbank1.com", "product": "Debit Card 1 exact name", "productUrl": "https://www.officialbank1.com/debit-cards/card-name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
+    {"bank": "Bank 2", "bankUrl": "https://www.officialbank2.com", "product": "Debit Card 2 exact name", "productUrl": "https://www.officialbank2.com/debit-cards/card-name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
+    {"bank": "Bank 3", "bankUrl": "https://www.officialbank3.com", "product": "Debit Card 3 exact name", "productUrl": "https://www.officialbank3.com/debit-cards/card-name", "rewardRate": "Exact rate/cashback", "fee": "₹XXX", "benefits": "Key differentiator"},
+    {"bank": "Bank 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialbank4.com", "product": "Debit Card 4 exact name", "productUrl": "https://www.officialbank4.com/debit-cards/card-name", "rewardRate": "Rate", "fee": "₹XXX", "benefits": "Key feature"},
+    {"bank": "Bank 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialbank5.com", "product": "Debit Card 5 exact name", "productUrl": "https://www.officialbank5.com/debit-cards/card-name", "rewardRate": "Rate", "fee": "₹XXX", "benefits": "Key feature"}
   ],
   "insights": ["Specific insight 1", "Specific insight 2", "Specific insight 3"]
 }
@@ -315,6 +316,7 @@ PRE-SUBMISSION VALIDATION CHECKLIST - VERIFY BEFORE RESPONDING:
 □ All card names include "Debit Card" suffix and are verified official names
 □ All fees and benefits are REAL and CURRENT (January 2025)
 □ All URLs point to official bank websites
+□ Each comparison entry has BOTH bankUrl (bank homepage) AND productUrl (specific debit card page)
 □ NO placeholder text or made-up data
 
 ⚠️ IF YOU CANNOT FIND REAL DEBIT CARD DATA: Return an error instead of making up data or returning credit cards. NEVER fabricate information.`;
@@ -447,11 +449,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "Insurer 1", "product": "Health Plan 1 exact name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
-    {"bank": "Insurer 2", "product": "Health Plan 2 exact name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
-    {"bank": "Insurer 3", "product": "Health Plan 3 exact name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
-    {"bank": "Insurer 4 (DIFFERENT from top 3)", "product": "Health Plan 4 exact name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Key features with numbers"},
-    {"bank": "Insurer 5 (DIFFERENT from all above)", "product": "Health Plan 5 exact name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Key features with numbers"}
+    {"bank": "Insurer 1", "bankUrl": "https://www.officialinsurer1.com", "product": "Health Plan 1 exact name", "productUrl": "https://www.officialinsurer1.com/health-insurance/plan-name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
+    {"bank": "Insurer 2", "bankUrl": "https://www.officialinsurer2.com", "product": "Health Plan 2 exact name", "productUrl": "https://www.officialinsurer2.com/health-insurance/plan-name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
+    {"bank": "Insurer 3", "bankUrl": "https://www.officialinsurer3.com", "product": "Health Plan 3 exact name", "productUrl": "https://www.officialinsurer3.com/health-insurance/plan-name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Network: X,XXX hospitals, Room: specifics, NCB: XX%"},
+    {"bank": "Insurer 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialinsurer4.com", "product": "Health Plan 4 exact name", "productUrl": "https://www.officialinsurer4.com/health-insurance/plan-name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Key features with numbers"},
+    {"bank": "Insurer 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialinsurer5.com", "product": "Health Plan 5 exact name", "productUrl": "https://www.officialinsurer5.com/health-insurance/plan-name", "rate": "₹XX,XXX/year", "fee": "₹XX L coverage", "benefits": "Key features with numbers"}
   ],
   "insights": [
     "Why Plan 1 is best for this user's age/family structure (e.g., Plan 1 offers best value with ₹8,450 premium for ₹5L cover vs Plan 2's ₹10,200 for same coverage)",
@@ -470,6 +472,7 @@ PRE-SUBMISSION VALIDATION CHECKLIST - VERIFY BEFORE RESPONDING:
 □ All benefits include SPECIFIC numbers (hospital count, room rent limits, NCB percentages)
 □ All network hospital counts are accurate and verified
 □ All URLs point to official insurance company websites (NOT bank websites)
+□ Each comparison entry has BOTH bankUrl (insurer homepage) AND productUrl (specific plan page)
 □ NO placeholder text like "TBD", "competitive rates", "check website"
 □ NO made-up or estimated data
 □ NO credit card or loan terminology (rewards, EMI, interest rate, cashback)
@@ -629,11 +632,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "Bank 1", "product": "Loan 1 exact name", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator (e.g., Lowest EMI, Fastest approval)"},
-    {"bank": "Bank 2", "product": "Loan 2 exact name", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator"},
-    {"bank": "Bank 3", "product": "Loan 3 exact name", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator"},
-    {"bank": "Bank 4 (DIFFERENT from top 3)", "product": "Loan 4 exact name", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key feature"},
-    {"bank": "Bank 5 (DIFFERENT from all above)", "product": "Loan 5 exact name", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key feature"}
+    {"bank": "Bank 1", "bankUrl": "https://www.officialbank1.com", "product": "Loan 1 exact name", "productUrl": "https://www.officialbank1.com/loans/loan-type", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator (e.g., Lowest EMI, Fastest approval)"},
+    {"bank": "Bank 2", "bankUrl": "https://www.officialbank2.com", "product": "Loan 2 exact name", "productUrl": "https://www.officialbank2.com/loans/loan-type", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator"},
+    {"bank": "Bank 3", "bankUrl": "https://www.officialbank3.com", "product": "Loan 3 exact name", "productUrl": "https://www.officialbank3.com/loans/loan-type", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key differentiator"},
+    {"bank": "Bank 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialbank4.com", "product": "Loan 4 exact name", "productUrl": "https://www.officialbank4.com/loans/loan-type", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key feature"},
+    {"bank": "Bank 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialbank5.com", "product": "Loan 5 exact name", "productUrl": "https://www.officialbank5.com/loans/loan-type", "rate": "X.XX% p.a.", "emi": "₹XX,XXX/month", "processing": "₹XXX + GST", "benefits": "Key feature"}
   ],
   "insights": [
     "Why Loan 1 offers best value (e.g., Loan 1 has lowest total interest outgo of ₹45,824 vs Loan 2's ₹58,450 over 36 months)",
@@ -652,6 +655,7 @@ PRE-SUBMISSION VALIDATION CHECKLIST - VERIFY BEFORE RESPONDING:
 □ ALL EMI amounts are ACCURATELY CALCULATED using the loan formula (not estimated!)
 □ All processing fees and charges are clearly itemized and verified
 □ All URLs point to official bank/NBFC websites
+□ Each comparison entry has BOTH bankUrl (bank homepage) AND productUrl (specific loan product page)
 □ NO placeholder text like "TBD", "competitive rates", "check with bank"
 □ NO made-up or estimated data, especially EMI amounts
 
@@ -802,11 +806,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "AMC 1", "product": "Fund 1 - Direct - Growth", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Flexi Cap | AUM: ₹XX,XXX Cr | Risk: High"},
-    {"bank": "AMC 2", "product": "Fund 2 - Direct - Growth", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Large Cap | AUM: ₹XX,XXX Cr | Risk: Moderate"},
-    {"bank": "AMC 3", "product": "Fund 3 - Direct - Growth", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Multi Cap | AUM: ₹XX,XXX Cr | Risk: High"},
-    {"bank": "AMC 4 (DIFFERENT from top 3)", "product": "Fund 4 - Direct - Growth", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category and risk details"},
-    {"bank": "AMC 5 (DIFFERENT from all above)", "product": "Fund 5 - Direct - Growth", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category and risk details"}
+    {"bank": "AMC 1", "bankUrl": "https://www.officialamc1.com", "product": "Fund 1 - Direct - Growth", "productUrl": "https://www.officialamc1.com/fund-details/fund-name", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Flexi Cap | AUM: ₹XX,XXX Cr | Risk: High"},
+    {"bank": "AMC 2", "bankUrl": "https://www.officialamc2.com", "product": "Fund 2 - Direct - Growth", "productUrl": "https://www.officialamc2.com/fund-details/fund-name", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Large Cap | AUM: ₹XX,XXX Cr | Risk: Moderate"},
+    {"bank": "AMC 3", "bankUrl": "https://www.officialamc3.com", "product": "Fund 3 - Direct - Growth", "productUrl": "https://www.officialamc3.com/fund-details/fund-name", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category: Multi Cap | AUM: ₹XX,XXX Cr | Risk: High"},
+    {"bank": "AMC 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialamc4.com", "product": "Fund 4 - Direct - Growth", "productUrl": "https://www.officialamc4.com/fund-details/fund-name", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category and risk details"},
+    {"bank": "AMC 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialamc5.com", "product": "Fund 5 - Direct - Growth", "productUrl": "https://www.officialamc5.com/fund-details/fund-name", "rate": "XX.X% (3Y CAGR)", "fee": "X.XX% expense ratio", "benefits": "Category and risk details"}
   ],
   "insights": [
     "Why Fund 1 is best for ${data.goal || 'your goal'} (e.g., Fund 1 has consistently outperformed its benchmark Nifty 500 by 2.5% annually over 5 years)",
@@ -887,11 +891,11 @@ RETURN FORMAT - STRICT JSON ONLY (NO other text):
     }
   ],
   "comparisons": [
-    {"bank": "Institution 1", "product": "Product 1 exact name", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
-    {"bank": "Institution 2", "product": "Product 2 exact name", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
-    {"bank": "Institution 3", "product": "Product 3 exact name", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
-    {"bank": "Institution 4 (DIFFERENT from top 3)", "product": "Product 4 exact name", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Key features"},
-    {"bank": "Institution 5 (DIFFERENT from all above)", "product": "Product 5 exact name", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Key features"}
+    {"bank": "Institution 1", "bankUrl": "https://www.officialinstitution1.com", "product": "Product 1 exact name", "productUrl": "https://www.officialinstitution1.com/product-page", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
+    {"bank": "Institution 2", "bankUrl": "https://www.officialinstitution2.com", "product": "Product 2 exact name", "productUrl": "https://www.officialinstitution2.com/product-page", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
+    {"bank": "Institution 3", "bankUrl": "https://www.officialinstitution3.com", "product": "Product 3 exact name", "productUrl": "https://www.officialinstitution3.com/product-page", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Specific key features with numbers"},
+    {"bank": "Institution 4 (DIFFERENT from top 3)", "bankUrl": "https://www.officialinstitution4.com", "product": "Product 4 exact name", "productUrl": "https://www.officialinstitution4.com/product-page", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Key features"},
+    {"bank": "Institution 5 (DIFFERENT from all above)", "bankUrl": "https://www.officialinstitution5.com", "product": "Product 5 exact name", "productUrl": "https://www.officialinstitution5.com/product-page", "rate": "Exact Rate/Price", "fee": "Exact Fees", "benefits": "Key features"}
   ],
   "insights": ["Specific insight 1 with actual numbers/comparisons", "Specific insight 2 with data", "Specific insight 3 with actionable advice"]
 }

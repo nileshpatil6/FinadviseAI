@@ -27,7 +27,7 @@ export async function POST(request: Request) {
     // Enable grounding with a simplified approach
     const model = genAI.getGenerativeModel(
       {
-        model: 'gemini-3-pro-preview',
+        model: 'gemini-4-carbon',
         tools: [
           {
             googleSearch: {},
